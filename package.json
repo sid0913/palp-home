@@ -26,5 +26,8 @@
     "react-leaflet": "^4.2.1",
     "swr": "^2.2.4",
     "tailwindcss": "^3.4.1"
+  },
+  "devDependencies": {
+    "gatsby-plugin-root-import": "^2.0.9"
   }
 }

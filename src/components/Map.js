@@ -85,8 +85,10 @@ const MapComponent = ({item, color}) => {
  * @param  {[string]} color the color we want it plotted in
  * @return {[JSX]}   the map component
  */
+  if (!color){
+   color = "#b029d7"
 
-  // const color = "#b029d7"
+  }
 
 
   const [geoJsonStyle, setGeoJSONOptions ] = useState({
@@ -120,7 +122,7 @@ const MapComponent = ({item, color}) => {
   
       setPolygon(list_of_geo_jsons);
     })();
-  }, [])
+  }, [item])
 
   return (
     <MapContainer style={{ height: '400px' }} center={DEFAULT_CENTER} zoom={13} scrollWheelZoom={false}>
@@ -147,6 +149,6 @@ const MapComponent = ({item, color}) => {
 
 export default MapComponent
 
-export const Head = ()=> <title>Map demo with component</title>
+// export const Head = ()=> <title>Map demo with component</title>
 
 
