@@ -137,7 +137,15 @@ const MainTemplate = ({children}) => {
         
         
         {/* header image */}
-        <img className='h-20 object-none w-full' src={header}/>
+        {/* <img className='h-20 object-none w-full' src={header}/> */}
+        <div className="h-20 bg-[url('src/images/header.jpg')] text-center object-none">
+          <h1 className="my-auto text-2xl text-center text-white font-bold h-full">
+            <span className="my-auto align-middle">
+              Pompeii’s Artistic Landscape
+            </span>
+          
+          </h1>
+        </div>
 
       </header>
       {children}

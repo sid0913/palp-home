@@ -7,7 +7,6 @@ const Explore = () => {
     const [currItem, setCurrItem] = useState("snake")
     const [currColor, setCurrColor] = useState(colors[itemList.indexOf(currItem)])
     const [mapProps, setMapProps] = useState({item:"snake", color:colors[itemList.indexOf("snake")]})
-    const [dummyState, setDummyState] = useState(1)
     
   return (
     <>
