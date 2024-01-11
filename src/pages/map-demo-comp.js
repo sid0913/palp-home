@@ -1,5 +1,5 @@
 import React from 'react'
-import MapComponent from '../components/layouts/map-demo-polygon'
+import MapComponent from '../components/Map'
 const MapDemoComp = () => {
   return (
     <>
