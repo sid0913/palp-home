@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import MainTemplate from '../components/layouts/MainTemplate'
 import MapComponent from '../components/Map'
 const Explore = () => {
     const itemList = ["snake", "lion","r1-i1-p1"]
@@ -11,7 +10,7 @@ const Explore = () => {
     const [dummyState, setDummyState] = useState(1)
     
   return (
-    <MainTemplate>
+    <>
         {itemList.map((item)=>{
             return (
             <>
@@ -24,13 +23,11 @@ const Explore = () => {
         <span>Currently Selected:{currItem}</span>
         <br></br>
 
-        <button onClick={()=>setDummyState(dummyState+1)}>
-            you clicked me {dummyState} times
-        </button>
+
 
         <MapComponent item={mapProps.item} color={mapProps.color}/>
         
-    </MainTemplate>
+    </>
     
   )
 }
