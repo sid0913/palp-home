@@ -97,11 +97,11 @@ const MapComponent = ({item, color}) => {
     "opacity": 0.85
 });
   const [PolygonDeets, setPolygon]  = useState([]);
-  const fetcher = (url) => fetch(url).then((res) => res.json());
-  const { data } = useSWR(
-    `http://palp.art/api/geojson/${item}`,
-    fetcher
-  );
+  // const fetcher = (url) => fetch(url).then((res) => res.json());
+  // const { data } = useSWR(
+  //   `http://palp.art/api/geojson/${item}`,
+  //   fetcher
+  // );
 
   useEffect(()=>{
     (async ()=>{
