@@ -22,6 +22,12 @@ const DEFAULT_CENTER = [40.749908945558815,  14.50079038639771]
 
 
 async function getGeoJSON(item){
+  /**
+ * given an entity like snake or an address like r1-i1-p1, it returns a geojsons where the item is found or the location of the address respectiely, from the palp.art server
+ * @param  {[string]} item the entity or address we want the geojson for
+ * @return {[Array]}     a list of geojsons where the item is found on the pompeii map
+ */
+
   let geo_json;
   //whether the endpoint was found
   let found = false;
@@ -72,8 +78,15 @@ async function getGeoJSON(item){
   return [geo_json, found];
 }
 
-const IndexPagePolygon = () => {
-  const color = "#b029d7"
+const MapComponent = ({item, color}) => {
+    /**
+ * given an entity like snake or an address like r1-i1-p1, it returns a map component where that entity or address is plotted
+ * @param  {[string]} item the entity or address we want plotted
+ * @param  {[string]} color the color we want it plotted in
+ * @return {[JSX]}   the map component
+ */
+
+  // const color = "#b029d7"
 
 
   const [geoJsonStyle, setGeoJSONOptions ] = useState({
@@ -84,10 +97,9 @@ const IndexPagePolygon = () => {
   const [PolygonDeets, setPolygon]  = useState([]);
   const fetcher = (url) => fetch(url).then((res) => res.json());
   const { data } = useSWR(
-    'http://palp.art/api/geojson/snake',
+    `http://palp.art/api/geojson/${item}`,
     fetcher
   );
-  const item = "snake";
 
   useEffect(()=>{
     (async ()=>{
@@ -133,6 +145,8 @@ const IndexPagePolygon = () => {
   )
 }
 
-export default IndexPagePolygon
+export default MapComponent
 
-export const Head = ()=> <title>Map demo with Polygon</title>
+export const Head = ()=> <title>Map demo with component</title>
+
+
