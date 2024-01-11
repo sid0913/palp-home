@@ -19,7 +19,7 @@ const Explore = () => {
         })}
         
         <br/>
-        <span>Currently Selected:{currItem}</span>
+        <span>Currently Selected:{" "} {currItem}</span>
         <br></br>
 
 
