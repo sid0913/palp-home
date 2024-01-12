@@ -128,9 +128,9 @@ const links = [
 const MainTemplate = ({children}) => {
   return (
     <div className="text-center h-full">
-      <header className="text-xl bg-[#ecf0f1] sticky top-0">
+      <header className="text-xl bg-[#ecf0f1]  sticky top-0">
         <Link href="/">
-          <button className='w-[15vw] h-[5vh] p-1 m-5 bg-white rounded-md'>
+          <button className='w-[15vw] h-[7vh] p-1 m-5 bg-white rounded-md hover:bg-slate-200'>
             <h1 className='text-black text-center my-auto'>Menu</h1>
           </button>
         </Link>

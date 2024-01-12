@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import MapComponent from '../components/Map'
 const Explore = () => {
-    const itemList = ["snake", "lion","r1-i1-p1"]
+    const itemList = ["snake", "lion","r1-i1-p2"]
     const colors = ["#FF7259", "#E7A10C", "#7759FF"]
 
     const [currItem, setCurrItem] = useState("snake")
@@ -13,13 +13,12 @@ const Explore = () => {
         {itemList.map((item)=>{
             return (
             <>
-                <button onClick={()=>{setCurrItem(item); console.log("index is", itemList.indexOf(currItem)); setCurrColor(colors[itemList.indexOf(currItem)]); setMapProps({item:item, color:colors[itemList.indexOf(item)]})}}>{item}</button> <br/>
+                <button className='hover:bg-blue-500 bg-blue-800 text-white rounded-lg p-1 my-1' onClick={()=>{setCurrItem(item); console.log("index is", itemList.indexOf(currItem)); setCurrColor(colors[itemList.indexOf(currItem)]); setMapProps({item:item, color:colors[itemList.indexOf(item)]})}}>{item}</button> <br/>
             </> 
             )
         })}
         
-        <br/>
-        <span>Currently Selected:{" "} {currItem}</span>
+        <span>Currently Selected:{" "} <span className='font-bold text-orange-800'>{currItem}</span> </span>
         <br></br>
 
 

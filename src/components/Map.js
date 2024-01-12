@@ -125,7 +125,7 @@ const MapComponent = ({item, color}) => {
   }, [item])
 
   return (
-    <MapContainer style={{ height: '400px' }} center={DEFAULT_CENTER} zoom={15} scrollWheelZoom={false}>
+    <MapContainer className='mx-auto' style={{ height: '200px', width:"1200px" }} center={DEFAULT_CENTER} zoom={15} scrollWheelZoom={false}>
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
