@@ -78,33 +78,47 @@ async function getGeoJSON(item){
   return [geo_json, found];
 }
 
-const MapComponent = ({item, color}) => {
+const MapComponent = ({item, color, height, width, zoom}) => {
     /**
  * given an entity like snake or an address like r1-i1-p1, it returns a map component where that entity or address is plotted
- * @param  {[string]} item the entity or address we want plotted
+ * @param  {[string]} item the entity or address we want plotted- must be lower case
  * @param  {[string]} color the color we want it plotted in
- * @return {[JSX]}   the map component
+ * @param  {[string]} width width as a string in pixels, the default value is "1200px"
+ * @param  {[string]} height height as a string in pixels like "200px"
+ * @param  {[Integer]} zoom how far out the map should be zoomed like 15. The higher the value the more zoomed in
+ * @return {[Component]}   the map component
  */
   if (!color){
    color = "#b029d7"
 
   }
 
+  //assigning default values
+  height = height? height: "200px" 
+  width = width? width: "1200px"
+  zoom = zoom? zoom: 15
 
+  //the styling for the geojson plots on the map
   const [geoJsonStyle, setGeoJSONOptions ] = useState({
     "color": color,
     "weight": 5,
     "opacity": 0.85
 });
+
+  //state to hold the polygon locations for the map
   const [PolygonDeets, setPolygon]  = useState([]);
-  // const fetcher = (url) => fetch(url).then((res) => res.json());
-  // const { data } = useSWR(
-  //   `http://palp.art/api/geojson/${item}`,
-  //   fetcher
-  // );
+
 
   useEffect(()=>{
+
+    //asynchronously get the geojsons and assign them to the Polygon react state
     (async ()=>{
+
+      //if this is any empty item- do nothing, showing a plain map
+      if (item === ""){
+        return
+      }
+
       const result = await getGeoJSON(item);
       console.log("this is the result", result[0])
       const api_response = result[0];
@@ -125,7 +139,7 @@ const MapComponent = ({item, color}) => {
   }, [item])
 
   return (
-    <MapContainer className='mx-auto' style={{ height: '200px', width:"1200px" }} center={DEFAULT_CENTER} zoom={15} scrollWheelZoom={false}>
+    <MapContainer style={{ height: height, width:width }} center={DEFAULT_CENTER} zoom={zoom} scrollWheelZoom={false}>
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

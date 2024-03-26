@@ -32,4 +32,4 @@ const Explore = () => {
 
 export default Explore
 
-export const Head = () => <title>Explore Page</title>
+export const Head = () => <title>PALP Explore</title>
