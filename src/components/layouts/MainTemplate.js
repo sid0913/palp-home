@@ -127,19 +127,19 @@ const links = [
 
 const MainTemplate = ({children}) => {
   return (
-    <div className="text-center h-full">
-      <header className="text-xl bg-[#ecf0f1]  sticky top-0">
+    <div className="text-center h-full flex-col flex">
+      <header className="text-xl bg-[#ecf0f1]   sticky top-0">
         <Link href="/">
-          <button className='w-[15vw] h-[7vh] p-1 m-5 bg-white rounded-md hover:bg-slate-200'>
-            <h1 className='text-black text-center my-auto'>Menu</h1>
+          <button className='w-[15vw] h-[7vh] p-1 m-5 bg-white rounded-md hover:bg-black hover:text-white  border-2 border-black text-black'>
+            <h1 className=' text-center my-auto '>MENU</h1>
           </button>
         </Link>
         
         
         {/* header image */}
         {/* <img className='h-20 object-none w-full' src={header}/> */}
-        <div className="h-20 bg-[url('src/images/header.jpg')] text-center object-none">
-          <h1 className="my-auto text-2xl text-center text-white font-bold h-full">
+        <div className=" bg-[url('src/images/header.jpg')] text-center object-none">
+          <h1 className="my-auto text-2xl text-center text-black font-bold h-full">
             <span className="my-auto align-middle">
               Pompeii’s Artistic Landscape
             </span>
@@ -148,9 +148,13 @@ const MainTemplate = ({children}) => {
         </div>
 
       </header>
-      {children}
 
-      <div className='absolute bottom-0 text-center w-full bg-[#234774]'>
+      <div className="h-[80vh] overflow-y-auto">
+        {children}
+      </div>
+
+      {/* <div className='z-50 absolute bottom-0 text-center w-full bg-[#234774]'> */}
+      <div className='z-50 absolute bottom-0 text-center w-full bg-[#234774]'>
         <img className='object-fit h-14 mx-auto ' src={footer}/>
       </div>
 
