@@ -34,7 +34,7 @@ const Item = (props) => {
       return
     }
     //fetch the images
-    const response = await fetch(`http://p-lod.org/api/depicted_where/${itemName}`)
+    const response = await fetch(`https://api.p-lod.org/depicted-where/${itemName}`)
 
     if (!response.ok) {
       console.log("url not found- unable to fetch images")
