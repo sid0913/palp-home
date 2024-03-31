@@ -4,6 +4,7 @@ import { useState } from 'react';
 import ImageGallery from "react-image-gallery";
 import "react-image-gallery/styles/css/image-gallery.css";
 import ConceptNavigator from '../../components/ConceptNavigator';
+import SpaceNavigator from '../../components/SpaceNavigator';
 import PageLayout from '../../components/layouts/PageLayout';
 
 //function to capitalize the first letter of a string
@@ -68,21 +69,43 @@ const Item = (props) => {
         {capitalize(itemName)}
       </div> 
 
-      <div className='flex flex-row justify-evenly'>
-        <ConceptNavigator selectedConcept={itemName}/>
-        <MapComponent zoom={14} width="500px" item={itemName} color={"#FF7259"}/>
-      </div>
+      <div className='flex flex-col'>
 
-      
-      {imageURLs?(imageURLs.length > 0?
-      <div className='border-2 border-black overflow-hidden w-[50vw] lg:w-[25vw] h-auto mx-auto my-10 '>
+        <div className='flex flex-row justify-evenly'>
+          <div className='border-2 border-amber-700 w-full flex justify-start'>
+            <SpaceNavigator selectedConcept={itemName}/>
+          </div>
 
-        <ImageGallery  items={imageURLs} />
+          <div  className='border-2 border-amber-700 w-full z-0'>
+            <MapComponent zoom={14} width="600px" height="300px" item={itemName} color={"#FF7259"}/>
+          </div>
 
+        </div>
+
+        <div className='flex flex-row justify-evenly mb-32'>
+          <div className='border-2 border-amber-700 w-full flex justify-start'>
+            <ConceptNavigator selectedConcept={itemName}/>
+          </div>
+
+          <div className='border-2 border-amber-700 w-full'>
+
+            {imageURLs?(imageURLs.length > 0?
+            <div className='overflow-hidden p-5 w-[40vw] h-auto '>
+              
+              <ImageGallery  items={imageURLs} />
+
+              
+            </div>
+          
+          :""):""}
+
+          </div>
+          
+        </div>
         
       </div>
-    
-    :""):""}
+      
+      
 
     </PageLayout>
     

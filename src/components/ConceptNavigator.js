@@ -9,7 +9,7 @@ const ConceptNavigator = ({selectedConcept}) => {
 
   return (
     <div>
-        <ul className='text-green-500 text-center'>
+        <ul className='text-green-500 text-center p-5'>
             {completeList.map((concept)=>{
                 //if selected, highlight it
                 if (concept.toLowerCase() === selectedConcept.toLowerCase()){
