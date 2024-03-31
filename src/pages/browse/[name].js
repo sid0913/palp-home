@@ -8,6 +8,10 @@ import PageLayout from '../../components/layouts/PageLayout';
 
 //function to capitalize the first letter of a string
 function capitalize(input){
+  if(!input){
+    return input
+  }
+
   if (input.length === 0){
     return input
   }
@@ -34,7 +38,7 @@ const Item = (props) => {
       return
     }
     //fetch the images
-    const response = await fetch(`http://p-lod.org/api/depicted_where/${itemName}`)
+    const response = await fetch(`https://api.p-lod.org/depicted-where/${itemName}`)
 
     if (!response.ok) {
       console.log("url not found- unable to fetch images")
@@ -51,7 +55,6 @@ const Item = (props) => {
     })
 
     setImageURLs(urls)
-    console.log(urls.length)
 
 
     }
@@ -71,7 +74,7 @@ const Item = (props) => {
       </div>
 
       
-      {imageURLs.length > 0?
+      {imageURLs?(imageURLs.length > 0?
       <div className='border-2 border-black overflow-hidden w-[50vw] lg:w-[25vw] h-auto mx-auto my-10 '>
 
         <ImageGallery  items={imageURLs} />
@@ -79,7 +82,7 @@ const Item = (props) => {
         
       </div>
     
-    :""}
+    :""):""}
 
     </PageLayout>
     

@@ -36,8 +36,8 @@ async function getGeoJSON(item){
 
   //fetch the api response
 
-      // const response = await fetch("http://palp.art/api/geojson/snake", { headers: {'Content-Type':'application/json','Access-Control-Request-Method':'GET', 'Access-Control-Request-Headers': 'Content-Type, Authorization'}});
-      const response = await fetch(`http://palp.art/api/geojson/${item}`);
+      // const response = await fetch("https://api.p-lod.org/geojson/snake", { headers: {'Content-Type':'application/json','Access-Control-Request-Method':'GET', 'Access-Control-Request-Headers': 'Content-Type, Authorization'}});
+      const response = await fetch(`https://api.p-lod.org/geojson/${item}`);
 
       console.log(response)
       if (!response.ok) {

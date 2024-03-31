@@ -12,13 +12,13 @@ const MenuButton = ({title, description, href}) => {
   return (
     <Link href={href}> 
         <div className="card border-2 border-[#843c0b] bg-[url('src/images/header.jpg')] hover:opacity-75 text-white bg-center h-[20vh] w-[50vw] mx-auto">
-          <h1 className="text-2xl font-bold">
+          <h1 className="text-2xl font-semibold">
             {title}
           </h1>
 
           <br/>
 
-          <p class="font-semibold">
+          <p>
             {description}
           </p>
         </div>
