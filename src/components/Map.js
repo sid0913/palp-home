@@ -18,7 +18,7 @@ import { MapContainer, TileLayer, Marker, Popup, GeoJSON } from 'react-leaflet'
 import { useState, useEffect } from 'react';
 import useSWR from 'swr';
 
-const DEFAULT_CENTER = [40.749908945558815,  14.50079038639771]
+const DEFAULT_CENTER = [40.75, 14.485]
 
 
 async function getGeoJSON(item){
@@ -142,7 +142,7 @@ const MapComponent = ({item, color, height, width, zoom}) => {
     <MapContainer style={{ height: height, width:width }} center={DEFAULT_CENTER} zoom={zoom} scrollWheelZoom={false}>
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        url="https://palp.art/xyz-tiles/{z}/{x}/{y}.png"
       />
       <Marker position={[51.505, -0.09]}>
         <Popup>
