@@ -90,9 +90,9 @@ const Item = (props) => {
           <div className='border-2 border-amber-700 w-full'>
 
             {imageURLs?(imageURLs.length > 0?
-            <div className='overflow-hidden p-5 w-[40vw] h-auto '>
-              
-              <ImageGallery  items={imageURLs} />
+            <div className='overflow-hidden p-5 w-[40vw] h-[40vh] '>
+              {/* https://github.com/xiaolin/react-image-gallery */}
+              <ImageGallery   items={imageURLs} />
 
               
             </div>
