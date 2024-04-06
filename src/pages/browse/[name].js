@@ -105,63 +105,50 @@ const Item = (props) => {
 
       </div>
 
+      <div className={`${entityTitle === ""?"invisible":""}`}>
+
       
-      <div className='text-left mt-10 text-6xl my-28 md:pl-28 lg:pl-64'>
-        {/* {capitalize(itemName)} */}
+        <div className={`text-left mt-10 text-6xl my-28 md:pl-28 lg:pl-64 `}>  
+          {entityTitle}
+          {entityType}
+        </div> 
 
+        <div className='flex flex-col'>
 
-        <span className={`${entityTitle !== ""?"hidden":""} inline`}>
-          <div class=" h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-e-transparent align-[-0.125em] text-surface motion-reduce:animate-[spin_1.5s_linear_infinite] dark:text-white" role="status">
-          
-          </div>
-
-          <h1 className='text-sm'>
-            Loading...
-          </h1>
-
-        </span>
-
-        
-        {entityTitle}
-        {entityType}
-      </div> 
-
-      <div className='flex flex-col'>
-
-        <div className='flex flex-row justify-evenly'>
-          <div className='border-2 border-amber-700 w-full flex justify-start'>
-            <SpaceNavigator selectedConcept={itemName}/>
-          </div>
-
-          <div  className='border-2 border-amber-700 w-full z-0'>
-            <MapComponent zoom={15} width="600px" height="300px" item={itemName} color={"#FF7259"}/>
-          </div>
-
-        </div>
-
-        <div className='flex flex-row justify-evenly mb-32'>
-          <div className='border-2 border-amber-700 w-full flex justify-start'>
-            <ConceptNavigator selectedConcept={itemName} selectedConceptLabel={entityTitle} entityType={"concept"}/>
-          </div>
-
-          <div className='border-2 border-amber-700 w-full'>
-
-            {imageURLs?(imageURLs.length > 0?
-            <div className='overflow-hidden p-5 w-[40vw] h-auto '>
-              {/* https://github.com/xiaolin/react-image-gallery */}
-              <ImageGallery   items={imageURLs} />
-
-              
+          <div className='flex flex-row justify-evenly'>
+            <div className='border-2 border-amber-700 w-full flex justify-start'>
+              <SpaceNavigator selectedConcept={itemName}/>
             </div>
-          
-          :""):""}
 
+            <div  className='border-2 border-amber-700 w-full z-0'>
+              <MapComponent zoom={15} width="600px" height="300px" item={itemName} color={"#FF7259"}/>
+            </div>
+
+          </div>
+
+          <div className='flex flex-row justify-evenly mb-32'>
+            <div className='border-2 border-amber-700 w-full flex justify-start'>
+              <ConceptNavigator selectedConcept={itemName} selectedConceptLabel={entityTitle} entityType={"concept"}/>
+            </div>
+
+            <div className='border-2 border-amber-700 w-full'>
+
+              {imageURLs?(imageURLs.length > 0?
+              <div className='overflow-hidden p-5 w-[40vw] h-auto z-0'>
+                {/* https://github.com/xiaolin/react-image-gallery */}
+                <ImageGallery   items={imageURLs} />
+
+                
+              </div>
+            
+            :""):""}
+
+            </div>
+            
           </div>
           
         </div>
-        
       </div>
-      
       
 
     </PageLayout>
