@@ -28,7 +28,28 @@ const Item = (props) => {
 
   const [imageURLs, setImageURLs] = useState([])
 
+  //the title with the entity name
+  const [entityTitle, setEntityTitle] = useState("")
 
+  //the type of the entity
+  const [entityType, setEntityType] = useState("")
+
+
+  async function getEntityDetails(itemName){
+    const response = await fetch(`https://api.p-lod.org/id/${itemName}`);
+
+    if (response.ok){
+      const responseIdList = await response.json()
+
+      console.log(responseIdList)
+      //get the label and type of the entity
+      setEntityTitle(responseIdList[0]["http://www.w3.org/2000/01/rdf-schema#label"])
+      setEntityType(responseIdList[0]["http://www.w3.org/1999/02/22-rdf-syntax-ns#type"])
+    }
+    else{
+
+    }
+  }
   
 
 
@@ -39,7 +60,7 @@ const Item = (props) => {
       return
     }
     //fetch the images
-    const response = await fetch(`https://api.p-lod.org/depicted-where/${itemName}`)
+    const response = await fetch(`https://api.p-lod.org/images/${itemName}`)
 
     if (!response.ok) {
       console.log("url not found- unable to fetch images")
@@ -48,6 +69,7 @@ const Item = (props) => {
     else{
     //get the image from the response
     const jsonBody = await response.json()
+    console.log("the json body for images:",jsonBody)
     const urls = jsonBody.filter((element)=>{
       return element["l_img_url"] !== "nan"
     }).map((element)=>{
@@ -55,18 +77,53 @@ const Item = (props) => {
       return {"original":element["l_img_url"], "thumbnail":element["l_img_url"]}
     })
 
+
     setImageURLs(urls)
 
 
     }
+
+    //get the entity details
+    (async ()=>getEntityDetails(itemName))()
 
 
   }, [])
 
   return (
     <PageLayout>
+      <div className={` ${entityTitle !== ""?"hidden":""} slate-300 w-screen h-screen z-50 flex flex-row justify-center`}>
+        <div className='flex flex-row justify-center my-auto space-x-5 '>
+          <div class=" h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-e-transparent align-[-0.125em] text-surface motion-reduce:animate-[spin_1.5s_linear_infinite] dark:text-white" role="status">
+          
+          </div>
+
+          <h1 className='text-lg my-auto'>
+            Loading...
+          </h1>
+        </div>
+          
+
+      </div>
+
+      
       <div className='text-left mt-10 text-6xl my-28 md:pl-28 lg:pl-64'>
-        {capitalize(itemName)}
+        {/* {capitalize(itemName)} */}
+
+
+        <span className={`${entityTitle !== ""?"hidden":""} inline`}>
+          <div class=" h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-e-transparent align-[-0.125em] text-surface motion-reduce:animate-[spin_1.5s_linear_infinite] dark:text-white" role="status">
+          
+          </div>
+
+          <h1 className='text-sm'>
+            Loading...
+          </h1>
+
+        </span>
+
+        
+        {entityTitle}
+        {entityType}
       </div> 
 
       <div className='flex flex-col'>
@@ -84,13 +141,13 @@ const Item = (props) => {
 
         <div className='flex flex-row justify-evenly mb-32'>
           <div className='border-2 border-amber-700 w-full flex justify-start'>
-            <ConceptNavigator selectedConcept={itemName}/>
+            <ConceptNavigator selectedConcept={itemName} selectedConceptLabel={entityTitle} entityType={"concept"}/>
           </div>
 
           <div className='border-2 border-amber-700 w-full'>
 
             {imageURLs?(imageURLs.length > 0?
-            <div className='overflow-hidden p-5 w-[40vw] h-[40vh] '>
+            <div className='overflow-hidden p-5 w-[40vw] h-auto '>
               {/* https://github.com/xiaolin/react-image-gallery */}
               <ImageGallery   items={imageURLs} />
 
