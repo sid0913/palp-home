@@ -13,7 +13,7 @@ const Explore = () => {
         {itemList.map((item)=>{
             return (
             <>
-                <button className='hover:bg-blue-500 bg-blue-800 text-white rounded-lg p-1 my-1' onClick={()=>{setCurrItem(item); console.log("index is", itemList.indexOf(currItem)); setCurrColor(colors[itemList.indexOf(currItem)]); setMapProps({item:item, color:colors[itemList.indexOf(item)]})}}>{item}</button> <br/>
+                <button className='hover:bg-blue-500 bg-blue-800 text-white rounded-lg p-1 my-1' onClick={()=>{setCurrItem(item); setCurrColor(colors[itemList.indexOf(currItem)]); setMapProps({item:item, color:colors[itemList.indexOf(item)]})}}>{item}</button> <br/>
             </> 
             )
         })}

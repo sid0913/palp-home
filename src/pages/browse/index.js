@@ -6,7 +6,7 @@ import ConceptNavigator from '../../components/ConceptNavigator';
 const Browse = (props) => {
   return (
     <div className='flex flex-row justify-evenly p-5'>
-        <ConceptNavigator selectedConcept={""}/>
+        <ConceptNavigator selectedConcept={""} entityType={"concept"}/>
         <MapComponent zoom={14} width="500px" item={""} color={"#FF7259"}/>
     </div>
     

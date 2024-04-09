@@ -8,7 +8,7 @@ const IndexPage = () => {
 
       {/* <MenuButton title={"Explore"} description={"Browse the map of Pompeii, discover artistic motifs, and peruse images of artworks"} href={"/explore"}/> */}
 
-      <MenuButton title={"Browse"} description={"Browse the map of Pompeii, discover artistic motifs, and peruse images of artworks"} href={"/browse"}/>
+      <MenuButton title={"Browse"} description={"Browse the map of Pompeii, discover artistic motifs, and peruse images of artworks"} href={"/browse/pompeii"}/>
 
     </div>
   )
