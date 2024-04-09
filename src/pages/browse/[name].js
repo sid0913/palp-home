@@ -6,6 +6,7 @@ import "react-image-gallery/styles/css/image-gallery.css";
 import ConceptNavigator from '../../components/ConceptNavigator';
 import SpaceNavigator from '../../components/SpaceNavigator';
 import PageLayout from '../../components/layouts/PageLayout';
+import SpatialNavigator from '../../components/SpatialNavigator';
 
 //function to capitalize the first letter of a string
 function capitalize(input){
@@ -45,13 +46,24 @@ const Item = (props) => {
       console.log(responseIdList)
       //get the label and type of the entity
       setEntityTitle(responseIdList[0]["http://www.w3.org/2000/01/rdf-schema#label"])
-      console.log("this is the type", responseIdList[1]["http://www.w3.org/1999/02/22-rdf-syntax-ns#type"].length)
 
-      if (responseIdList[1]["http://www.w3.org/1999/02/22-rdf-syntax-ns#type"].includes("concept")){
+      let entityTypeJSON;
+
+      if(responseIdList[1]["http://www.w3.org/1999/02/22-rdf-syntax-ns#type"]){
+        entityTypeJSON = responseIdList[1]["http://www.w3.org/1999/02/22-rdf-syntax-ns#type"]
+      }
+
+      else{
+        //happens with spaces
+        entityTypeJSON = responseIdList[0]["http://www.w3.org/1999/02/22-rdf-syntax-ns#type"]
+      }
+
+
+      if (entityTypeJSON.includes("concept")){
         setEntityType("concept")
       }
 
-      else if(responseIdList[1]["http://www.w3.org/1999/02/22-rdf-syntax-ns#type"].includes("city")){
+      else if(entityTypeJSON.includes("city")){
         setEntityType("city")
       }
 
@@ -142,8 +154,9 @@ const Item = (props) => {
         <div className='flex flex-col'>
 
           <div className='flex flex-row justify-evenly'>
-            <div className='border-2 border-amber-700 w-full flex justify-start'>
-              <SpaceNavigator selectedConcept={itemName}/>
+            <div className='border-2 border-amber-700 w-full flex justify-start overflow-y-auto max-h-[30vh] lg:max-h-[50vh]'>
+              {/* <SpaceNavigator selectedConcept={itemName}/> */}
+              {entityType !== "" ?<SpatialNavigator selectedConcept={itemName} selectedConceptLabel={entityTitle} entityType={entityType}/> :""}
             </div>
 
             <div  className='border-2 border-amber-700 w-full z-0'>

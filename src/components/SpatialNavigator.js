@@ -3,7 +3,7 @@ import { Link } from 'gatsby'
 import LoadingComponent from './LoadingComponent'
 
 
-const ConceptNavigator = ({selectedConcept, selectedConceptLabel, entityType}) => {
+const SpatialNavigator = ({selectedConcept, selectedConceptLabel, entityType}) => {
 
     
     selectedConcept = selectedConcept?selectedConcept:""
@@ -12,10 +12,16 @@ const ConceptNavigator = ({selectedConcept, selectedConceptLabel, entityType}) =
     const [ancestors, setAncestors] = useState([])
 
     //if the entity type is concept, this stores conceptual children of the concept as JSONs
-    const [conceptualChildren, setConceptualChildren] = useState([])
+    const [spatialChildren, setSpatialChildren] = useState([])
     
     //if the entity type is spatialEntity or city, this list stores the concepts depicted in the spatialEntity or city as JSONs
     const [listOfconceptsDepictedInSpatialEntity, setListOfconceptsDepictedInSpatialEntity] = useState([])
+
+    //checks the state of the fetches
+    const [fetchedAncestors, setFetchedAncestors] = useState(false)
+    const [fetchedChildren, setFetchedChildren] = useState(false)
+    const [fetchedConceptSpaces, setFetchedConceptSpaces] = useState(false)
+ 
 
     
     async function getAncestors(concept){
@@ -26,13 +32,14 @@ const ConceptNavigator = ({selectedConcept, selectedConceptLabel, entityType}) =
          */
         
         
-            const response = await fetch(`https://api.p-lod.org/conceptual-ancestors/${concept}`);
+            const response = await fetch(`https://api.p-lod.org/spatial-ancestors/${concept}`);
         
             if(response.ok){
                 const listOfAncestors = await response.json()
 
                 //set the state for ancestors
                 setAncestors(listOfAncestors.reverse().slice(0,-1))
+                setFetchedAncestors(true)
         
             }
             else{
@@ -48,7 +55,7 @@ const ConceptNavigator = ({selectedConcept, selectedConceptLabel, entityType}) =
          */
         
         
-            const response = await fetch(`https://api.p-lod.org/conceptual-children/${concept}`);
+            const response = await fetch(`https://api.p-lod.org/spatial-children/${concept}`);
         
             if(response.ok){
                 const listOfChildren = await response.json()
@@ -60,7 +67,8 @@ const ConceptNavigator = ({selectedConcept, selectedConceptLabel, entityType}) =
 
                 else{
                     //set the state for children
-                    setConceptualChildren(listOfChildren.reverse().slice(0,-1))
+                    setSpatialChildren(listOfChildren.reverse().slice(0,-1))
+                    setFetchedChildren(true)
                 }
 
                 
@@ -80,19 +88,20 @@ const ConceptNavigator = ({selectedConcept, selectedConceptLabel, entityType}) =
          */
         
         
-            const response = await fetch(`https://api.p-lod.org/depicts-concepts/${spatialEntity}`);
+            const response = await fetch(`https://api.p-lod.org/depicted-where/${spatialEntity}`);
         
             if(response.ok){
                 const listOfDepictedConcepts = await response.json()
 
-                console.log("depocted concepts:", listOfDepictedConcepts)
 
                 if(listOfDepictedConcepts.length === 0){
+                    setFetchedConceptSpaces(true)
                     return 
 
                 }
 
                 else{
+                    setFetchedConceptSpaces(true)
                     //set the state for children
                     setListOfconceptsDepictedInSpatialEntity(listOfDepictedConcepts)
                 }
@@ -113,19 +122,22 @@ const ConceptNavigator = ({selectedConcept, selectedConceptLabel, entityType}) =
             //for Pompeii
             case "city":
 
-                //get the concepts depicted in the city of Pompeii
-                (async()=>getDepictedConceptsInSpatialEntity(selectedConcept))()
+                //get the immediate children of the concept and all the ancestors
+                (async ()=>{getConceptualChildren(selectedConcept);getAncestors(selectedConcept)})()
+
+
                 return 
 
             //for spatialEntities
             case "spatial-entity":
-                (async()=>getDepictedConceptsInSpatialEntity(selectedConcept))()
+                //get the immediate children of the concept and all the ancestors
+                (async ()=>{getConceptualChildren(selectedConcept);getAncestors(selectedConcept)})()
                 return
 
             //for Pompeii
             case "concept":
-                //get the immediate children of the concept and all the ancestors
-                (async ()=>{getConceptualChildren(selectedConcept);getAncestors(selectedConcept)})()
+                
+                (async()=>getDepictedConceptsInSpatialEntity(selectedConcept))()
                 
 
                 return
@@ -141,7 +153,7 @@ const ConceptNavigator = ({selectedConcept, selectedConceptLabel, entityType}) =
   return (
     <div className='p-5 flex flex-col space-y-5'>
         <h1 className='font-semibold text-2xl'>
-            Artistic Concepts
+            Spaces
         </h1>
 
         <ul className='text-green-500 text-left ml-5 '>
@@ -155,10 +167,10 @@ const ConceptNavigator = ({selectedConcept, selectedConceptLabel, entityType}) =
 
                 :
                 
-                entityType !== "concept"? 
+                entityType === "concept"? 
                     function (){return (
                         <>
-                            <LoadingComponent hiddenWhen={listOfconceptsDepictedInSpatialEntity.length > 0 || entityType !== "city"}/>
+                            <LoadingComponent hiddenWhen={fetchedConceptSpaces}/>
                             {listOfconceptsDepictedInSpatialEntity.map((concept)=>{
                                 //if selected, highlight it
                                 
@@ -166,12 +178,14 @@ const ConceptNavigator = ({selectedConcept, selectedConceptLabel, entityType}) =
                                     return (
         
                                         <>
-        
+                                            
+
                                             
                                         
                                             <li className='text-cyan-800  decoration-cyan-800 hover:underline'>
-                                                <Link href={`/browse/${concept["urn"].replace("urn:p-lod:id:","")}`}>
-                                                    {concept["label"]}
+                                                <Link href={`/browse/${concept["within"].replace("urn:p-lod:id:","")}`}>
+                                                    {/* {concept["urn"].replace("urn:p-lod:id:","")} */}
+                                                    {concept["within"].replace("urn:p-lod:id:","")}
                                                 </Link>
                                             </li>
         
@@ -196,6 +210,7 @@ const ConceptNavigator = ({selectedConcept, selectedConceptLabel, entityType}) =
                     function ifEntityTypeIsConcept (){
                         return (
                             <>
+                                <LoadingComponent hiddenWhen={fetchedAncestors && fetchedChildren}/>
                                 
                                 {ancestors.map((ancestor)=>{
 
@@ -222,9 +237,9 @@ const ConceptNavigator = ({selectedConcept, selectedConceptLabel, entityType}) =
                                             
 
                                     {/* the conceptual children */}
-                                    {conceptualChildren.map((conceptualChild)=>{
+                                    {spatialChildren.map((conceptualChild)=>{
 
-                                    const label = conceptualChild['label']? conceptualChild['label'] : conceptualChild['urn'].replace("urn:p-lod:id:","")
+                                    const label = conceptualChild['urn'].replace("urn:p-lod:id:","")
                                     const lowerCaseName = conceptualChild['urn'].replace("urn:p-lod:id:","")
 
                                     return(
@@ -246,4 +261,4 @@ const ConceptNavigator = ({selectedConcept, selectedConceptLabel, entityType}) =
   )
 }
 
-export default ConceptNavigator
+export default SpatialNavigator

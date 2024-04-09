@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import { Link } from 'gatsby'
 import * as styles from '../styles/SpaceNavigation.module.css'
 
+
+//DEPRECATED: KEEPING AROUND TO EXTRACT THE REGION-INSULA-PROPERTY TAB SWITCHER- DELETE AFTER THIS
 const SpaceNavigator = ({selectedConcept}) => {
     //the options of space levels
     const levels = ["Region", "Insula","Property"] //, "Space"]
