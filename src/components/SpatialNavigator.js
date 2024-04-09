@@ -3,19 +3,19 @@ import { Link } from 'gatsby'
 import LoadingComponent from './LoadingComponent'
 
 
-const SpatialNavigator = ({selectedConcept, selectedConceptLabel, entityType}) => {
+const SpatialNavigator = ({selectedEntity, selectedEntityLabel, entityType}) => {
 
-    
-    selectedConcept = selectedConcept?selectedConcept:""
+    //give it a default empty string value
+    selectedEntity = selectedEntity?selectedEntity:""
 
-    //if the entity type is concept, this stores conceptual ancestors of the concept as JSONs
+    //if the entity type is spatial-entity, this stores spatial ancestors of the spatial-entity as JSONs
     const [ancestors, setAncestors] = useState([])
 
-    //if the entity type is concept, this stores conceptual children of the concept as JSONs
+    //if the entity type is spatial-entity, this stores spatial children of the spatial-entity as JSONs
     const [spatialChildren, setSpatialChildren] = useState([])
     
-    //if the entity type is spatialEntity or city, this list stores the concepts depicted in the spatialEntity or city as JSONs
-    const [listOfconceptsDepictedInSpatialEntity, setListOfconceptsDepictedInSpatialEntity] = useState([])
+    //if the entity type is concept, this list stores JSONs of the spatial entities where the concept is depicted
+    const [listOfSpacesDepictingTheConcept, setListOfSpacesDepictingTheConcept] = useState([])
 
     //checks the state of the fetches
     const [fetchedAncestors, setFetchedAncestors] = useState(false)
@@ -24,15 +24,15 @@ const SpatialNavigator = ({selectedConcept, selectedConceptLabel, entityType}) =
  
 
     
-    async function getAncestors(concept){
+    async function getAncestors(spatialEntity){
         /**
-         * given a concept like snake, it retrieves a list of JSONs of conceptual ancestors for the concept
-         * @param  {[string]} concept the concept we want the ancestors for
+         * given a spatialEntity like r1, it retrieves a list of JSONs of spatial ancestors for the selected spatial entity
+         * @param  {[string]} spatialEntity the spatial entity we want the ancestors for
          * @return {[JSON]}     a list of JSONs of the ancestors
          */
         
         
-            const response = await fetch(`https://api.p-lod.org/spatial-ancestors/${concept}`);
+            const response = await fetch(`https://api.p-lod.org/spatial-ancestors/${spatialEntity}`);
         
             if(response.ok){
                 const listOfAncestors = await response.json()
@@ -43,19 +43,19 @@ const SpatialNavigator = ({selectedConcept, selectedConceptLabel, entityType}) =
         
             }
             else{
-                console.log("Error retrieving ancestors for "+concept)
+                console.log("Error retrieving ancestors for "+spatialEntity)
             }
     }
 
-    async function getConceptualChildren(concept){
+    async function getConceptualChildren(spatialEntity){
         /**
-         * given a concept like snake, it retrieves a list of JSONs of conceptual children for the concept
-         * @param  {[string]} concept the concept we want the children for
+         * given a spatialEntity like r1, it retrieves a list of JSONs of spatial children for the selected spatial entity
+         * @param  {[string]} spatialEntity the spatialEntity we want the spatial children for
          * @return {[JSON]}     a list of JSONs of the children
          */
         
-        
-            const response = await fetch(`https://api.p-lod.org/spatial-children/${concept}`);
+            console.log(`https://api.p-lod.org/spatial-children/${spatialEntity}`)
+            const response = await fetch(`https://api.p-lod.org/spatial-children/${spatialEntity}`);
         
             if(response.ok){
                 const listOfChildren = await response.json()
@@ -75,20 +75,20 @@ const SpatialNavigator = ({selectedConcept, selectedConceptLabel, entityType}) =
         
             }
             else{
-                console.log("Error retrieving children for "+concept)
+                console.log("Error retrieving children for "+spatialEntity)
             }
     }
 
 
-    async function getDepictedConceptsInSpatialEntity(spatialEntity){
+    async function getSpatialEntitiesWhereTheConceptIsDepicted(concept){
         /**
-         * given a spatialEntity or city  like r1, it retrieves a list of JSONs of conceptual children for the concept
-         * @param  {[String]} spatialEntity the spatialEntity or city we want the depicted concepts for
-         * @return {[JSON]}     a list of JSONs of the depicted concepts
+         * retrieves a list of spatial entities where the selected concept is depicted
+         * @param  {[String]} concept the concept for which we are search spatialEntities
+         * @return {[JSON]}     a list of JSONs of the spatialEntities
          */
         
         
-            const response = await fetch(`https://api.p-lod.org/depicted-where/${spatialEntity}`);
+            const response = await fetch(`https://api.p-lod.org/depicted-where/${concept}`);
         
             if(response.ok){
                 const listOfDepictedConcepts = await response.json()
@@ -103,14 +103,14 @@ const SpatialNavigator = ({selectedConcept, selectedConceptLabel, entityType}) =
                 else{
                     setFetchedConceptSpaces(true)
                     //set the state for children
-                    setListOfconceptsDepictedInSpatialEntity(listOfDepictedConcepts)
+                    setListOfSpacesDepictingTheConcept(listOfDepictedConcepts)
                 }
 
                 
         
             }
             else{
-                console.log("Error retrieving the depicted concepts in spatialEntity: "+spatialEntity)
+                console.log("Error retrieving the spatial entities where the concept is depicted")
             }
     }
 
@@ -122,22 +122,22 @@ const SpatialNavigator = ({selectedConcept, selectedConceptLabel, entityType}) =
             //for Pompeii
             case "city":
 
-                //get the immediate children of the concept and all the ancestors
-                (async ()=>{getConceptualChildren(selectedConcept);getAncestors(selectedConcept)})()
+                //get the immediate children of the spatialEntity and all the ancestors
+                (async ()=>{getConceptualChildren(selectedEntity);getAncestors(selectedEntity)})()
 
 
                 return 
 
             //for spatialEntities
             case "spatial-entity":
-                //get the immediate children of the concept and all the ancestors
-                (async ()=>{getConceptualChildren(selectedConcept);getAncestors(selectedConcept)})()
+                //get the immediate children of the spatialEntity and all the ancestors
+                (async ()=>{getConceptualChildren(selectedEntity);getAncestors(selectedEntity)})()
                 return
 
-            //for Pompeii
+            //for concepts
             case "concept":
                 
-                (async()=>getDepictedConceptsInSpatialEntity(selectedConcept))()
+                (async()=>getSpatialEntitiesWhereTheConceptIsDepicted(selectedEntity))()
                 
 
                 return
@@ -157,7 +157,7 @@ const SpatialNavigator = ({selectedConcept, selectedConceptLabel, entityType}) =
         </h1>
 
         <ul className='text-green-500 text-left ml-5 '>
-            {/* if the entity type is spatialEntity or city, show a list of the concepts depicted in that spatialEntity or city */}
+            {/* if the entity type is spatialEntity or city, show a heirarchy of it, or if it is a concept, render a list of spatial entities where the concept is depicted */}
             { 
             
             // if the entity type has not been fetched yet, don't render anything
@@ -171,7 +171,7 @@ const SpatialNavigator = ({selectedConcept, selectedConceptLabel, entityType}) =
                     function (){return (
                         <>
                             <LoadingComponent hiddenWhen={fetchedConceptSpaces}/>
-                            {listOfconceptsDepictedInSpatialEntity.map((concept)=>{
+                            {listOfSpacesDepictingTheConcept.map((concept)=>{
                                 //if selected, highlight it
                                 
         
@@ -206,7 +206,7 @@ const SpatialNavigator = ({selectedConcept, selectedConceptLabel, entityType}) =
                     
                     
 
-                    //if the entity is a concept execute this
+                    //if the entity is not a concept execute this, show the hierarchy of the spatial entity
                     function ifEntityTypeIsConcept (){
                         return (
                             <>
@@ -231,12 +231,12 @@ const SpatialNavigator = ({selectedConcept, selectedConceptLabel, entityType}) =
                                     {/* Make the selected concept bold and display it */}
 
 
-                                    <li className='ml-3 text-black font-semibold'>{selectedConceptLabel}</li>
+                                    <li className='ml-3 text-black font-semibold'>{selectedEntityLabel}</li>
 
 
                                             
 
-                                    {/* the conceptual children */}
+                                    {/* the spatial children */}
                                     {spatialChildren.map((conceptualChild)=>{
 
                                     const label = conceptualChild['urn'].replace("urn:p-lod:id:","")

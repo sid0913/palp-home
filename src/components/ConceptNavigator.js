@@ -3,10 +3,10 @@ import { Link } from 'gatsby'
 import LoadingComponent from './LoadingComponent'
 
 
-const ConceptNavigator = ({selectedConcept, selectedConceptLabel, entityType}) => {
+const ConceptNavigator = ({selectedEntity, selectedEntityLabel, entityType}) => {
 
     
-    selectedConcept = selectedConcept?selectedConcept:""
+    selectedEntity = selectedEntity?selectedEntity:""
 
     //if the entity type is concept, this stores conceptual ancestors of the concept as JSONs
     const [ancestors, setAncestors] = useState([])
@@ -74,7 +74,7 @@ const ConceptNavigator = ({selectedConcept, selectedConceptLabel, entityType}) =
 
     async function getDepictedConceptsInSpatialEntity(spatialEntity){
         /**
-         * given a spatialEntity or city  like r1, it retrieves a list of JSONs of conceptual children for the concept
+         * gets the list of concepts depicted in the selected spatial entity or city
          * @param  {[String]} spatialEntity the spatialEntity or city we want the depicted concepts for
          * @return {[JSON]}     a list of JSONs of the depicted concepts
          */
@@ -114,18 +114,18 @@ const ConceptNavigator = ({selectedConcept, selectedConceptLabel, entityType}) =
             case "city":
 
                 //get the concepts depicted in the city of Pompeii
-                (async()=>getDepictedConceptsInSpatialEntity(selectedConcept))()
+                (async()=>getDepictedConceptsInSpatialEntity(selectedEntity))()
                 return 
 
             //for spatialEntities
             case "spatial-entity":
-                (async()=>getDepictedConceptsInSpatialEntity(selectedConcept))()
+                (async()=>getDepictedConceptsInSpatialEntity(selectedEntity))()
                 return
 
             //for Pompeii
             case "concept":
                 //get the immediate children of the concept and all the ancestors
-                (async ()=>{getConceptualChildren(selectedConcept);getAncestors(selectedConcept)})()
+                (async ()=>{getConceptualChildren(selectedEntity);getAncestors(selectedEntity)})()
                 
 
                 return
@@ -216,7 +216,7 @@ const ConceptNavigator = ({selectedConcept, selectedConceptLabel, entityType}) =
                                     {/* Make the selected concept bold and display it */}
 
 
-                                    <li className='ml-3 text-black font-semibold'>{selectedConceptLabel}</li>
+                                    <li className='ml-3 text-black font-semibold'>{selectedEntityLabel}</li>
 
 
                                             

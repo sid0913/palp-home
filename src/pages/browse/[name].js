@@ -156,7 +156,7 @@ const Item = (props) => {
           <div className='flex flex-row justify-evenly'>
             <div className='border-2 border-amber-700 w-full flex justify-start overflow-y-auto max-h-[30vh] lg:max-h-[50vh]'>
               {/* <SpaceNavigator selectedConcept={itemName}/> */}
-              {entityType !== "" ?<SpatialNavigator selectedConcept={itemName} selectedConceptLabel={entityTitle} entityType={entityType}/> :""}
+              {entityType !== "" ?<SpatialNavigator selectedEntity={itemName} selectedEntityLabel={entityTitle} entityType={entityType}/> :""}
             </div>
 
             <div  className='border-2 border-amber-700 w-full z-0'>
@@ -167,7 +167,7 @@ const Item = (props) => {
 
           <div className='flex flex-row justify-evenly mb-32'>
             <div className='border-2 border-amber-700 w-full flex justify-start overflow-y-auto max-h-[30vh] lg:max-h-[50vh]'>
-              {entityType !== "" ?<ConceptNavigator selectedConcept={itemName} selectedConceptLabel={entityTitle} entityType={entityType}/> :""}
+              {entityType !== "" ?<ConceptNavigator selectedEntity={itemName} selectedEntityLabel={entityTitle} entityType={entityType}/> :""}
             </div>
 
             <div className='border-2 border-amber-700 w-full'>
