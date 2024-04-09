@@ -1,35 +1,246 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'gatsby'
+import LoadingComponent from './LoadingComponent'
 
-const ConceptNavigator = ({selectedConcept}) => {
-    //the complete list of all the concepts
-    const completeList = ["Lion", "Snake", "Zeus", "Sphinx"]
 
+const ConceptNavigator = ({selectedConcept, selectedConceptLabel, entityType}) => {
+
+    
     selectedConcept = selectedConcept?selectedConcept:""
 
-  return (
-    <div>
-        <ul className='text-green-500 text-center p-5'>
-            {completeList.map((concept)=>{
-                //if selected, highlight it
-                if (concept.toLowerCase() === selectedConcept.toLowerCase()){
-                    return (
-                        <li className='text-black font-semibold'>
-                                {concept}
-                        </li>
-                    )
+    //if the entity type is concept, this stores conceptual ancestors of the concept as JSONs
+    const [ancestors, setAncestors] = useState([])
+
+    //if the entity type is concept, this stores conceptual children of the concept as JSONs
+    const [conceptualChildren, setConceptualChildren] = useState([])
+    
+    //if the entity type is spatialEntity or city, this list stores the concepts depicted in the spatialEntity or city as JSONs
+    const [listOfconceptsDepictedInSpatialEntity, setListOfconceptsDepictedInSpatialEntity] = useState([])
+
+    
+    async function getAncestors(concept){
+        /**
+         * given a concept like snake, it retrieves a list of JSONs of conceptual ancestors for the concept
+         * @param  {[string]} concept the concept we want the ancestors for
+         * @return {[JSON]}     a list of JSONs of the ancestors
+         */
+        
+        
+            const response = await fetch(`https://api.p-lod.org/conceptual-ancestors/${concept}`);
+        
+            if(response.ok){
+                const listOfAncestors = await response.json()
+
+                //set the state for ancestors
+                setAncestors(listOfAncestors.reverse().slice(0,-1))
+        
+            }
+            else{
+                console.log("Error retrieving ancestors for "+concept)
+            }
+    }
+
+    async function getConceptualChildren(concept){
+        /**
+         * given a concept like snake, it retrieves a list of JSONs of conceptual children for the concept
+         * @param  {[string]} concept the concept we want the children for
+         * @return {[JSON]}     a list of JSONs of the children
+         */
+        
+        
+            const response = await fetch(`https://api.p-lod.org/conceptual-children/${concept}`);
+        
+            if(response.ok){
+                const listOfChildren = await response.json()
+
+                if(listOfChildren.length === 0){
+                    return 
+
                 }
 
                 else{
-                    return (
-                        <li className='text-cyan-800  decoration-cyan-800 hover:underline'>
-                            <Link href={`/browse/${concept.toLowerCase()}`}>
-                                {concept}
-                            </Link>
-                        </li>
-                    )
+                    //set the state for children
+                    setConceptualChildren(listOfChildren.reverse().slice(0,-1))
                 }
-            })}
+
+                
+        
+            }
+            else{
+                console.log("Error retrieving children for "+concept)
+            }
+    }
+
+
+    async function getDepictedConceptsInSpatialEntity(spatialEntity){
+        /**
+         * given a spatialEntity or city  like r1, it retrieves a list of JSONs of conceptual children for the concept
+         * @param  {[String]} spatialEntity the spatialEntity or city we want the depicted concepts for
+         * @return {[JSON]}     a list of JSONs of the depicted concepts
+         */
+        
+        
+            const response = await fetch(`https://api.p-lod.org/depicts-concepts/${spatialEntity}`);
+        
+            if(response.ok){
+                const listOfDepictedConcepts = await response.json()
+
+                console.log("depocted concepts:", listOfDepictedConcepts)
+
+                if(listOfDepictedConcepts.length === 0){
+                    return 
+
+                }
+
+                else{
+                    //set the state for children
+                    setListOfconceptsDepictedInSpatialEntity(listOfDepictedConcepts.reverse().slice(0,-1))
+                }
+
+                
+        
+            }
+            else{
+                console.log("Error retrieving the depicted concepts in spatialEntity: "+spatialEntity)
+            }
+    }
+
+    useEffect(()=>{
+    
+
+        switch(entityType){
+    
+            //for Pompeii
+            case "city":
+
+                //get the concepts depicted in the city of Pompeii
+                (async()=>getDepictedConceptsInSpatialEntity(selectedConcept))()
+                return 
+
+            //for spatialEntities
+            case "spatial-entity":
+                (async()=>getDepictedConceptsInSpatialEntity(selectedConcept))()
+                return
+
+            //for Pompeii
+            case "concept":
+                //get the immediate children of the concept and all the ancestors
+                (async ()=>{getConceptualChildren(selectedConcept);getAncestors(selectedConcept)})()
+                
+
+                return
+
+        }
+
+    }, [])
+
+    
+
+    
+
+  return (
+    <div className='p-5 flex flex-col space-y-5'>
+        <h1 className='font-semibold text-2xl'>
+            Artistic Concepts
+        </h1>
+
+        <ul className='text-green-500 text-left ml-5 '>
+            {/* if the entity type is spatialEntity or city, show a list of the concepts depicted in that spatialEntity or city */}
+            { 
+            
+            // if the entity type has not been fetched yet, don't render anything
+            entityType === ""?
+
+                <></>
+
+                :
+                
+                entityType !== "concept"? 
+                    function (){return (
+                        <>
+                            <LoadingComponent expression={listOfconceptsDepictedInSpatialEntity.length > 0 || entityType !== "city"}/>
+                            {listOfconceptsDepictedInSpatialEntity.map((concept)=>{
+                                //if selected, highlight it
+                                
+        
+                                    return (
+        
+                                        <>
+        
+                                            
+                                        
+                                            <li className='text-cyan-800  decoration-cyan-800 hover:underline'>
+                                                <Link href={`/browse/${concept["urn"].replace("urn:p-lod:id:","")}`}>
+                                                    {concept["label"]}
+                                                </Link>
+                                            </li>
+        
+                                        </>
+                                    )
+        
+                            })}
+                        </>
+                        
+                    )
+                    
+                    } ()
+                    
+                    
+
+                    
+                    :
+                    
+                    
+
+                    //if the entity is a concept execute this
+                    function ifEntityTypeIsConcept (){
+                        return (
+                            <>
+                                
+                                {ancestors.map((ancestor)=>{
+
+                                    const label = ancestor['label']? ancestor['label'] : ancestor['urn'].replace("urn:p-lod:id:","")
+                                    const lowerCaseName = ancestor['urn'].replace("urn:p-lod:id:","")
+
+                                    return(
+                                        <li className='text-cyan-800  decoration-cyan-800 hover:underline'>
+                                                <Link href={`/browse/${lowerCaseName}`}>
+                                                    {label}
+                                                </Link>
+                                        </li>
+                                    );
+                                    })}
+
+
+
+                                    {/* Make the selected concept bold and display it */}
+
+
+                                    <li className='ml-3 text-black font-semibold'>{selectedConceptLabel}</li>
+
+
+                                            
+
+                                    {/* the conceptual children */}
+                                    {conceptualChildren.map((conceptualChild)=>{
+
+                                    const label = conceptualChild['label']? conceptualChild['label'] : conceptualChild['urn'].replace("urn:p-lod:id:","")
+                                    const lowerCaseName = conceptualChild['urn'].replace("urn:p-lod:id:","")
+
+                                    return(
+                                    <li className='ml-6 text-cyan-800  decoration-cyan-800 hover:underline'>
+                                            <Link href={`/browse/${lowerCaseName}`}>
+                                                {label}
+                                            </Link>
+                                    </li>
+                                    );
+                                    })}
+                            </>
+                        )
+                    }()
+
+                
+            }
         </ul>
     </div>
   )

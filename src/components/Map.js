@@ -39,10 +39,9 @@ async function getGeoJSON(item){
       // const response = await fetch("https://api.p-lod.org/geojson/snake", { headers: {'Content-Type':'application/json','Access-Control-Request-Method':'GET', 'Access-Control-Request-Headers': 'Content-Type, Authorization'}});
       const response = await fetch(`https://api.p-lod.org/geojson/${item}`);
 
-      console.log(response)
       if (!response.ok) {
         console.log("url not found")
-        throw new Error("Network response was not OK");
+        throw new Error("Network response was not OK. item:"+item);
       }
       else{
         
@@ -120,7 +119,6 @@ const MapComponent = ({item, color, height, width, zoom}) => {
       }
 
       const result = await getGeoJSON(item);
-      console.log("this is the result", result[0])
       const api_response = result[0];
       let list_of_geo_jsons;
       if(api_response.features){
@@ -132,7 +130,6 @@ const MapComponent = ({item, color, height, width, zoom}) => {
         list_of_geo_jsons = [api_response]
       }
   
-      console.log("this is the polygon assignment", list_of_geo_jsons)
   
       setPolygon(list_of_geo_jsons);
     })();
@@ -152,7 +149,6 @@ const MapComponent = ({item, color, height, width, zoom}) => {
 
       {
         PolygonDeets.map((element)=>{
-          // console.log(element)
           return (<GeoJSON pathOptions={geoJsonStyle} data={element} />);
         })
 
