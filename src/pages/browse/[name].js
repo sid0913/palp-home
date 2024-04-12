@@ -43,27 +43,51 @@ const Item = (props) => {
     if (response.ok){
       const responseIdList = await response.json()
 
+      let label = "";
+      let type = "";
+
+      responseIdList.forEach(element => {
+        
+        //get the label
+        if (element["http://www.w3.org/2000/01/rdf-schema#label"]){
+          label = element["http://www.w3.org/2000/01/rdf-schema#label"]
+        }
+
+        //get the type
+        if(element["http://www.w3.org/1999/02/22-rdf-syntax-ns#type"]){
+          type = element["http://www.w3.org/1999/02/22-rdf-syntax-ns#type"]
+        }
+
+      }); 
+
       console.log(responseIdList)
-      //get the label and type of the entity
-      setEntityTitle(responseIdList[0]["http://www.w3.org/2000/01/rdf-schema#label"])
 
-      let entityTypeJSON;
-
-      if(responseIdList[1]["http://www.w3.org/1999/02/22-rdf-syntax-ns#type"]){
-        entityTypeJSON = responseIdList[1]["http://www.w3.org/1999/02/22-rdf-syntax-ns#type"]
+      if (label === ""){
+        setEntityTitle(itemName)
       }
-
       else{
-        //happens with spaces
-        entityTypeJSON = responseIdList[0]["http://www.w3.org/1999/02/22-rdf-syntax-ns#type"]
+        //get the label and type of the entity
+        setEntityTitle(label)
       }
+      
+
+      // let entityTypeJSON;
+
+      // if(responseIdList[1]["http://www.w3.org/1999/02/22-rdf-syntax-ns#type"]){
+      //   entityTypeJSON = responseIdList[1]["http://www.w3.org/1999/02/22-rdf-syntax-ns#type"]
+      // }
+
+      // else{
+      //   //happens with spaces
+      //   entityTypeJSON = responseIdList[0]["http://www.w3.org/1999/02/22-rdf-syntax-ns#type"]
+      // }
 
 
-      if (entityTypeJSON.includes("concept")){
+      if (type.includes("concept")){
         setEntityType("concept")
       }
 
-      else if(entityTypeJSON.includes("city")){
+      else if(type.includes("city")){
         setEntityType("city")
       }
 
