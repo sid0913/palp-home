@@ -166,7 +166,7 @@ const SpatialNavigator = ({selectedEntity, selectedEntityLabel, entityType}) => 
                 <></>
 
                 :
-                
+                //if it is concept, show all the locations where the concept shows up
                 entityType === "concept"? 
                     function (){return (
                         <>
