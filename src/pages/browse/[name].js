@@ -7,9 +7,23 @@ import ConceptNavigator from '../../components/ConceptNavigator';
 import SpaceNavigator from '../../components/SpaceNavigator';
 import PageLayout from '../../components/layouts/PageLayout';
 import SpatialNavigator from '../../components/SpatialNavigator';
+import {SwiperSlide, Swiper } from 'swiper/react';
+import {Navigation, Thumbs, FreeMode } from 'swiper/modules';
 
+import 'swiper/css/thumbs';
+import 'swiper/css/navigation';
+import 'swiper/css/free-mode';
+import '../../styles/Carousel.module.css'
+
+// import Swiper styles
+import 'swiper/css';
+
+// import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
+// import { Carousel } from 'react-responsive-carousel';
 //function to capitalize the first letter of a string
 function capitalize(input){
+
+
   if(!input){
     return input
   }
@@ -25,6 +39,9 @@ function capitalize(input){
 }
 
 const Item = (props) => {
+
+  const [thumbsSwiper, setThumbsSwiper] = useState(null);
+
   const itemName = props.params.name;
 
   const [imageURLs, setImageURLs] = useState([])
@@ -137,7 +154,8 @@ const Item = (props) => {
       return element["l_img_url"] !== "nan"
     }).map((element)=>{
       
-      return {"original":element["l_img_url"], "thumbnail":element["l_img_url"]}
+      // return {"original":element["l_img_url"], "thumbnail":element["l_img_url"]}
+      return element["l_img_url"]
     })
 
 
@@ -190,16 +208,66 @@ const Item = (props) => {
           </div>
 
           <div className='flex flex-row justify-evenly mb-32'>
-            <div className='border-2 border-amber-700 w-full flex justify-start overflow-y-auto max-h-[30vh] lg:max-h-[50vh]'>
+            <div className='border-2 border-amber-700 w-full flex justify-start overflow-y-auto h-[100vh]'>
               {entityType !== "" ?<ConceptNavigator selectedEntity={itemName} selectedEntityLabel={entityTitle} entityType={entityType}/> :""}
             </div>
 
             <div className='border-2 border-amber-700 w-full'>
 
               {imageURLs?(imageURLs.length > 0?
-              <div className='overflow-hidden p-5 w-[40vw] h-auto z-0'>
+              <div className='overflow-hidden p-5 w-[40vw] z-0'>
                 {/* https://github.com/xiaolin/react-image-gallery */}
-                <ImageGallery   items={imageURLs} />
+                {/* <ImageGallery  items={imageURLs} /> */}
+                <Swiper navigation={true} modules={[Navigation, Thumbs, FreeMode]}
+                  thumbs={{ swiper: thumbsSwiper }}
+                  spaceBetween={50}
+                  slidesPerView={1}
+                  onSlideChange={() => console.log('slide change')}
+                  onSwiper={(swiper) => console.log(swiper)}
+                  className='mySwiper2'
+                  style={{
+                    '--swiper-navigation-color': '#000',
+                    '--swiper-pagination-color': '#000',
+                  }}
+                >
+
+
+                  {imageURLs.map(imgURL=>{
+                    return (<SwiperSlide>
+                      <img className='h-[50vh] mx-auto px-16' src={imgURL}/>
+                    </SwiperSlide>)
+                  })}
+                  {/* ... */}
+                </Swiper>
+
+                <Swiper
+                  onSwiper={setThumbsSwiper}
+                  spaceBetween={10}
+                  slidesPerView={4}
+                  freeMode={true}
+                  watchSlidesProgress={true}
+                  modules={[FreeMode, Navigation, Thumbs]}
+                  className="mySwiper"
+                >
+
+                  {imageURLs.map(imgURL=>{
+                    return (<SwiperSlide>
+                      {/* {({isActive})=>(<img className={`${isActive? "":"opacity-50"}`} src={imgURL}/>)} */}
+                      {<img src={imgURL}/>}
+                    </SwiperSlide>)
+                  })}
+
+                </Swiper>
+
+                {/* CITATION:https://github.com/leandrowd/react-responsive-carousel */}
+                {/* <Carousel clas showIndicators={false} dynamicHeight={false}>
+                  {imageURLs.map(imgURL=>{
+                    return (<div>
+                      <img src={imgURL}/>
+                      <p></p>
+                    </div>)
+                  })}
+                </Carousel> */}
 
                 
               </div>
