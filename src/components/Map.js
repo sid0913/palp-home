@@ -1,22 +1,8 @@
-// import React from 'react'
-// // import Map from '../components/map'
-// export const mapDemo = () => {
-//   return (
-//     <>
-//     <div>map</div>
-//     {/* <Map/> */}
-//     </>
-//   )
-// }
-
-// export default mapDemo
-// export const Head = () => <title>Demo of React Leaflet</title>
 
 
 import React from 'react'
 import { MapContainer, TileLayer, Marker, Popup, GeoJSON } from 'react-leaflet'
 import { useState, useEffect } from 'react';
-import useSWR from 'swr';
 
 const DEFAULT_CENTER = [40.75, 14.485]
 
@@ -77,25 +63,24 @@ async function getGeoJSON(item){
   return [geo_json, found];
 }
 
-const MapComponent = ({item, color, height, width, zoom}) => {
+const MapComponent = ({item, color, height, width, zoom, additionalItems}) => {
     /**
  * given an entity like snake or an address like r1-i1-p1, it returns a map component where that entity or address is plotted
- * @param  {[string]} item the entity or address we want plotted- must be lower case
- * @param  {[string]} color the color we want it plotted in
- * @param  {[string]} width width as a string in pixels, the default value is "1200px"
- * @param  {[string]} height height as a string in pixels like "200px"
- * @param  {[Integer]} zoom how far out the map should be zoomed like 15. The higher the value the more zoomed in
- * @return {[Component]}   the map component
+ * @param  {string} item the entity or address we want plotted- must be lower case
+ * @param  {string} color the color we want it plotted in
+ * @param  {string} width width as a string in pixels, the default value is "1200px"
+ * @param  {string} height height as a string in pixels like "200px"
+ * @param  {Integer} zoom how far out the map should be zoomed like 15. The higher the value the more zoomed in
+ * @param  {[JSON]} additionalItems array of jsons of the itemName and color
+ * @return {Component}   the map component
  */
-  if (!color){
-   color = "#b029d7"
-
-  }
 
   //assigning default values
   height = height? height: "200px" 
   width = width? width: "1200px"
   zoom = zoom? zoom: 15
+  additionalItems = additionalItems? additionalItems : []
+  color = color? color : "#b029d7"
 
   //the styling for the geojson plots on the map
   const [geoJsonStyle, setGeoJSONOptions ] = useState({
@@ -106,6 +91,9 @@ const MapComponent = ({item, color, height, width, zoom}) => {
 
   //state to hold the polygon locations for the map
   const [PolygonDeets, setPolygon]  = useState([]);
+
+  //hold the polygon details for additional items
+  const [additionalItemsPolygonDeets, setAdditionalItemsPolygonDeets]  = useState([]);
 
 
   useEffect(()=>{
@@ -133,7 +121,48 @@ const MapComponent = ({item, color, height, width, zoom}) => {
   
       setPolygon(list_of_geo_jsons);
     })();
-  }, [item])
+
+
+
+    (async ()=>{
+
+      if (additionalItems.length === 0){
+        return 
+      }
+
+      const additionalItemsGeoJSONs = []
+
+      additionalItems.forEach(async(item) => {
+        
+        
+
+
+        //if this is any empty item- do nothing, showing a plain map
+        if (item === ""){
+          return
+        }
+
+        const result = await getGeoJSON(item);
+        const api_response = result[0];
+        let list_of_geo_jsons;
+        if(api_response.features){
+          list_of_geo_jsons = api_response.features;
+      
+        }
+      
+        else{
+          list_of_geo_jsons = [api_response]
+        }
+        // console.log({geojson:list_of_geo_jsons, color:"#ff0000"})
+    
+        additionalItemsGeoJSONs.push({geojson:list_of_geo_jsons, color:"#ff0000"});
+
+      });
+
+      setAdditionalItemsPolygonDeets(additionalItemsGeoJSONs)
+
+    })();
+  }, [item, additionalItems])
 
   return (
     <MapContainer style={{ height: height, width:width }} center={DEFAULT_CENTER} zoom={zoom} scrollWheelZoom={false}>
@@ -152,6 +181,26 @@ const MapComponent = ({item, color, height, width, zoom}) => {
           return (<GeoJSON pathOptions={geoJsonStyle} data={element} />);
         })
 
+      }
+
+{
+        PolygonDeets.map((element)=>{
+          return (<GeoJSON pathOptions={{"color": "#00ff80",
+          "weight": 5,
+          "opacity": 0.50}} data={element} />);
+        })
+
+      }
+
+      {
+        additionalItemsPolygonDeets.map(additionalItem=>{
+          additionalItem["geojson"].map((element)=>{
+            console.log("here",additionalItem)
+            return (<GeoJSON pathOptions={{"color": "#00ff80",
+            "weight": 5,
+            "opacity": 0.90}} data={element} />);
+          })
+        })
       }
     </MapContainer>
   )
