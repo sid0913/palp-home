@@ -48,6 +48,7 @@ const Item = (props) => {
 
   //the title with the entity name
   const [entityTitle, setEntityTitle] = useState("")
+  const [secondaryEntity, setSecondaryEntity] = useState("")
 
   //the type of the entity
   const [entityType, setEntityType] = useState("")
@@ -202,20 +203,20 @@ const Item = (props) => {
             </div>
 
             <div  className='border-2 border-amber-700 w-full z-0'>
-              <MapComponent zoom={15} width="600px" height="300px" item={itemName} color={"#FF7259"} additionalItems={["snake"]}/>
+              <MapComponent zoom={15} width="600px" height="300px" item={itemName} color={"#FF7259"} additionalItems={[secondaryEntity]}/>
             </div>
 
           </div>
 
           <div className='flex flex-row justify-evenly mb-32'>
             <div className='border-2 border-amber-700 w-full flex justify-start overflow-y-auto h-[100vh]'>
-              {entityType !== "" ?<ConceptNavigator selectedEntity={itemName} selectedEntityLabel={entityTitle} entityType={entityType}/> :""}
+              {entityType !== "" ?<ConceptNavigator selectedEntity={itemName} selectedEntityLabel={entityTitle} entityType={entityType} setSecondaryEntity={setSecondaryEntity}/> :""}
             </div>
 
-            <div className='border-2 border-amber-700 w-full'>
+            <div className='border-2 border-amber-700 w-full bg-slate-950'>
 
               {imageURLs?(imageURLs.length > 0?
-              <div className='overflow-hidden p-5 w-[40vw] z-0'>
+              <div className='overflow-hidden p-5 w-[40vw] z-0 space-y-5'>
                 {/* https://github.com/xiaolin/react-image-gallery */}
                 {/* <ImageGallery  items={imageURLs} /> */}
                 <Swiper navigation={true} modules={[Navigation, Thumbs, FreeMode]}
@@ -226,7 +227,7 @@ const Item = (props) => {
                   onSwiper={(swiper) => console.log(swiper)}
                   className='mySwiper2'
                   style={{
-                    '--swiper-navigation-color': '#000',
+                    '--swiper-navigation-color': 'white',
                     '--swiper-pagination-color': '#000',
                   }}
                 >
@@ -239,6 +240,8 @@ const Item = (props) => {
                   })}
                   {/* ... */}
                 </Swiper>
+
+
 
                 <Swiper
                   onSwiper={setThumbsSwiper}

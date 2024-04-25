@@ -86,7 +86,7 @@ const MapComponent = ({item, color, height, width, zoom, additionalItems}) => {
   const [geoJsonStyle, setGeoJSONOptions ] = useState({
     "color": color,
     "weight": 5,
-    "opacity": 0.85
+    "opacity": 0.25
 });
 
   //state to hold the polygon locations for the map
@@ -129,42 +129,64 @@ const MapComponent = ({item, color, height, width, zoom, additionalItems}) => {
       if (additionalItems.length === 0){
         return 
       }
+      console.log("additional items list not empty")
 
-      const additionalItemsGeoJSONs = []
-
-      additionalItems.forEach(async(item) => {
-        
-        
-
-
-        //if this is any empty item- do nothing, showing a plain map
-        if (item === ""){
-          return
-        }
-
-        const result = await getGeoJSON(item);
-        const api_response = result[0];
-        let list_of_geo_jsons;
-        if(api_response.features){
-          list_of_geo_jsons = api_response.features;
       
-        }
+
+      async function fillGeoJSONArray(){
+        const additionalItemsGeoJSONs = []
+
+        // additionalItems.forEach(async(item) => {
+
+        for (let indexElement = 0; indexElement < additionalItems.length; indexElement++){
+          
+          const item = additionalItems[indexElement]
+        
+
+
+          //if this is any empty item- do nothing, showing a plain map
+          if (item === ""){
+            return
+          }
+  
+          const result = await getGeoJSON(item);
+          const api_response = result[0];
+          let list_of_geo_jsons;
+          if(api_response.features){
+            list_of_geo_jsons = api_response.features;
+        
+          }
+        
+          else{
+            list_of_geo_jsons = [api_response]
+          }
+          // console.log({geojson:list_of_geo_jsons, color:"#ff0000"})
       
-        else{
-          list_of_geo_jsons = [api_response]
+          additionalItemsGeoJSONs.push({geojson:list_of_geo_jsons, color:"#ff0000"});
+          if(indexElement === additionalItems.length-1){
+
+            setAdditionalItemsPolygonDeets(additionalItemsGeoJSONs)
+
+          }
+          
         }
-        // console.log({geojson:list_of_geo_jsons, color:"#ff0000"})
-    
-        additionalItemsGeoJSONs.push({geojson:list_of_geo_jsons, color:"#ff0000"});
+        
+        // return additionalItemsGeoJSONs;
+      }
 
-      });
 
-      setAdditionalItemsPolygonDeets(additionalItemsGeoJSONs)
+      await fillGeoJSONArray()
+
+      
+
+      // setAdditionalItemsPolygonDeets(FinalAdditionalItemsGeoJSONs)
 
     })();
   }, [item, additionalItems])
 
   return (
+
+    <>
     <MapContainer style={{ height: height, width:width }} center={DEFAULT_CENTER} zoom={zoom} scrollWheelZoom={false}>
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -176,33 +198,84 @@ const MapComponent = ({item, color, height, width, zoom, additionalItems}) => {
         </Popup>
       </Marker>
 
-      {
+      {/* <Marker position={[52.505, -0.09]}>
+        <Popup>
+          A pretty CSS3 popup. <br /> Easily customizable.
+        </Popup>
+      </Marker> */}
+
+      {/* {
         PolygonDeets.map((element)=>{
+          // console.log(element, "polygon og element")
           return (<GeoJSON pathOptions={geoJsonStyle} data={element} />);
         })
 
-      }
+      } */}
 
 {
         PolygonDeets.map((element)=>{
           return (<GeoJSON pathOptions={{"color": "#00ff80",
           "weight": 5,
-          "opacity": 0.50}} data={element} />);
+          "opacity": 0.90}} data={element} />);
         })
 
       }
 
-      {
-        additionalItemsPolygonDeets.map(additionalItem=>{
-          additionalItem["geojson"].map((element)=>{
+      {/* {
+        additionalItemsPolygonDeets.reduce((accumulator, additionalItem)=>{
+            return accumulator.concat(additionalItem["geojson"].map((element)=>{
             console.log("here",additionalItem)
             return (<GeoJSON pathOptions={{"color": "#00ff80",
             "weight": 5,
             "opacity": 0.90}} data={element} />);
-          })
+          }))
+
+          
+        }, [])
+      } */}
+
+{
+        additionalItemsPolygonDeets.map((additionalItem)=>{
+          console.log("this is the additional item", additionalItem)
+          console.log("This is the addn deets", additionalItemsPolygonDeets)
+            return (<>
+
+
+              {
+                additionalItem["geojson"].map((element)=>{
+                  console.log(element, "printed")
+                  return (<GeoJSON pathOptions={geoJsonStyle} data={element} />);
+                })
+              }
+            
+              {/* this is supposed to be right beside the other popup but it doesnt show up either- hardcoding before the map makes it show up though so multiple popups are allowed */}
+              <Marker position={[52.505, -0.09]}>
+                <Popup>
+                  A pretty CSS3 popup. <br /> Easily customizable.
+                </Popup>
+              </Marker>
+            
+            </>)
+
+          
         })
       }
+
+
+
+      {/* {
+        additionalItemsPolygonDeets?additionalItemsPolygonDeets.length>0?additionalItemsPolygonDeets[0]["geojson"].map((element)=>{
+          console.log("here",additionalItemsPolygonDeets[0])
+          return (<GeoJSON pathOptions={{"color": "#00ff80",
+          "weight": 5,
+          "opacity": 0.90}} data={element} />);
+        }) :"":""
+      } */}
+
+
     </MapContainer>
+      {additionalItemsPolygonDeets.length === 0? <span>This is not empty </span>:""}
+  </>
   )
 }
 

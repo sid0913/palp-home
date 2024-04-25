@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'gatsby'
 import LoadingComponent from './LoadingComponent'
+import { FaPlay } from "react-icons/fa";
 
 
-const ConceptNavigator = ({selectedEntity, selectedEntityLabel, entityType}) => {
+const ConceptNavigator = ({selectedEntity, selectedEntityLabel, entityType, setSecondaryEntity}) => {
 
     
     selectedEntity = selectedEntity?selectedEntity:""
@@ -203,10 +204,16 @@ const ConceptNavigator = ({selectedEntity, selectedEntityLabel, entityType}) => 
                                     const lowerCaseName = ancestor['urn'].replace("urn:p-lod:id:","")
 
                                     return(
-                                        <li className='text-cyan-800  decoration-cyan-800 hover:underline'>
-                                                <Link href={`/browse/${lowerCaseName}`}>
+                                        <li className='text-cyan-800   space-x-2'>
+                                                <Link className='decoration-cyan-800 hover:underline' href={`/browse/${lowerCaseName}`}>
                                                     {label}
                                                 </Link>
+
+                                            <button className='text-black text-sm hover:opacity-50' onClick={()=>{
+                                                setSecondaryEntity(lowerCaseName)
+                                            }}>
+                                                <FaPlay/>
+                                            </button>
                                         </li>
                                     );
                                     })}
@@ -228,10 +235,15 @@ const ConceptNavigator = ({selectedEntity, selectedEntityLabel, entityType}) => 
                                     const lowerCaseName = conceptualChild['urn'].replace("urn:p-lod:id:","")
 
                                     return(
-                                    <li className='ml-6 text-cyan-800  decoration-cyan-800 hover:underline'>
-                                            <Link href={`/browse/${lowerCaseName}`}>
+                                    <li className='ml-6 text-cyan-800   space-x-2'>
+                                            <Link className='decoration-cyan-800 hover:underline' href={`/browse/${lowerCaseName}`}>
                                                 {label}
                                             </Link>
+                                            <button className='text-black text-sm hover:opacity-50' onClick={()=>{
+                                                setSecondaryEntity(lowerCaseName)
+                                            }}>
+                                                <FaPlay/>
+                                            </button>
                                     </li>
                                     );
                                     })}
