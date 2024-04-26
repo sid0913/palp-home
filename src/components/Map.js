@@ -84,18 +84,26 @@ const MapComponent = ({item, color, height, width, zoom, additionalItems, imageA
   color = color? color : "#b029d7"
   imageARC = imageARC? imageARC : ""
 
-  //the styling for the geojson plots on the map
-  const [geoJsonStyle, setGeoJSONOptions ] = useState({
-    "color": color,
-    "weight": 5,
-    "opacity": 0.25
-});
+  
 
+  //the geojson style of the currently selected image
   const currImageGeoJSONStyle = {
     "color": "#000000",
     "weight": 9,
     "opacity": 0.9
-}
+  } 
+
+  //style of the geojsons to be plotted for all the occurences of the current item on the map
+  const currentItemGeoJSONStyle={"color": "#00ff80",
+    "weight": 5,
+    "opacity": 0.50}
+
+  //the styling for the geojson plots on the map
+  const additionalGeoJSONStyle = {
+    "color": "#FF7259",
+    "weight": 6,
+    "opacity": 0.25
+  };
 
   //state to hold the polygon locations for the map
   const [PolygonDeets, setPolygon]  = useState([]);
@@ -245,80 +253,38 @@ const MapComponent = ({item, color, height, width, zoom, additionalItems, imageA
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://palp.art/xyz-tiles/{z}/{x}/{y}.png"
       />
-      <Marker position={[51.505, -0.09]}>
-        <Popup>
-          A pretty CSS3 popup. <br /> Easily customizable.
-        </Popup>
-      </Marker>
-
-      {/* <Marker position={[52.505, -0.09]}>
+      {/* <Marker position={[51.505, -0.09]}>
         <Popup>
           A pretty CSS3 popup. <br /> Easily customizable.
         </Popup>
       </Marker> */}
 
-      {/* {
-        PolygonDeets.map((element)=>{
-          // console.log(element, "polygon og element")
-          return (<GeoJSON pathOptions={geoJsonStyle} data={element} />);
-        })
-
-      } */}
-
-{
+      {/* the polygons of the current item */}
+      {
         PolygonDeets.map((element)=>{
           // console.log("element", element)
-          return (<GeoJSON pathOptions={{"color": "#00ff80",
-          "weight": 5,
-          "opacity": 0.90}} data={element} />);
+          return (<GeoJSON key={element["id"]} pathOptions={currentItemGeoJSONStyle} data={element} />);
         })
 
       }
 
-      {/* {
-        imagePolygon.map((element)=>{
-          return (<GeoJSON pathOptions={{"color": "#00ff80",
-          "weight": 7,
-          "opacity": 0.90}} data={element} />);
+      {/* shows the location of the currently presenting image on the gallery */}
+      {
+
+        currImagePolygonDeets.map((currentImagePolygon)=>{
+          console.log("element", currentImagePolygon['id'])
+          return (
+            // IMP:the key enables the geojson to change when the data prop is changed
+          <GeoJSON key={currentImagePolygon['id']} pathOptions={currImageGeoJSONStyle} data={currentImagePolygon}>
+            <Popup>
+              The selected image is in {`${currentImagePolygon['id'].replace("urn:p-lod:id:","")}`}
+            </Popup>
+          </GeoJSON>);
         })
-      } */}
-
-      {/* {
-        additionalItemsPolygonDeets.reduce((accumulator, additionalItem)=>{
-            return accumulator.concat(additionalItem["geojson"].map((element)=>{
-            console.log("here",additionalItem)
-            return (<GeoJSON pathOptions={{"color": "#00ff80",
-            "weight": 5,
-            "opacity": 0.90}} data={element} />);
-          }))
-
-          
-        }, [])
-      } */}
-
+      }
       
-        {/* {imagePolygonState? <GeoJSON pathOptions={{
-            "color": "#ff0000",
-            "weight": 9,
-            "opacity": 0.9
-        }} data={imagePolygonState} />:""} */}
-
-        {
-
-          currImagePolygonDeets.map((currentImagePolygon)=>{
-            console.log("element", currentImagePolygon['id'])
-            return (
-              // IMP:the key enables the geojson to change when the data prop is changed
-            <GeoJSON key={currentImagePolygon['id']} pathOptions={currImageGeoJSONStyle} data={currentImagePolygon}>
-              <Popup>
-                The selected image is in {`${currentImagePolygon['id'].replace("urn:p-lod:id:","")}`}
-              </Popup>
-            </GeoJSON>);
-          })
-        }
-      
-
-{
+      {/* shows the additional items on the map */}
+      {
         additionalItemsPolygonDeets.map((additionalItem)=>{
 
             return (<>
@@ -326,7 +292,7 @@ const MapComponent = ({item, color, height, width, zoom, additionalItems, imageA
 
               {
                 additionalItem["geojson"].map((element)=>{
-                  return (<GeoJSON pathOptions={geoJsonStyle} data={element} />);
+                  return (<GeoJSON key={element["id"]} pathOptions={additionalGeoJSONStyle} data={element} />);
                 })
               }
             
