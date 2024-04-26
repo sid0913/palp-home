@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'gatsby'
 import LoadingComponent from './LoadingComponent'
+// import MenuItem from './NavigatorComponents/MenuItem'
+import EntityMenuItem from './NavigatorComponents/EntityMenuItem';
 import { FaPlay } from "react-icons/fa";
-
+import { MdOpenInNew } from "react-icons/md";
 
 const ConceptNavigator = ({selectedEntity, selectedEntityLabel, entityType, setSecondaryEntity}) => {
 
@@ -160,22 +162,16 @@ const ConceptNavigator = ({selectedEntity, selectedEntityLabel, entityType, setS
                     function (){return (
                         <>
                             <LoadingComponent hiddenWhen={listOfconceptsDepictedInSpatialEntity.length > 0 || entityType !== "city"}/>
-                            {listOfconceptsDepictedInSpatialEntity.map((concept)=>{
+                            {/* filter to get rid of border_frame type elements from the response */}
+                            {listOfconceptsDepictedInSpatialEntity.filter((element)=> element["label"] !== null ).map((concept)=>{
+                                console.log("this is an element0", concept)
                                 //if selected, highlight it
                                 
         
                                     return (
         
                                         <>
-        
-                                            
-                                        
-                                            <li className='text-cyan-800  decoration-cyan-800 hover:underline'>
-                                                <Link href={`/browse/${concept["urn"].replace("urn:p-lod:id:","")}`}>
-                                                    {concept["label"]}
-                                                </Link>
-                                            </li>
-        
+                                            <EntityMenuItem label={concept["label"]} lowerCaseName={concept["urn"].replace("urn:p-lod:id:","")} setSecondaryEntity={setSecondaryEntity}/>
                                         </>
                                     )
         
@@ -203,18 +199,10 @@ const ConceptNavigator = ({selectedEntity, selectedEntityLabel, entityType, setS
                                     const label = ancestor['label']? ancestor['label'] : ancestor['urn'].replace("urn:p-lod:id:","")
                                     const lowerCaseName = ancestor['urn'].replace("urn:p-lod:id:","")
 
-                                    return(
-                                        <li className='text-cyan-800   space-x-2'>
-                                                <Link className='decoration-cyan-800 hover:underline' href={`/browse/${lowerCaseName}`}>
-                                                    {label}
-                                                </Link>
+                                    return(    
 
-                                            <button className='text-black text-sm hover:opacity-50' onClick={()=>{
-                                                setSecondaryEntity(lowerCaseName)
-                                            }}>
-                                                <FaPlay/>
-                                            </button>
-                                        </li>
+                                        <EntityMenuItem lowerCaseName={lowerCaseName} label={label} setSecondaryEntity={setSecondaryEntity} />
+                                
                                     );
                                     })}
 
@@ -235,16 +223,9 @@ const ConceptNavigator = ({selectedEntity, selectedEntityLabel, entityType, setS
                                     const lowerCaseName = conceptualChild['urn'].replace("urn:p-lod:id:","")
 
                                     return(
-                                    <li className='ml-6 text-cyan-800   space-x-2'>
-                                            <Link className='decoration-cyan-800 hover:underline' href={`/browse/${lowerCaseName}`}>
-                                                {label}
-                                            </Link>
-                                            <button className='text-black text-sm hover:opacity-50' onClick={()=>{
-                                                setSecondaryEntity(lowerCaseName)
-                                            }}>
-                                                <FaPlay/>
-                                            </button>
-                                    </li>
+                                        
+                                        <EntityMenuItem lowerCaseName={lowerCaseName} label={label} setSecondaryEntity={setSecondaryEntity} href={`/browse/${lowerCaseName}`}/>
+
                                     );
                                     })}
                             </>

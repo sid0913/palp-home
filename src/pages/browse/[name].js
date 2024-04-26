@@ -229,7 +229,7 @@ const Item = (props) => {
           <div className='flex flex-row justify-evenly'>
             <div className='border-2 border-amber-700 w-full flex justify-start overflow-y-auto max-h-[30vh] lg:max-h-[50vh]'>
               {/* <SpaceNavigator selectedConcept={itemName}/> */}
-              {entityType !== "" ?<SpatialNavigator selectedEntity={itemName} selectedEntityLabel={entityTitle} entityType={entityType}/> :""}
+              {entityType !== "" ?<SpatialNavigator selectedEntity={itemName} selectedEntityLabel={entityTitle} entityType={entityType} setSecondaryEntity={setSecondaryEntity}/> :""}
             </div>
 
             <div  className='border-2 border-amber-700 w-full z-0'>
@@ -256,7 +256,7 @@ const Item = (props) => {
                   onSlideChange={(swiper) => {
                     console.log("the active index is", swiper.activeIndex, imageURLs[Number(swiper.activeIndex)])
                     // setCurrImageIndex(swiper.activeIndex)
-                    
+
                     setImageLocation(imageURLs[Number(swiper.activeIndex)]["arc"])
 
                     //show change on the map
