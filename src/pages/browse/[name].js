@@ -4,7 +4,6 @@ import { useState } from 'react';
 import ImageGallery from "react-image-gallery";
 import "react-image-gallery/styles/css/image-gallery.css";
 import ConceptNavigator from '../../components/ConceptNavigator';
-import SpaceNavigator from '../../components/SpaceNavigator';
 import PageLayout from '../../components/layouts/PageLayout';
 import SpatialNavigator from '../../components/SpatialNavigator';
 import {SwiperSlide, Swiper } from 'swiper/react';
@@ -155,7 +154,7 @@ const Item = (props) => {
       }).map((element)=>{
         
 
-        return {"url":element["l_img_url"], "geojson": element["geojson"], "arc":element["feature"].replace("urn:p-lod:id:","")}
+        return {"url":element["l_img_url"], "arc":element["feature"].replace("urn:p-lod:id:","")}
       })
 
 
@@ -247,18 +246,19 @@ const Item = (props) => {
                 >
 
 
-                  {imageURLs.map(imgURL=>{
-                    return (<SwiperSlide>
-                      
+                  {imageURLs.map(imgURL=>
+                  {
+                    return (
+                    <SwiperSlide>
                       <img className='h-[50vh] mx-auto px-16' src={imgURL["url"]}/>
                     </SwiperSlide>)
                   })}
                   {/* ... */}
                 </Swiper>
 
-
-
-                <Swiper
+                
+                {/* thumbnail swiper */}
+                {/* <Swiper
                   onSwiper={setThumbsSwiper}
                   spaceBetween={10}
                   slidesPerView={4}
@@ -270,12 +270,11 @@ const Item = (props) => {
 
                   {imageURLs.map((imgURL, index)=>{
                     return (<SwiperSlide>
-                      {/* {({isActive})=>(<img className={`${isActive? "":"opacity-50"}`} src={imgURL}/>)} */}
                       {<img id={index} src={imgURL["url"]}/>}
                     </SwiperSlide>)
                   })}
 
-                </Swiper>
+                </Swiper> */}
 
                 {/* CITATION:https://github.com/leandrowd/react-responsive-carousel */}
                 {/* <Carousel clas showIndicators={false} dynamicHeight={false}>
