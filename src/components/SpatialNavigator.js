@@ -102,6 +102,7 @@ const SpatialNavigator = ({selectedEntity, selectedEntityLabel, entityType}) => 
 
                 else{
                     setFetchedConceptSpaces(true)
+                    console.log(listOfDepictedConcepts.length, "is the num of images")
                     //set the state for children
                     setListOfSpacesDepictingTheConcept(listOfDepictedConcepts)
                 }

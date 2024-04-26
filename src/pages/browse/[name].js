@@ -44,7 +44,15 @@ const Item = (props) => {
 
   const itemName = props.params.name;
 
+  //the image urls
   const [imageURLs, setImageURLs] = useState([])
+
+  //the location string of the currently viewed image
+  const [imageLocation, setImageLocation] = useState("")
+
+
+  //the index number of the currently showing image in the gallery
+  const [currImageIndex, setCurrImageIndex] = useState(0)
 
   //the title with the entity name
   const [entityTitle, setEntityTitle] = useState("")
@@ -52,6 +60,8 @@ const Item = (props) => {
 
   //the type of the entity
   const [entityType, setEntityType] = useState("")
+  const [imagePolygon, setImagePolygon] = useState([])
+  
 
 
 
@@ -135,10 +145,12 @@ const Item = (props) => {
 
     if (itemName === "pompeii"){
       imageURLsFetchURL = `https://api.p-lod.org/images/r2`
+      // imageURLsFetchURL = `https://api.p-lod.org/depicted-where/r2`
     }
 
     else{
       imageURLsFetchURL = `https://api.p-lod.org/images/${itemName}`
+      // imageURLsFetchURL = `https://api.p-lod.org/depicted-where/${itemName}`
     }
 
     //fetch the images
@@ -148,19 +160,37 @@ const Item = (props) => {
       console.log("url not found- unable to fetch images")
       throw new Error("Network response was not OK");
     }
+    
     else{
-    //get the image from the response
-    const jsonBody = await response.json()
-    const urls = jsonBody.filter((element)=>{
-      return element["l_img_url"] !== "nan"
-    }).map((element)=>{
+      //get the image from the response
+      const jsonBody = await response.json()
+      const urls = jsonBody.filter((element)=>{
+        return element["l_img_url"] !== "nan"
+      }).map((element)=>{
+        
+        // return {"original":element["l_img_url"], "thumbnail":element["l_img_url"]}
+        // console.log("parsed", JSON.parse(element["geojson"]))
+        // return {"url":element["l_img_url"], "geojson": JSON.parse(element["geojson"]), "arc":element["feature"].replace("urn:p-lod:id:","")}
+        return {"url":element["l_img_url"], "geojson": element["geojson"], "arc":element["feature"].replace("urn:p-lod:id:","")}
+      })
+
+
+      setImageURLs(urls)
+
+      if(urls.length > 0 && imageLocation.length === 0){
+        setImageLocation(urls[0]["arc"]);
+      }
+        
       
-      // return {"original":element["l_img_url"], "thumbnail":element["l_img_url"]}
-      return element["l_img_url"]
-    })
-
-
-    setImageURLs(urls)
+      
+      //set the image polygon to mark the selected image's geojson on the map
+      if(urls.length > 0 && imagePolygon.length === 0){
+        if (urls[0].length > 0){
+          console.log("this is the value", urls[0])
+          setImagePolygon(urls[0]["geojson"]);
+        }
+        
+      }
 
 
     }
@@ -203,7 +233,7 @@ const Item = (props) => {
             </div>
 
             <div  className='border-2 border-amber-700 w-full z-0'>
-              <MapComponent zoom={15} width="600px" height="300px" item={itemName} color={"#FF7259"} additionalItems={[secondaryEntity]}/>
+              <MapComponent zoom={15} width="600px" height="300px" item={itemName} color={"#FF7259"} additionalItems={[secondaryEntity]}  imagePolygon = {imagePolygon} imageARC={imageLocation}/>
             </div>
 
           </div>
@@ -223,7 +253,15 @@ const Item = (props) => {
                   thumbs={{ swiper: thumbsSwiper }}
                   spaceBetween={50}
                   slidesPerView={1}
-                  onSlideChange={() => console.log('slide change')}
+                  onSlideChange={(swiper) => {
+                    console.log("the active index is", swiper.activeIndex, imageURLs[Number(swiper.activeIndex)])
+                    // setCurrImageIndex(swiper.activeIndex)
+                    
+                    setImageLocation(imageURLs[Number(swiper.activeIndex)]["arc"])
+
+                    //show change on the map
+                    setImagePolygon(imageURLs[Number(swiper.activeIndex)]["geojson"])
+                  }}
                   onSwiper={(swiper) => console.log(swiper)}
                   className='mySwiper2'
                   style={{
@@ -235,7 +273,8 @@ const Item = (props) => {
 
                   {imageURLs.map(imgURL=>{
                     return (<SwiperSlide>
-                      <img className='h-[50vh] mx-auto px-16' src={imgURL}/>
+                      
+                      <img className='h-[50vh] mx-auto px-16' src={imgURL["url"]}/>
                     </SwiperSlide>)
                   })}
                   {/* ... */}
@@ -253,10 +292,10 @@ const Item = (props) => {
                   className="mySwiper"
                 >
 
-                  {imageURLs.map(imgURL=>{
+                  {imageURLs.map((imgURL, index)=>{
                     return (<SwiperSlide>
                       {/* {({isActive})=>(<img className={`${isActive? "":"opacity-50"}`} src={imgURL}/>)} */}
-                      {<img src={imgURL}/>}
+                      {<img id={index} src={imgURL["url"]}/>}
                     </SwiperSlide>)
                   })}
 
