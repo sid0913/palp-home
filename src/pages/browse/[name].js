@@ -154,7 +154,7 @@ const Item = (props) => {
       }).map((element)=>{
         
 
-        return {"url":element["l_img_url"], "arc":element["feature"].replace("urn:p-lod:id:","")}
+        return {"url":element["l_img_url"], "arc":element["feature"].replace("urn:p-lod:id:",""), "description":element["l_description"]}
       })
 
 
@@ -237,7 +237,7 @@ const Item = (props) => {
                   slidesPerView={1}
                   onSlideChange={(swiper) => {
                     console.log("the active index is", swiper.activeIndex, imageURLs[Number(swiper.activeIndex)])
-                    // setCurrImageIndex(swiper.activeIndex)
+                    setCurrImageIndex(swiper.activeIndex)
 
                     setImageLocation(imageURLs[Number(swiper.activeIndex)]["arc"])
 
@@ -255,9 +255,16 @@ const Item = (props) => {
                   {imageURLs.map(imgURL=>
                   {
                     return (
-                    <SwiperSlide>
+                    <div className='flex flex-col'>
+                      <SwiperSlide>
                       <img className='h-[50vh] mx-auto px-16' src={imgURL["url"]}/>
-                    </SwiperSlide>)
+                      
+                      </SwiperSlide>)
+                      {/* <span className='h-[20vh] overflow-y-auto text-white'>
+                        {imgURL['description']}
+                      </span> */}
+                    </div>)
+                    
                   })}
                   {/* ... */}
                 </Swiper>
@@ -291,6 +298,14 @@ const Item = (props) => {
                     </div>)
                   })}
                 </Carousel> */}
+
+                <div className='text-white overflow-y-auto h-[20vh] text-left p-3 border-2 border-white'>
+
+                  {
+                    imageURLs.length>0 ? imageURLs[currImageIndex]['description'] : ""
+                  }
+
+                </div>
 
                 
               </div>
