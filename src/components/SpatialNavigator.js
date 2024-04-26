@@ -177,12 +177,8 @@ const SpatialNavigator = ({selectedEntity, selectedEntityLabel, entityType, setS
                                 
         
                                     return (
-        
-                                            
-
                                             <EntityMenuItem lowerCaseName={concept["within"].replace("urn:p-lod:id:","")} label={concept["within"].replace("urn:p-lod:id:","")} setSecondaryEntity={setSecondaryEntity}/>
                                         
-
                                     )
         
                             })}
