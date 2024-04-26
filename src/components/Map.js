@@ -98,7 +98,7 @@ const MapComponent = ({item, color, height, width, zoom, additionalItems, imageA
     "weight": 5,
     "opacity": 0.50}
 
-  //the styling for the geojson plots on the map
+  //the styling for the additional geojson plots on the map
   const additionalGeoJSONStyle = {
     "color": "#FF7259",
     "weight": 6,
