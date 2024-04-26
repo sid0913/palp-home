@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'gatsby'
 import LoadingComponent from './LoadingComponent'
+import EntityMenuItem from './NavigatorComponents/EntityMenuItem'
 
-
-const SpatialNavigator = ({selectedEntity, selectedEntityLabel, entityType}) => {
+const SpatialNavigator = ({selectedEntity, selectedEntityLabel, entityType, setSecondaryEntity}) => {
 
     //give it a default empty string value
     selectedEntity = selectedEntity?selectedEntity:""
@@ -102,6 +102,7 @@ const SpatialNavigator = ({selectedEntity, selectedEntityLabel, entityType}) => 
 
                 else{
                     setFetchedConceptSpaces(true)
+                    console.log(listOfDepictedConcepts.length, "is the num of images")
                     //set the state for children
                     setListOfSpacesDepictingTheConcept(listOfDepictedConcepts)
                 }
@@ -177,19 +178,11 @@ const SpatialNavigator = ({selectedEntity, selectedEntityLabel, entityType}) => 
         
                                     return (
         
-                                        <>
                                             
 
-                                            
+                                            <EntityMenuItem lowerCaseName={concept["within"].replace("urn:p-lod:id:","")} label={concept["within"].replace("urn:p-lod:id:","")} setSecondaryEntity={setSecondaryEntity}/>
                                         
-                                            <li className='text-cyan-800  decoration-cyan-800 hover:underline'>
-                                                <Link href={`/browse/${concept["within"].replace("urn:p-lod:id:","")}`}>
-                                                    {/* {concept["urn"].replace("urn:p-lod:id:","")} */}
-                                                    {concept["within"].replace("urn:p-lod:id:","")}
-                                                </Link>
-                                            </li>
-        
-                                        </>
+
                                     )
         
                             })}
@@ -218,11 +211,9 @@ const SpatialNavigator = ({selectedEntity, selectedEntityLabel, entityType}) => 
                                     const lowerCaseName = ancestor['urn'].replace("urn:p-lod:id:","")
 
                                     return(
-                                        <li className='text-cyan-800  decoration-cyan-800 hover:underline'>
-                                                <Link href={`/browse/${lowerCaseName}`}>
-                                                    {label}
-                                                </Link>
-                                        </li>
+     
+                                        <EntityMenuItem lowerCaseName={lowerCaseName} label={label} setSecondaryEntity={setSecondaryEntity}/>
+                                        
                                     );
                                     })}
 
@@ -243,11 +234,7 @@ const SpatialNavigator = ({selectedEntity, selectedEntityLabel, entityType}) => 
                                     const lowerCaseName = conceptualChild['urn'].replace("urn:p-lod:id:","")
 
                                     return(
-                                    <li className='ml-6 text-cyan-800  decoration-cyan-800 hover:underline'>
-                                            <Link href={`/browse/${lowerCaseName}`}>
-                                                {label}
-                                            </Link>
-                                    </li>
+                                        <EntityMenuItem lowerCaseName={lowerCaseName} label={label} setSecondaryEntity={setSecondaryEntity}/>
                                     );
                                     })}
                             </>

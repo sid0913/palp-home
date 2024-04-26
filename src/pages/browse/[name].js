@@ -4,7 +4,6 @@ import { useState } from 'react';
 import ImageGallery from "react-image-gallery";
 import "react-image-gallery/styles/css/image-gallery.css";
 import ConceptNavigator from '../../components/ConceptNavigator';
-import SpaceNavigator from '../../components/SpaceNavigator';
 import PageLayout from '../../components/layouts/PageLayout';
 import SpatialNavigator from '../../components/SpatialNavigator';
 import {SwiperSlide, Swiper } from 'swiper/react';
@@ -44,13 +43,23 @@ const Item = (props) => {
 
   const itemName = props.params.name;
 
+  //the image urls
   const [imageURLs, setImageURLs] = useState([])
+
+  //the location string of the currently viewed image
+  const [imageLocation, setImageLocation] = useState("")
+
+
+  //the index number of the currently showing image in the gallery
+  const [currImageIndex, setCurrImageIndex] = useState(0)
 
   //the title with the entity name
   const [entityTitle, setEntityTitle] = useState("")
+  const [secondaryEntity, setSecondaryEntity] = useState([])
 
   //the type of the entity
   const [entityType, setEntityType] = useState("")
+  
 
 
 
@@ -87,17 +96,6 @@ const Item = (props) => {
         setEntityTitle(label)
       }
       
-
-      // let entityTypeJSON;
-
-      // if(responseIdList[1]["http://www.w3.org/1999/02/22-rdf-syntax-ns#type"]){
-      //   entityTypeJSON = responseIdList[1]["http://www.w3.org/1999/02/22-rdf-syntax-ns#type"]
-      // }
-
-      // else{
-      //   //happens with spaces
-      //   entityTypeJSON = responseIdList[0]["http://www.w3.org/1999/02/22-rdf-syntax-ns#type"]
-      // }
 
 
       if (type.includes("concept")){
@@ -147,19 +145,28 @@ const Item = (props) => {
       console.log("url not found- unable to fetch images")
       throw new Error("Network response was not OK");
     }
+    
     else{
-    //get the image from the response
-    const jsonBody = await response.json()
-    const urls = jsonBody.filter((element)=>{
-      return element["l_img_url"] !== "nan"
-    }).map((element)=>{
+      //get the image from the response
+      const jsonBody = await response.json()
+      const urls = jsonBody.filter((element)=>{
+        return element["l_img_url"] !== "nan"
+      }).map((element)=>{
+        
+
+        return {"url":element["l_img_url"], "arc":element["feature"].replace("urn:p-lod:id:","")}
+      })
+
+
+      setImageURLs(urls)
+
+      //show the location of the current image in the gallery on the map
+      if(urls.length > 0 && imageLocation.length === 0){
+        setImageLocation(urls[0]["arc"]);
+      }
+        
       
-      // return {"original":element["l_img_url"], "thumbnail":element["l_img_url"]}
-      return element["l_img_url"]
-    })
-
-
-    setImageURLs(urls)
+  
 
 
     }
@@ -198,49 +205,66 @@ const Item = (props) => {
           <div className='flex flex-row justify-evenly'>
             <div className='border-2 border-amber-700 w-full flex justify-start overflow-y-auto max-h-[30vh] lg:max-h-[50vh]'>
               {/* <SpaceNavigator selectedConcept={itemName}/> */}
-              {entityType !== "" ?<SpatialNavigator selectedEntity={itemName} selectedEntityLabel={entityTitle} entityType={entityType}/> :""}
+              {entityType !== "" ?<SpatialNavigator selectedEntity={itemName} selectedEntityLabel={entityTitle} entityType={entityType} setSecondaryEntity={setSecondaryEntity}/> :""}
             </div>
 
             <div  className='border-2 border-amber-700 w-full z-0'>
-              <MapComponent zoom={15} width="600px" height="300px" item={itemName} color={"#FF7259"}/>
+              <span className='flex flex-row justify-start'>
+                <button disabled={secondaryEntity.length === 0 } className={ `p-2 m-2 rounded-lg ${secondaryEntity.length > 0 ?'bg-black text-white border-2 border-black hover:bg-white hover:text-black ':"bg-slate-300 border-2 border-slate-300 text-slate-400"}`} onClick={()=>{
+                  //empty the secondary entities array
+                  setSecondaryEntity([])
+                }}>Clear</button>
+              </span>
+              <MapComponent zoom={15} width="600px" height="300px" item={itemName} color={"#FF7259"} additionalItems={secondaryEntity}  imageARC={imageLocation}/>
             </div>
 
           </div>
 
           <div className='flex flex-row justify-evenly mb-32'>
             <div className='border-2 border-amber-700 w-full flex justify-start overflow-y-auto h-[100vh]'>
-              {entityType !== "" ?<ConceptNavigator selectedEntity={itemName} selectedEntityLabel={entityTitle} entityType={entityType}/> :""}
+              {entityType !== "" ?<ConceptNavigator selectedEntity={itemName} selectedEntityLabel={entityTitle} entityType={entityType} setSecondaryEntity={setSecondaryEntity}/> :""}
             </div>
 
-            <div className='border-2 border-amber-700 w-full'>
+            <div className='border-2 border-amber-700 w-full bg-slate-950'>
 
               {imageURLs?(imageURLs.length > 0?
-              <div className='overflow-hidden p-5 w-[40vw] z-0'>
+              <div className='overflow-hidden p-5 w-[40vw] z-0 space-y-5'>
                 {/* https://github.com/xiaolin/react-image-gallery */}
                 {/* <ImageGallery  items={imageURLs} /> */}
                 <Swiper navigation={true} modules={[Navigation, Thumbs, FreeMode]}
                   thumbs={{ swiper: thumbsSwiper }}
                   spaceBetween={50}
                   slidesPerView={1}
-                  onSlideChange={() => console.log('slide change')}
+                  onSlideChange={(swiper) => {
+                    console.log("the active index is", swiper.activeIndex, imageURLs[Number(swiper.activeIndex)])
+                    // setCurrImageIndex(swiper.activeIndex)
+
+                    setImageLocation(imageURLs[Number(swiper.activeIndex)]["arc"])
+
+
+                  }}
                   onSwiper={(swiper) => console.log(swiper)}
                   className='mySwiper2'
                   style={{
-                    '--swiper-navigation-color': '#000',
+                    '--swiper-navigation-color': 'white',
                     '--swiper-pagination-color': '#000',
                   }}
                 >
 
 
-                  {imageURLs.map(imgURL=>{
-                    return (<SwiperSlide>
-                      <img className='h-[50vh] mx-auto px-16' src={imgURL}/>
+                  {imageURLs.map(imgURL=>
+                  {
+                    return (
+                    <SwiperSlide>
+                      <img className='h-[50vh] mx-auto px-16' src={imgURL["url"]}/>
                     </SwiperSlide>)
                   })}
                   {/* ... */}
                 </Swiper>
 
-                <Swiper
+                
+                {/* thumbnail swiper */}
+                {/* <Swiper
                   onSwiper={setThumbsSwiper}
                   spaceBetween={10}
                   slidesPerView={4}
@@ -250,14 +274,13 @@ const Item = (props) => {
                   className="mySwiper"
                 >
 
-                  {imageURLs.map(imgURL=>{
+                  {imageURLs.map((imgURL, index)=>{
                     return (<SwiperSlide>
-                      {/* {({isActive})=>(<img className={`${isActive? "":"opacity-50"}`} src={imgURL}/>)} */}
-                      {<img src={imgURL}/>}
+                      {<img id={index} src={imgURL["url"]}/>}
                     </SwiperSlide>)
                   })}
 
-                </Swiper>
+                </Swiper> */}
 
                 {/* CITATION:https://github.com/leandrowd/react-responsive-carousel */}
                 {/* <Carousel clas showIndicators={false} dynamicHeight={false}>
