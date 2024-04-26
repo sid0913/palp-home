@@ -160,12 +160,12 @@ const MapComponent = ({item, color, height, width, zoom, additionalItems, imageP
   
   
       // setCurrImagePolygonDeets([]);
-      // setCurrImagePolygonDeets(list_of_geo_jsons);
+      setCurrImagePolygonDeets(list_of_geo_jsons);
 
       //this dynamically adds a growing black spot that grows when the navigation arrows are used- indicating that it can be changed and that the new geojson values are different
-      setCurrImagePolygonDeets((prev, props)=>{
-        return prev.concat(list_of_geo_jsons)
-      });
+      // setCurrImagePolygonDeets((prev, props)=>{
+      //   return prev.concat(list_of_geo_jsons)
+      // });
 
       //this stays stationary
       // setCurrImagePolygonDeets((prev, props)=>{
@@ -221,9 +221,7 @@ const MapComponent = ({item, color, height, width, zoom, additionalItems, imageP
 
             setAdditionalItemsPolygonDeets(additionalItemsGeoJSONs)
 
-            //TODO:remove this- it worked, it removed the old polygons and the current image polygon completely- this is not a cache problem
-            setPolygon([])
-            setCurrImagePolygonDeets([]);
+
 
           }
           
@@ -316,9 +314,10 @@ const MapComponent = ({item, color, height, width, zoom, additionalItems, imageP
           currImagePolygonDeets.map((currentImagePolygon)=>{
             console.log("element", currentImagePolygon['id'])
             return (
-            <GeoJSON pathOptions={currImageGeoJSONStyle} data={currentImagePolygon}>
+              // IMP:the key enables the geojson to change when the data prop is changed
+            <GeoJSON key={currentImagePolygon['id']} pathOptions={currImageGeoJSONStyle} data={currentImagePolygon}>
               <Popup>
-                A pretty CSS3 popup. <br /> Easily customizable. arc {`${currentImagePolygon['id']}`}
+                The selected image is in {`${currentImagePolygon['id'].replace("urn:p-lod:id:","")}`}
               </Popup>
             </GeoJSON>);
           })
