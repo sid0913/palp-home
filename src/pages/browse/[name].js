@@ -55,7 +55,7 @@ const Item = (props) => {
 
   //the title with the entity name
   const [entityTitle, setEntityTitle] = useState("")
-  const [secondaryEntity, setSecondaryEntity] = useState("")
+  const [secondaryEntity, setSecondaryEntity] = useState([])
 
   //the type of the entity
   const [entityType, setEntityType] = useState("")
@@ -209,7 +209,13 @@ const Item = (props) => {
             </div>
 
             <div  className='border-2 border-amber-700 w-full z-0'>
-              <MapComponent zoom={15} width="600px" height="300px" item={itemName} color={"#FF7259"} additionalItems={[secondaryEntity]}  imageARC={imageLocation}/>
+              <span className='flex flex-row justify-start'>
+                <button disabled={secondaryEntity.length === 0 } className={ `p-2 m-2 rounded-lg ${secondaryEntity.length > 0 ?'bg-black text-white border-2 border-black hover:bg-white hover:text-black ':"bg-slate-300 border-2 border-slate-300 text-slate-400"}`} onClick={()=>{
+                  //empty the secondary entities array
+                  setSecondaryEntity([])
+                }}>Clear</button>
+              </span>
+              <MapComponent zoom={15} width="600px" height="300px" item={itemName} color={"#FF7259"} additionalItems={secondaryEntity}  imageARC={imageLocation}/>
             </div>
 
           </div>
