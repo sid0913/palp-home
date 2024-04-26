@@ -64,7 +64,7 @@ async function getGeoJSON(item){
   return [geo_json, found];
 }
 
-const MapComponent = ({item, color, height, width, zoom, additionalItems, imagePolygon, imageARC}) => {
+const MapComponent = ({item, color, height, width, zoom, additionalItems, imageARC}) => {
     /**
  * given an entity like snake or an address like r1-i1-p1, it returns a map component where that entity or address is plotted
  * @param  {string} item the entity or address we want plotted- must be lower case
@@ -82,7 +82,6 @@ const MapComponent = ({item, color, height, width, zoom, additionalItems, imageP
   zoom = zoom? zoom: 15
   additionalItems = additionalItems? additionalItems : []
   color = color? color : "#b029d7"
-  imagePolygon = imagePolygon? imagePolygon : undefined
   imageARC = imageARC? imageARC : ""
 
   //the styling for the geojson plots on the map
@@ -183,7 +182,6 @@ const MapComponent = ({item, color, height, width, zoom, additionalItems, imageP
       if (additionalItems.length === 0){
         return 
       }
-      console.log("additional items list not empty", imagePolygon)
 
       
 
@@ -235,10 +233,6 @@ const MapComponent = ({item, color, height, width, zoom, additionalItems, imageP
 
       
 
-      // setAdditionalItemsPolygonDeets(FinalAdditionalItemsGeoJSONs)
-
-      // setImagePolygonState(imagePolygon)
-      // console.log("curr imagepolysonstate", imagePolygonState)
 
     })();
   }, [item, additionalItems, imageARC])

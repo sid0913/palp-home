@@ -60,7 +60,6 @@ const Item = (props) => {
 
   //the type of the entity
   const [entityType, setEntityType] = useState("")
-  const [imagePolygon, setImagePolygon] = useState([])
   
 
 
@@ -99,17 +98,6 @@ const Item = (props) => {
       }
       
 
-      // let entityTypeJSON;
-
-      // if(responseIdList[1]["http://www.w3.org/1999/02/22-rdf-syntax-ns#type"]){
-      //   entityTypeJSON = responseIdList[1]["http://www.w3.org/1999/02/22-rdf-syntax-ns#type"]
-      // }
-
-      // else{
-      //   //happens with spaces
-      //   entityTypeJSON = responseIdList[0]["http://www.w3.org/1999/02/22-rdf-syntax-ns#type"]
-      // }
-
 
       if (type.includes("concept")){
         setEntityType("concept")
@@ -145,12 +133,10 @@ const Item = (props) => {
 
     if (itemName === "pompeii"){
       imageURLsFetchURL = `https://api.p-lod.org/images/r2`
-      // imageURLsFetchURL = `https://api.p-lod.org/depicted-where/r2`
     }
 
     else{
       imageURLsFetchURL = `https://api.p-lod.org/images/${itemName}`
-      // imageURLsFetchURL = `https://api.p-lod.org/depicted-where/${itemName}`
     }
 
     //fetch the images
@@ -168,29 +154,20 @@ const Item = (props) => {
         return element["l_img_url"] !== "nan"
       }).map((element)=>{
         
-        // return {"original":element["l_img_url"], "thumbnail":element["l_img_url"]}
-        // console.log("parsed", JSON.parse(element["geojson"]))
-        // return {"url":element["l_img_url"], "geojson": JSON.parse(element["geojson"]), "arc":element["feature"].replace("urn:p-lod:id:","")}
+
         return {"url":element["l_img_url"], "geojson": element["geojson"], "arc":element["feature"].replace("urn:p-lod:id:","")}
       })
 
 
       setImageURLs(urls)
 
+      //show the location of the current image in the gallery on the map
       if(urls.length > 0 && imageLocation.length === 0){
         setImageLocation(urls[0]["arc"]);
       }
         
       
-      
-      //set the image polygon to mark the selected image's geojson on the map
-      if(urls.length > 0 && imagePolygon.length === 0){
-        if (urls[0].length > 0){
-          console.log("this is the value", urls[0])
-          setImagePolygon(urls[0]["geojson"]);
-        }
-        
-      }
+  
 
 
     }
@@ -233,7 +210,7 @@ const Item = (props) => {
             </div>
 
             <div  className='border-2 border-amber-700 w-full z-0'>
-              <MapComponent zoom={15} width="600px" height="300px" item={itemName} color={"#FF7259"} additionalItems={[secondaryEntity]}  imagePolygon = {imagePolygon} imageARC={imageLocation}/>
+              <MapComponent zoom={15} width="600px" height="300px" item={itemName} color={"#FF7259"} additionalItems={[secondaryEntity]}  imageARC={imageLocation}/>
             </div>
 
           </div>
@@ -259,8 +236,7 @@ const Item = (props) => {
 
                     setImageLocation(imageURLs[Number(swiper.activeIndex)]["arc"])
 
-                    //show change on the map
-                    setImagePolygon(imageURLs[Number(swiper.activeIndex)]["geojson"])
+
                   }}
                   onSwiper={(swiper) => console.log(swiper)}
                   className='mySwiper2'
