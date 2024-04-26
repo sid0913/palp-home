@@ -178,18 +178,11 @@ const SpatialNavigator = ({selectedEntity, selectedEntityLabel, entityType, setS
         
                                     return (
         
-                                        <>
                                             
 
                                             <EntityMenuItem lowerCaseName={concept["within"].replace("urn:p-lod:id:","")} label={concept["within"].replace("urn:p-lod:id:","")} setSecondaryEntity={setSecondaryEntity}/>
                                         
-                                            {/* <li className='text-cyan-800  decoration-cyan-800 hover:underline'>
-                                                <Link href={`/browse/${concept["within"].replace("urn:p-lod:id:","")}`}>
-                                                    {concept["within"].replace("urn:p-lod:id:","")}
-                                                </Link>
-                                            </li> */}
-        
-                                        </>
+
                                     )
         
                             })}

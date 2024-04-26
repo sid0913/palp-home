@@ -188,6 +188,7 @@ const MapComponent = ({item, color, height, width, zoom, additionalItems, imageA
     (async ()=>{
 
       if (additionalItems.length === 0){
+        setAdditionalItemsPolygonDeets([])
         return 
       }
 

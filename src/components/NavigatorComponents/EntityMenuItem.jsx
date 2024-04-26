@@ -11,7 +11,10 @@ const EntityMenuItem = ({lowerCaseName, label, setSecondaryEntity}) => {
                 </a>
 
             <button className='text-black text-sm hover:opacity-50' onClick={()=>{
-                setSecondaryEntity(lowerCaseName)
+                // setSecondaryEntity([lowerCaseName])
+                setSecondaryEntity((prev, props)=>{
+                    return prev.concat([lowerCaseName])
+                })
             }}>
                 <FaPlay className=''/>
             </button>
