@@ -220,18 +220,18 @@ const Item = (props) => {
 
           </div>
 
-          <div className='flex flex-col lg:flex-row justify-evenly '>
-            <div className='border-2 border-amber-700 w-full flex justify-start overflow-y-auto h-[100vh]'>
+          <div className='flex flex-col lg:flex-row justify-evenly h-[47vh] w-full'>
+            <div className='border-2 border-amber-700 w-[60vh] flex justify-start overflow-auto '>
               {entityType !== "" ?<ConceptNavigator selectedEntity={itemName} selectedEntityLabel={entityTitle} entityType={entityType} setSecondaryEntity={setSecondaryEntity}/> :""}
             </div>
 
-            <div className='border-2 border-amber-700 w-full bg-slate-950'>
+            <div className='border-2 border-amber-700 w-full bg-slate-950 overflow-auto '>
 
               {imageURLs?(imageURLs.length > 0?
-              <div className='overflow-hidden p-5 w-[40vw] z-0 space-y-5'>
+              <div className='overflow-hidden p-5 w-[40vw] z-0 space-y-5 mx-auto'>
                 {/* https://github.com/xiaolin/react-image-gallery */}
                 {/* <ImageGallery  items={imageURLs} /> */}
-                <Swiper navigation={true} modules={[Navigation, Thumbs, FreeMode]}
+                <Swiper  navigation={true} modules={[Navigation, Thumbs, FreeMode]}
                   thumbs={{ swiper: thumbsSwiper }}
                   spaceBetween={50}
                   slidesPerView={1}
@@ -256,7 +256,7 @@ const Item = (props) => {
                     return (
                     <div key={index.toString()+Math.floor(Math.random()*1000).toString()} className='flex flex-col'>
                       <SwiperSlide>
-                      <img className='h-[50vh] mx-auto px-16' src={imgURL["url"]}/>
+                      <img className='h-[30vh] mx-auto px-16' src={imgURL["url"]}/>
                       
                       </SwiperSlide>)
                       {/* <span className='h-[20vh] overflow-y-auto text-white'>
