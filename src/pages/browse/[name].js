@@ -202,7 +202,7 @@ const Item = (props) => {
         <div className='flex flex-col'>
 
           <div className='flex lg:flex-row flex-col justify-evenly h-[30vh] w-full'>
-            <div className='border-2 border-amber-700  flex justify-start overflow-auto w-[20vw] '>
+            <div className='border-2 border-amber-700  flex justify-start overflow-auto w-[40vw] '>
               {/* <SpaceNavigator selectedConcept={itemName}/> */}
               {entityType !== "" ?<SpatialNavigator selectedEntity={itemName} selectedEntityLabel={entityTitle} entityType={entityType} setSecondaryEntity={setSecondaryEntity}/> :""}
             </div>
@@ -215,7 +215,7 @@ const Item = (props) => {
                 }}>Clear</button>
               </span>
               {/* <MapComponent zoom={15} width="600px" height="300px" item={itemName} color={"#FF7259"} additionalItems={secondaryEntity}  imageARC={imageLocation}/> */}
-              <MapComponent zoom={15} width="70vw" height="22vh" item={itemName} color={"#FF7259"} additionalItems={secondaryEntity}  imageARC={imageLocation}/>
+              <MapComponent zoom={15} width="53vw" height="22vh" item={itemName} color={"#FF7259"} additionalItems={secondaryEntity}  imageARC={imageLocation}/>
             </div>
 
           </div>
@@ -281,7 +281,7 @@ const Item = (props) => {
                   })}
                 </Carousel> */}
 
-                <div className='text-white overflow-y-auto h-[20vh] text-left p-3 border-2 border-white'>
+                <div className='text-white overflow-y-auto h-[20vh] text-left p-3 border-2 border-white rounded-md'>
 
                   {
                     imageURLs.length>0 ? imageURLs[currImageIndex]['description'] : ""
