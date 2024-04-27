@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'gatsby'
 import LoadingComponent from './LoadingComponent'
+// import MenuItem from './NavigatorComponents/MenuItem'
+import EntityMenuItem from './NavigatorComponents/EntityMenuItem';
+import { FaPlay } from "react-icons/fa";
+import { MdOpenInNew } from "react-icons/md";
 
-
-const ConceptNavigator = ({selectedEntity, selectedEntityLabel, entityType}) => {
+const ConceptNavigator = ({selectedEntity, selectedEntityLabel, entityType, setSecondaryEntity}) => {
 
     
     selectedEntity = selectedEntity?selectedEntity:""
@@ -139,12 +142,12 @@ const ConceptNavigator = ({selectedEntity, selectedEntityLabel, entityType}) => 
     
 
   return (
-    <div className='p-5 flex flex-col space-y-5'>
-        <h1 className='font-semibold text-2xl'>
+    <div className='p-2 flex flex-col space-y-5'>
+        <h1 className='font-semibold text-lg'>
             Artistic Concepts
         </h1>
 
-        <ul className='text-green-500 text-left ml-5 '>
+        <ul className='text-green-500 text-left text-sm'>
             {/* if the entity type is spatialEntity or city, show a list of the concepts depicted in that spatialEntity or city */}
             { 
             
@@ -159,22 +162,16 @@ const ConceptNavigator = ({selectedEntity, selectedEntityLabel, entityType}) => 
                     function (){return (
                         <>
                             <LoadingComponent hiddenWhen={listOfconceptsDepictedInSpatialEntity.length > 0 || entityType !== "city"}/>
-                            {listOfconceptsDepictedInSpatialEntity.map((concept)=>{
+                            {/* filter to get rid of border_frame type elements from the response */}
+                            {listOfconceptsDepictedInSpatialEntity.filter((element)=> element["label"] !== null ).map((concept)=>{
+                                console.log("this is an element0", concept)
                                 //if selected, highlight it
-                                
+                                    const label = concept["label"]
         
                                     return (
         
                                         <>
-        
-                                            
-                                        
-                                            <li className='text-cyan-800  decoration-cyan-800 hover:underline'>
-                                                <Link href={`/browse/${concept["urn"].replace("urn:p-lod:id:","")}`}>
-                                                    {concept["label"]}
-                                                </Link>
-                                            </li>
-        
+                                            <EntityMenuItem key={label+Math.floor(Math.random()*1000).toString()} label={label} lowerCaseName={concept["urn"].replace("urn:p-lod:id:","")} setSecondaryEntity={setSecondaryEntity}/>
                                         </>
                                     )
         
@@ -202,12 +199,10 @@ const ConceptNavigator = ({selectedEntity, selectedEntityLabel, entityType}) => 
                                     const label = ancestor['label']? ancestor['label'] : ancestor['urn'].replace("urn:p-lod:id:","")
                                     const lowerCaseName = ancestor['urn'].replace("urn:p-lod:id:","")
 
-                                    return(
-                                        <li className='text-cyan-800  decoration-cyan-800 hover:underline'>
-                                                <Link href={`/browse/${lowerCaseName}`}>
-                                                    {label}
-                                                </Link>
-                                        </li>
+                                    return(    
+
+                                        <EntityMenuItem key={lowerCaseName+Math.floor(Math.random()*1000).toString()} lowerCaseName={lowerCaseName} label={label} setSecondaryEntity={setSecondaryEntity} />
+                                
                                     );
                                     })}
 
@@ -228,11 +223,9 @@ const ConceptNavigator = ({selectedEntity, selectedEntityLabel, entityType}) => 
                                     const lowerCaseName = conceptualChild['urn'].replace("urn:p-lod:id:","")
 
                                     return(
-                                    <li className='ml-6 text-cyan-800  decoration-cyan-800 hover:underline'>
-                                            <Link href={`/browse/${lowerCaseName}`}>
-                                                {label}
-                                            </Link>
-                                    </li>
+                                        
+                                        <EntityMenuItem key={lowerCaseName+Math.floor(Math.random()*1000).toString()} lowerCaseName={lowerCaseName} label={label} setSecondaryEntity={setSecondaryEntity} href={`/browse/${lowerCaseName}`}/>
+
                                     );
                                     })}
                             </>

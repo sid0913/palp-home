@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'gatsby'
 import LoadingComponent from './LoadingComponent'
+import EntityMenuItem from './NavigatorComponents/EntityMenuItem'
 
-
-const SpatialNavigator = ({selectedEntity, selectedEntityLabel, entityType}) => {
+const SpatialNavigator = ({selectedEntity, selectedEntityLabel, entityType, setSecondaryEntity}) => {
 
     //give it a default empty string value
     selectedEntity = selectedEntity?selectedEntity:""
@@ -60,16 +60,16 @@ const SpatialNavigator = ({selectedEntity, selectedEntityLabel, entityType}) => 
             if(response.ok){
                 const listOfChildren = await response.json()
 
-                if(listOfChildren.length === 0){
-                    return 
+                // if(listOfChildren.length === 0){
+                //     return 
 
-                }
+                // }
 
-                else{
+                // else{
                     //set the state for children
                     setSpatialChildren(listOfChildren.reverse().slice(0,-1))
                     setFetchedChildren(true)
-                }
+                // }
 
                 
         
@@ -151,12 +151,12 @@ const SpatialNavigator = ({selectedEntity, selectedEntityLabel, entityType}) => 
     
 
   return (
-    <div className='p-5 flex flex-col space-y-5'>
-        <h1 className='font-semibold text-2xl'>
+    <div className='p-2 flex flex-col space-y-5'>
+        <h1 className='font-semibold text-lg text-left'>
             Spaces
         </h1>
 
-        <ul className='text-green-500 text-left ml-5 '>
+        <ul className='text-green-500 text-left text-sm'>
             {/* if the entity type is spatialEntity or city, show a heirarchy of it, or if it is a concept, render a list of spatial entities where the concept is depicted */}
             { 
             
@@ -166,7 +166,7 @@ const SpatialNavigator = ({selectedEntity, selectedEntityLabel, entityType}) => 
                 <></>
 
                 :
-                
+                //if it is concept, show all the locations where the concept shows up
                 entityType === "concept"? 
                     function (){return (
                         <>
@@ -174,22 +174,10 @@ const SpatialNavigator = ({selectedEntity, selectedEntityLabel, entityType}) => 
                             {listOfSpacesDepictingTheConcept.map((concept)=>{
                                 //if selected, highlight it
                                 
-        
+                                const label = concept["urn"].replace("urn:p-lod:id:","")
                                     return (
-        
-                                        <>
-                                            
-
-                                            
+                                            <EntityMenuItem key={label+Math.floor(Math.random()*1000).toString()} lowerCaseName={label} label={label} setSecondaryEntity={setSecondaryEntity}/>
                                         
-                                            <li className='text-cyan-800  decoration-cyan-800 hover:underline'>
-                                                <Link href={`/browse/${concept["within"].replace("urn:p-lod:id:","")}`}>
-                                                    {/* {concept["urn"].replace("urn:p-lod:id:","")} */}
-                                                    {concept["within"].replace("urn:p-lod:id:","")}
-                                                </Link>
-                                            </li>
-        
-                                        </>
                                     )
         
                             })}
@@ -218,11 +206,9 @@ const SpatialNavigator = ({selectedEntity, selectedEntityLabel, entityType}) => 
                                     const lowerCaseName = ancestor['urn'].replace("urn:p-lod:id:","")
 
                                     return(
-                                        <li className='text-cyan-800  decoration-cyan-800 hover:underline'>
-                                                <Link href={`/browse/${lowerCaseName}`}>
-                                                    {label}
-                                                </Link>
-                                        </li>
+     
+                                        <EntityMenuItem key={lowerCaseName+Math.floor(Math.random()*1000).toString()} lowerCaseName={lowerCaseName} label={label} setSecondaryEntity={setSecondaryEntity}/>
+                                        
                                     );
                                     })}
 
@@ -243,11 +229,7 @@ const SpatialNavigator = ({selectedEntity, selectedEntityLabel, entityType}) => 
                                     const lowerCaseName = conceptualChild['urn'].replace("urn:p-lod:id:","")
 
                                     return(
-                                    <li className='ml-6 text-cyan-800  decoration-cyan-800 hover:underline'>
-                                            <Link href={`/browse/${lowerCaseName}`}>
-                                                {label}
-                                            </Link>
-                                    </li>
+                                        <EntityMenuItem key={lowerCaseName+Math.floor(Math.random()*1000).toString()} lowerCaseName={lowerCaseName} label={label} setSecondaryEntity={setSecondaryEntity}/>
                                     );
                                     })}
                             </>

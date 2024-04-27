@@ -2,6 +2,8 @@ import * as React from "react"
 import header from 'src/images/header.jpg';
 import footer from 'src/images/footer-no-bg.png';
 import { Link } from "gatsby";
+import { GoHomeFill } from "react-icons/go";
+
 const pageStyles = {
   color: "#232129",
   padding: 96,
@@ -128,20 +130,22 @@ const links = [
 const MainTemplate = ({children}) => {
   return (
     <div className="text-center h-full flex-col flex">
-      <header className="text-xl bg-[#ecf0f1]   sticky top-0">
-        <Link href="/">
-          <button className='w-[15vw] h-[7vh] p-1 m-5 bg-white rounded-md hover:bg-black hover:text-white  border-2 border-black text-black'>
-            <h1 className=' text-center my-auto '>MENU</h1>
-          </button>
-        </Link>
+      <header className="text-xl bg-[#ecf0f1] w-full top-0">
+        
         
         
         {/* header image */}
         {/* <img className='h-20 object-none w-full' src={header}/> */}
-        <div className=" bg-[url('src/images/header.jpg')] text-center object-none">
-          <h1 className="my-auto text-2xl text-center text-black font-bold h-full">
-            <span className="my-auto align-middle">
-              Pompeii’s Artistic Landscape
+        <div className=" bg-[url('src/images/header.jpg')] text-center object-none flex flex-row py-3">
+          <Link href="/">
+            <button className='my-auto p-1 m-5 bg-white rounded-md hover:bg-black hover:text-white  border-2 border-black text-black'>
+              {/* <h1 className=' text-center my-auto '>MENU</h1> */}
+              <GoHomeFill  /> 
+            </button>
+          </Link>
+          <h1 className="my-auto text-2xl text-center text-black font-semibold h-full">
+            <span className="">
+              Pompeii’s Artistic Landscape Project
             </span>
           
           </h1>
@@ -149,14 +153,15 @@ const MainTemplate = ({children}) => {
 
       </header>
 
-      <div className="h-[80vh] overflow-y-auto">
+      <div className=" overflow-y-auto">
         {children}
+        {/* <div className='z-50 absolute bottom-0 text-center w-full bg-[#234774]'> */}
+        <div className=' bottom-0 text-center w-full bg-[#234774]'>
+          <img className='object-fit h-14 mx-auto ' src={footer}/>
+        </div>
       </div>
 
-      {/* <div className='z-50 absolute bottom-0 text-center w-full bg-[#234774]'> */}
-      <div className='z-50 absolute bottom-0 text-center w-full bg-[#234774]'>
-        <img className='object-fit h-14 mx-auto ' src={footer}/>
-      </div>
+      
 
     </div>
   )
