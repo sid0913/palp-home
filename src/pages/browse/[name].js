@@ -195,42 +195,43 @@ const Item = (props) => {
       <div className={`${entityTitle === ""?"invisible":""}`}>
 
       
-        <div className={`text-left mt-10 text-6xl my-28 md:pl-28 lg:pl-64 `}>  
+        <div className={`text-left text-base font-semibold py-2 md:pl-28 lg:pl-5 `}>  
           {entityTitle}
         </div> 
 
         <div className='flex flex-col'>
 
-          <div className='flex flex-row justify-evenly'>
-            <div className='border-2 border-amber-700 w-full flex justify-start overflow-y-auto max-h-[30vh] lg:max-h-[50vh]'>
+          <div className='flex lg:flex-row flex-col justify-evenly h-[30vh] w-full'>
+            <div className='border-2 border-amber-700  flex justify-start overflow-auto w-[40vw] '>
               {/* <SpaceNavigator selectedConcept={itemName}/> */}
               {entityType !== "" ?<SpatialNavigator selectedEntity={itemName} selectedEntityLabel={entityTitle} entityType={entityType} setSecondaryEntity={setSecondaryEntity}/> :""}
             </div>
 
-            <div  className='border-2 border-amber-700 w-full z-0'>
+            <div  className='border-2 border-amber-700 w-full z-0 overflow-auto'>
               <span className='flex flex-row justify-start'>
-                <button disabled={secondaryEntity.length === 0 } className={ `p-2 m-2 rounded-lg ${secondaryEntity.length > 0 ?'bg-black text-white border-2 border-black hover:bg-white hover:text-black ':"bg-slate-300 border-2 border-slate-300 text-slate-400"}`} onClick={()=>{
+                <button disabled={secondaryEntity.length === 0 } className={ `p-2 m-2 rounded-lg text-xs ${secondaryEntity.length > 0 ?'bg-black text-white border-2 border-black hover:bg-white hover:text-black ':"bg-slate-300 border-2 border-slate-300 text-slate-400"}`} onClick={()=>{
                   //empty the secondary entities array
                   setSecondaryEntity([])
                 }}>Clear</button>
               </span>
-              <MapComponent zoom={15} width="600px" height="300px" item={itemName} color={"#FF7259"} additionalItems={secondaryEntity}  imageARC={imageLocation}/>
+              {/* <MapComponent zoom={15} width="600px" height="300px" item={itemName} color={"#FF7259"} additionalItems={secondaryEntity}  imageARC={imageLocation}/> */}
+              <MapComponent zoom={15} width="53vw" height="22vh" item={itemName} color={"#FF7259"} additionalItems={secondaryEntity}  imageARC={imageLocation}/>
             </div>
 
           </div>
 
-          <div className='flex flex-row justify-evenly mb-32'>
-            <div className='border-2 border-amber-700 w-full flex justify-start overflow-y-auto h-[100vh]'>
+          <div className='flex flex-col lg:flex-row justify-evenly h-[47vh] w-full'>
+            <div className='border-2 border-amber-700 w-[60vh] flex justify-start overflow-auto '>
               {entityType !== "" ?<ConceptNavigator selectedEntity={itemName} selectedEntityLabel={entityTitle} entityType={entityType} setSecondaryEntity={setSecondaryEntity}/> :""}
             </div>
 
-            <div className='border-2 border-amber-700 w-full bg-slate-950'>
+            <div className='border-2 border-amber-700 w-full bg-slate-950 overflow-auto '>
 
               {imageURLs?(imageURLs.length > 0?
-              <div className='overflow-hidden p-5 w-[40vw] z-0 space-y-5'>
+              <div className='overflow-hidden p-5 w-[40vw] z-0 space-y-5 mx-auto'>
                 {/* https://github.com/xiaolin/react-image-gallery */}
                 {/* <ImageGallery  items={imageURLs} /> */}
-                <Swiper navigation={true} modules={[Navigation, Thumbs, FreeMode]}
+                <Swiper  navigation={true} modules={[Navigation, Thumbs, FreeMode]}
                   thumbs={{ swiper: thumbsSwiper }}
                   spaceBetween={50}
                   slidesPerView={1}
@@ -255,7 +256,7 @@ const Item = (props) => {
                     return (
                     <div key={index.toString()+Math.floor(Math.random()*1000).toString()} className='flex flex-col'>
                       <SwiperSlide>
-                      <img className='h-[50vh] mx-auto px-16' src={imgURL["url"]}/>
+                      <img className='h-[30vh] mx-auto px-16' src={imgURL["url"]}/>
                       
                       </SwiperSlide>)
                       {/* <span className='h-[20vh] overflow-y-auto text-white'>
@@ -280,7 +281,7 @@ const Item = (props) => {
                   })}
                 </Carousel> */}
 
-                <div className='text-white overflow-y-auto h-[20vh] text-left p-3 border-2 border-white'>
+                <div className='text-white overflow-y-auto h-[20vh] text-left p-3 border-2 border-white rounded-md'>
 
                   {
                     imageURLs.length>0 ? imageURLs[currImageIndex]['description'] : ""

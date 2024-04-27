@@ -151,12 +151,12 @@ const SpatialNavigator = ({selectedEntity, selectedEntityLabel, entityType, setS
     
 
   return (
-    <div className='p-5 flex flex-col space-y-5'>
-        <h1 className='font-semibold text-2xl'>
+    <div className='p-2 flex flex-col space-y-5'>
+        <h1 className='font-semibold text-lg text-left'>
             Spaces
         </h1>
 
-        <ul className='text-green-500 text-left ml-5 '>
+        <ul className='text-green-500 text-left text-sm'>
             {/* if the entity type is spatialEntity or city, show a heirarchy of it, or if it is a concept, render a list of spatial entities where the concept is depicted */}
             { 
             

@@ -142,12 +142,12 @@ const ConceptNavigator = ({selectedEntity, selectedEntityLabel, entityType, setS
     
 
   return (
-    <div className='p-5 flex flex-col space-y-5'>
-        <h1 className='font-semibold text-2xl'>
+    <div className='p-2 flex flex-col space-y-5'>
+        <h1 className='font-semibold text-lg'>
             Artistic Concepts
         </h1>
 
-        <ul className='text-green-500 text-left ml-5 '>
+        <ul className='text-green-500 text-left text-sm'>
             {/* if the entity type is spatialEntity or city, show a list of the concepts depicted in that spatialEntity or city */}
             { 
             
