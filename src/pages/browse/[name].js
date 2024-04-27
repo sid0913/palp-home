@@ -86,7 +86,6 @@ const Item = (props) => {
 
       }); 
 
-      console.log(responseIdList)
 
       if (label === ""){
         setEntityTitle(itemName)
@@ -236,14 +235,13 @@ const Item = (props) => {
                   spaceBetween={50}
                   slidesPerView={1}
                   onSlideChange={(swiper) => {
-                    console.log("the active index is", swiper.activeIndex, imageURLs[Number(swiper.activeIndex)])
                     setCurrImageIndex(swiper.activeIndex)
 
                     setImageLocation(imageURLs[Number(swiper.activeIndex)]["arc"])
 
 
                   }}
-                  onSwiper={(swiper) => console.log(swiper)}
+                  onSwiper={(swiper) => {}}
                   className='mySwiper2'
                   style={{
                     '--swiper-navigation-color': 'white',
