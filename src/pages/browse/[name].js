@@ -195,31 +195,32 @@ const Item = (props) => {
       <div className={`${entityTitle === ""?"invisible":""}`}>
 
       
-        <div className={`text-left mt-10 text-6xl my-28 md:pl-28 lg:pl-64 `}>  
+        <div className={`text-left text-base font-semibold py-2 md:pl-28 lg:pl-5 `}>  
           {entityTitle}
         </div> 
 
         <div className='flex flex-col'>
 
-          <div className='flex flex-row justify-evenly'>
-            <div className='border-2 border-amber-700 w-full flex justify-start overflow-y-auto max-h-[30vh] lg:max-h-[50vh]'>
+          <div className='flex lg:flex-row flex-col justify-evenly h-[30vh] w-full'>
+            <div className='border-2 border-amber-700  flex justify-start overflow-auto w-[20vw] '>
               {/* <SpaceNavigator selectedConcept={itemName}/> */}
               {entityType !== "" ?<SpatialNavigator selectedEntity={itemName} selectedEntityLabel={entityTitle} entityType={entityType} setSecondaryEntity={setSecondaryEntity}/> :""}
             </div>
 
-            <div  className='border-2 border-amber-700 w-full z-0'>
+            <div  className='border-2 border-amber-700 w-full z-0 overflow-auto'>
               <span className='flex flex-row justify-start'>
-                <button disabled={secondaryEntity.length === 0 } className={ `p-2 m-2 rounded-lg ${secondaryEntity.length > 0 ?'bg-black text-white border-2 border-black hover:bg-white hover:text-black ':"bg-slate-300 border-2 border-slate-300 text-slate-400"}`} onClick={()=>{
+                <button disabled={secondaryEntity.length === 0 } className={ `p-2 m-2 rounded-lg text-xs ${secondaryEntity.length > 0 ?'bg-black text-white border-2 border-black hover:bg-white hover:text-black ':"bg-slate-300 border-2 border-slate-300 text-slate-400"}`} onClick={()=>{
                   //empty the secondary entities array
                   setSecondaryEntity([])
                 }}>Clear</button>
               </span>
-              <MapComponent zoom={15} width="600px" height="300px" item={itemName} color={"#FF7259"} additionalItems={secondaryEntity}  imageARC={imageLocation}/>
+              {/* <MapComponent zoom={15} width="600px" height="300px" item={itemName} color={"#FF7259"} additionalItems={secondaryEntity}  imageARC={imageLocation}/> */}
+              <MapComponent zoom={15} width="70vw" height="22vh" item={itemName} color={"#FF7259"} additionalItems={secondaryEntity}  imageARC={imageLocation}/>
             </div>
 
           </div>
 
-          <div className='flex flex-row justify-evenly mb-32'>
+          <div className='flex flex-col lg:flex-row justify-evenly '>
             <div className='border-2 border-amber-700 w-full flex justify-start overflow-y-auto h-[100vh]'>
               {entityType !== "" ?<ConceptNavigator selectedEntity={itemName} selectedEntityLabel={entityTitle} entityType={entityType} setSecondaryEntity={setSecondaryEntity}/> :""}
             </div>

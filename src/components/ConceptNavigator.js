@@ -143,7 +143,7 @@ const ConceptNavigator = ({selectedEntity, selectedEntityLabel, entityType, setS
 
   return (
     <div className='p-5 flex flex-col space-y-5'>
-        <h1 className='font-semibold text-2xl'>
+        <h1 className='font-semibold text-lg'>
             Artistic Concepts
         </h1>
 
