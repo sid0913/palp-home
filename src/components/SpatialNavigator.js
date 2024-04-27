@@ -60,16 +60,16 @@ const SpatialNavigator = ({selectedEntity, selectedEntityLabel, entityType, setS
             if(response.ok){
                 const listOfChildren = await response.json()
 
-                if(listOfChildren.length === 0){
-                    return 
+                // if(listOfChildren.length === 0){
+                //     return 
 
-                }
+                // }
 
-                else{
+                // else{
                     //set the state for children
                     setSpatialChildren(listOfChildren.reverse().slice(0,-1))
                     setFetchedChildren(true)
-                }
+                // }
 
                 
         
@@ -174,7 +174,7 @@ const SpatialNavigator = ({selectedEntity, selectedEntityLabel, entityType, setS
                             {listOfSpacesDepictingTheConcept.map((concept)=>{
                                 //if selected, highlight it
                                 
-                                const label = concept["within"].replace("urn:p-lod:id:","")
+                                const label = concept["urn"].replace("urn:p-lod:id:","")
                                     return (
                                             <EntityMenuItem key={label+Math.floor(Math.random()*1000).toString()} lowerCaseName={label} label={label} setSecondaryEntity={setSecondaryEntity}/>
                                         

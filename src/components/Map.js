@@ -261,7 +261,11 @@ const MapComponent = ({item, color, height, width, zoom, additionalItems, imageA
       {/* the polygons of the current item */}
       {
         PolygonDeets.map((element)=>{
-          return (<GeoJSON key={element["id"]+Math.floor(Math.random()*1000).toString()} pathOptions={currentItemGeoJSONStyle} data={element} />);
+          return (<GeoJSON key={element["id"]+Math.floor(Math.random()*1000).toString()} pathOptions={currentItemGeoJSONStyle} data={element} >
+            <Popup>
+              {`${element['id'].replace("urn:p-lod:id:","")}`}
+            </Popup>
+          </GeoJSON>);
         })
 
       }
@@ -289,7 +293,11 @@ const MapComponent = ({item, color, height, width, zoom, additionalItems, imageA
 
               {
                 additionalItem["geojson"].map((element)=>{
-                  return (<GeoJSON key={element["id"]+Math.floor(Math.random()*1000).toString()} pathOptions={additionalGeoJSONStyle} data={element} />);
+                  return (<GeoJSON key={element["id"]+Math.floor(Math.random()*1000).toString()} pathOptions={additionalGeoJSONStyle} data={element} >
+                    <Popup>
+                      {`${element['id'].replace("urn:p-lod:id:","")}`}
+                    </Popup>
+                  </GeoJSON>);
                 })
               }
             
