@@ -154,7 +154,7 @@ const MainTemplate = ({children}) => {
       </header>
 
       <div className=" overflow-y-auto h-full">
-        <div className="min-h-[86vh]">
+        <div style={{minHeight:"86vh"}}>
           {children}
         </div>
         
