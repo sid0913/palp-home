@@ -270,24 +270,7 @@ const Item = (props) => {
                 </Swiper>
 
                 
-                {/* thumbnail swiper */}
-                {/* <Swiper
-                  onSwiper={setThumbsSwiper}
-                  spaceBetween={10}
-                  slidesPerView={4}
-                  freeMode={true}
-                  watchSlidesProgress={true}
-                  modules={[FreeMode, Navigation, Thumbs]}
-                  className="mySwiper"
-                >
-
-                  {imageURLs.map((imgURL, index)=>{
-                    return (<SwiperSlide>
-                      {<img id={index} src={imgURL["url"]}/>}
-                    </SwiperSlide>)
-                  })}
-
-                </Swiper> */}
+                
 
                 {/* CITATION:https://github.com/leandrowd/react-responsive-carousel */}
                 {/* <Carousel clas showIndicators={false} dynamicHeight={false}>
@@ -306,6 +289,25 @@ const Item = (props) => {
                   }
 
                 </div>
+
+                {/* thumbnail swiper */}
+                <Swiper
+                  onSwiper={setThumbsSwiper}
+                  spaceBetween={10}
+                  slidesPerView={4}
+                  freeMode={true}
+                  watchSlidesProgress={true}
+                  modules={[FreeMode, Navigation, Thumbs]}
+                  className="mySwiper"
+                >
+
+                  {imageURLs.map((imgURL, index)=>{
+                    return (<SwiperSlide>
+                      {<img id={index} src={imgURL["url"]}/>}
+                    </SwiperSlide>)
+                  })}
+
+                </Swiper>
 
                 
               </div>

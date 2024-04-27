@@ -264,7 +264,7 @@ const MapComponent = ({item, color, height, width, zoom, additionalItems, imageA
       {
         PolygonDeets.map((element)=>{
           // console.log("element", element)
-          return (<GeoJSON key={element["id"]} pathOptions={currentItemGeoJSONStyle} data={element} />);
+          return (<GeoJSON key={element["id"]+Math.floor(Math.random()*1000).toString()} pathOptions={currentItemGeoJSONStyle} data={element} />);
         })
 
       }
@@ -276,7 +276,7 @@ const MapComponent = ({item, color, height, width, zoom, additionalItems, imageA
           console.log("element", currentImagePolygon['id'])
           return (
             // IMP:the key enables the geojson to change when the data prop is changed
-          <GeoJSON key={currentImagePolygon['id']} pathOptions={currImageGeoJSONStyle} data={currentImagePolygon}>
+          <GeoJSON key={currentImagePolygon['id']+Math.floor(Math.random()*1000).toString()} pathOptions={currImageGeoJSONStyle} data={currentImagePolygon}>
             <Popup>
               The selected image is in {`${currentImagePolygon['id'].replace("urn:p-lod:id:","")}`}
             </Popup>
@@ -293,7 +293,7 @@ const MapComponent = ({item, color, height, width, zoom, additionalItems, imageA
 
               {
                 additionalItem["geojson"].map((element)=>{
-                  return (<GeoJSON key={element["id"]} pathOptions={additionalGeoJSONStyle} data={element} />);
+                  return (<GeoJSON key={element["id"]+Math.floor(Math.random()*1000).toString()} pathOptions={additionalGeoJSONStyle} data={element} />);
                 })
               }
             
