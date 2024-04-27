@@ -163,7 +163,6 @@ const MapComponent = ({item, color, height, width, zoom, additionalItems, imageA
         list_of_geo_jsons = [api_response]
       }
 
-      console.log("currently viewed image geojson arc", list_of_geo_jsons)
   
   
       // setCurrImagePolygonDeets([]);
@@ -221,7 +220,6 @@ const MapComponent = ({item, color, height, width, zoom, additionalItems, imageA
           else{
             list_of_geo_jsons = [api_response]
           }
-          // console.log({geojson:list_of_geo_jsons, color:"#ff0000"})
       
           additionalItemsGeoJSONs.push({geojson:list_of_geo_jsons, color:"#ff0000"});
           if(indexElement === additionalItems.length-1){
@@ -263,8 +261,11 @@ const MapComponent = ({item, color, height, width, zoom, additionalItems, imageA
       {/* the polygons of the current item */}
       {
         PolygonDeets.map((element)=>{
-          // console.log("element", element)
-          return (<GeoJSON key={element["id"]} pathOptions={currentItemGeoJSONStyle} data={element} />);
+          return (<GeoJSON key={element["id"]+Math.floor(Math.random()*1000).toString()} pathOptions={currentItemGeoJSONStyle} data={element} >
+            <Popup>
+              {`${element['id'].replace("urn:p-lod:id:","")}`}
+            </Popup>
+          </GeoJSON>);
         })
 
       }
@@ -273,10 +274,9 @@ const MapComponent = ({item, color, height, width, zoom, additionalItems, imageA
       {
 
         currImagePolygonDeets.map((currentImagePolygon)=>{
-          console.log("element", currentImagePolygon['id'])
           return (
             // IMP:the key enables the geojson to change when the data prop is changed
-          <GeoJSON key={currentImagePolygon['id']} pathOptions={currImageGeoJSONStyle} data={currentImagePolygon}>
+          <GeoJSON key={currentImagePolygon['id']+Math.floor(Math.random()*1000).toString()} pathOptions={currImageGeoJSONStyle} data={currentImagePolygon}>
             <Popup>
               The selected image is in {`${currentImagePolygon['id'].replace("urn:p-lod:id:","")}`}
             </Popup>
@@ -293,7 +293,11 @@ const MapComponent = ({item, color, height, width, zoom, additionalItems, imageA
 
               {
                 additionalItem["geojson"].map((element)=>{
-                  return (<GeoJSON key={element["id"]} pathOptions={additionalGeoJSONStyle} data={element} />);
+                  return (<GeoJSON key={element["id"]+Math.floor(Math.random()*1000).toString()} pathOptions={additionalGeoJSONStyle} data={element} >
+                    <Popup>
+                      {`${element['id'].replace("urn:p-lod:id:","")}`}
+                    </Popup>
+                  </GeoJSON>);
                 })
               }
             
@@ -306,15 +310,6 @@ const MapComponent = ({item, color, height, width, zoom, additionalItems, imageA
       }
 
 
-
-      {/* {
-        additionalItemsPolygonDeets?additionalItemsPolygonDeets.length>0?additionalItemsPolygonDeets[0]["geojson"].map((element)=>{
-          console.log("here",additionalItemsPolygonDeets[0])
-          return (<GeoJSON pathOptions={{"color": "#00ff80",
-          "weight": 5,
-          "opacity": 0.90}} data={element} />);
-        }) :"":""
-      } */}
 
 
     </MapContainer>

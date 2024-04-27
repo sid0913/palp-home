@@ -166,12 +166,12 @@ const ConceptNavigator = ({selectedEntity, selectedEntityLabel, entityType, setS
                             {listOfconceptsDepictedInSpatialEntity.filter((element)=> element["label"] !== null ).map((concept)=>{
                                 console.log("this is an element0", concept)
                                 //if selected, highlight it
-                                
+                                    const label = concept["label"]
         
                                     return (
         
                                         <>
-                                            <EntityMenuItem label={concept["label"]} lowerCaseName={concept["urn"].replace("urn:p-lod:id:","")} setSecondaryEntity={setSecondaryEntity}/>
+                                            <EntityMenuItem key={label+Math.floor(Math.random()*1000).toString()} label={label} lowerCaseName={concept["urn"].replace("urn:p-lod:id:","")} setSecondaryEntity={setSecondaryEntity}/>
                                         </>
                                     )
         
@@ -201,7 +201,7 @@ const ConceptNavigator = ({selectedEntity, selectedEntityLabel, entityType, setS
 
                                     return(    
 
-                                        <EntityMenuItem lowerCaseName={lowerCaseName} label={label} setSecondaryEntity={setSecondaryEntity} />
+                                        <EntityMenuItem key={lowerCaseName+Math.floor(Math.random()*1000).toString()} lowerCaseName={lowerCaseName} label={label} setSecondaryEntity={setSecondaryEntity} />
                                 
                                     );
                                     })}
@@ -224,7 +224,7 @@ const ConceptNavigator = ({selectedEntity, selectedEntityLabel, entityType, setS
 
                                     return(
                                         
-                                        <EntityMenuItem lowerCaseName={lowerCaseName} label={label} setSecondaryEntity={setSecondaryEntity} href={`/browse/${lowerCaseName}`}/>
+                                        <EntityMenuItem key={lowerCaseName+Math.floor(Math.random()*1000).toString()} lowerCaseName={lowerCaseName} label={label} setSecondaryEntity={setSecondaryEntity} href={`/browse/${lowerCaseName}`}/>
 
                                     );
                                     })}

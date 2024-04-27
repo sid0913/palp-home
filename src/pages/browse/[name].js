@@ -86,7 +86,6 @@ const Item = (props) => {
 
       }); 
 
-      console.log(responseIdList)
 
       if (label === ""){
         setEntityTitle(itemName)
@@ -236,14 +235,13 @@ const Item = (props) => {
                   spaceBetween={50}
                   slidesPerView={1}
                   onSlideChange={(swiper) => {
-                    console.log("the active index is", swiper.activeIndex, imageURLs[Number(swiper.activeIndex)])
                     setCurrImageIndex(swiper.activeIndex)
 
                     setImageLocation(imageURLs[Number(swiper.activeIndex)]["arc"])
 
 
                   }}
-                  onSwiper={(swiper) => console.log(swiper)}
+                  onSwiper={(swiper) => {}}
                   className='mySwiper2'
                   style={{
                     '--swiper-navigation-color': 'white',
@@ -252,10 +250,10 @@ const Item = (props) => {
                 >
 
 
-                  {imageURLs.map(imgURL=>
+                  {imageURLs.map((imgURL, index)=>
                   {
                     return (
-                    <div className='flex flex-col'>
+                    <div key={index.toString()+Math.floor(Math.random()*1000).toString()} className='flex flex-col'>
                       <SwiperSlide>
                       <img className='h-[50vh] mx-auto px-16' src={imgURL["url"]}/>
                       
@@ -270,24 +268,7 @@ const Item = (props) => {
                 </Swiper>
 
                 
-                {/* thumbnail swiper */}
-                {/* <Swiper
-                  onSwiper={setThumbsSwiper}
-                  spaceBetween={10}
-                  slidesPerView={4}
-                  freeMode={true}
-                  watchSlidesProgress={true}
-                  modules={[FreeMode, Navigation, Thumbs]}
-                  className="mySwiper"
-                >
-
-                  {imageURLs.map((imgURL, index)=>{
-                    return (<SwiperSlide>
-                      {<img id={index} src={imgURL["url"]}/>}
-                    </SwiperSlide>)
-                  })}
-
-                </Swiper> */}
+                
 
                 {/* CITATION:https://github.com/leandrowd/react-responsive-carousel */}
                 {/* <Carousel clas showIndicators={false} dynamicHeight={false}>
@@ -306,6 +287,25 @@ const Item = (props) => {
                   }
 
                 </div>
+
+                {/* thumbnail swiper */}
+                <Swiper
+                  onSwiper={setThumbsSwiper}
+                  spaceBetween={10}
+                  slidesPerView={4}
+                  freeMode={true}
+                  watchSlidesProgress={true}
+                  modules={[FreeMode, Navigation, Thumbs]}
+                  className="mySwiper"
+                >
+
+                  {imageURLs.map((imgURL, index)=>{
+                    return (<SwiperSlide key={index.toString()+Math.floor(Math.random()*1000).toString()}>
+                      {<img id={index} src={imgURL["url"]}/>}
+                    </SwiperSlide>)
+                  })}
+
+                </Swiper>
 
                 
               </div>
