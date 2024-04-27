@@ -250,10 +250,10 @@ const Item = (props) => {
                 >
 
 
-                  {imageURLs.map(imgURL=>
+                  {imageURLs.map((imgURL, index)=>
                   {
                     return (
-                    <div className='flex flex-col'>
+                    <div key={index.toString()+Math.floor(Math.random()*1000).toString()} className='flex flex-col'>
                       <SwiperSlide>
                       <img className='h-[50vh] mx-auto px-16' src={imgURL["url"]}/>
                       
@@ -300,7 +300,7 @@ const Item = (props) => {
                 >
 
                   {imageURLs.map((imgURL, index)=>{
-                    return (<SwiperSlide>
+                    return (<SwiperSlide key={index.toString()+Math.floor(Math.random()*1000).toString()}>
                       {<img id={index} src={imgURL["url"]}/>}
                     </SwiperSlide>)
                   })}

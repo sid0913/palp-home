@@ -102,7 +102,6 @@ const SpatialNavigator = ({selectedEntity, selectedEntityLabel, entityType, setS
 
                 else{
                     setFetchedConceptSpaces(true)
-                    console.log(listOfDepictedConcepts.length, "is the num of images")
                     //set the state for children
                     setListOfSpacesDepictingTheConcept(listOfDepictedConcepts)
                 }
@@ -175,9 +174,9 @@ const SpatialNavigator = ({selectedEntity, selectedEntityLabel, entityType, setS
                             {listOfSpacesDepictingTheConcept.map((concept)=>{
                                 //if selected, highlight it
                                 
-        
+                                const label = concept["within"].replace("urn:p-lod:id:","")
                                     return (
-                                            <EntityMenuItem lowerCaseName={concept["within"].replace("urn:p-lod:id:","")} label={concept["within"].replace("urn:p-lod:id:","")} setSecondaryEntity={setSecondaryEntity}/>
+                                            <EntityMenuItem key={label+Math.floor(Math.random()*1000).toString()} lowerCaseName={label} label={label} setSecondaryEntity={setSecondaryEntity}/>
                                         
                                     )
         
@@ -208,7 +207,7 @@ const SpatialNavigator = ({selectedEntity, selectedEntityLabel, entityType, setS
 
                                     return(
      
-                                        <EntityMenuItem lowerCaseName={lowerCaseName} label={label} setSecondaryEntity={setSecondaryEntity}/>
+                                        <EntityMenuItem key={lowerCaseName+Math.floor(Math.random()*1000).toString()} lowerCaseName={lowerCaseName} label={label} setSecondaryEntity={setSecondaryEntity}/>
                                         
                                     );
                                     })}
@@ -230,7 +229,7 @@ const SpatialNavigator = ({selectedEntity, selectedEntityLabel, entityType, setS
                                     const lowerCaseName = conceptualChild['urn'].replace("urn:p-lod:id:","")
 
                                     return(
-                                        <EntityMenuItem lowerCaseName={lowerCaseName} label={label} setSecondaryEntity={setSecondaryEntity}/>
+                                        <EntityMenuItem key={lowerCaseName+Math.floor(Math.random()*1000).toString()} lowerCaseName={lowerCaseName} label={label} setSecondaryEntity={setSecondaryEntity}/>
                                     );
                                     })}
                             </>
