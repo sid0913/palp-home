@@ -153,7 +153,7 @@ const SpatialNavigator = ({selectedEntity, selectedEntityLabel, entityType, setS
   return (
     <div className='p-2 flex flex-col space-y-5'>
         <h1 className='font-semibold text-lg text-left'>
-            Spaces
+            Spatial Units
         </h1>
 
         <ul className='text-green-500 text-left text-sm'>
