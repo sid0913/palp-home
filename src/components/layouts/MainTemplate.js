@@ -153,8 +153,11 @@ const MainTemplate = ({children}) => {
 
       </header>
 
-      <div className=" overflow-y-auto">
-        {children}
+      <div className=" overflow-y-auto h-full">
+        <div style={{minHeight:"86vh"}}>
+          {children}
+        </div>
+        
         {/* <div className='z-50 absolute bottom-0 text-center w-full bg-[#234774]'> */}
         <div className=' bottom-0 text-center w-full bg-[#234774]'>
           <img className='object-fit h-14 mx-auto ' src={footer}/>
