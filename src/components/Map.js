@@ -291,7 +291,7 @@ const MapComponent = ({item, color, height, width, zoom, additionalItems, imageA
             // IMP:the key enables the geojson to change when the data prop is changed
           <GeoJSON key={currentImagePolygon['id']+Math.floor(Math.random()*1000).toString()} pathOptions={currImageGeoJSONStyle} data={currentImagePolygon}>
             <Popup>
-              The selected image is in <Link className='hover:underline' href={`/browse/${currentImagePolygon['id'].replace("urn:p-lod:id:","")}`}>{`${currentImagePolygon['id'].replace("urn:p-lod:id:","")}`}</Link> 
+              The selected image is on <Link className='hover:underline' href={`/browse/${currentImagePolygon['id'].replace("urn:p-lod:id:","")}`}>{`${currentImagePolygon['id'].replace("urn:p-lod:id:","")}`}</Link> 
             </Popup>
           </GeoJSON>);
         })
