@@ -4,6 +4,7 @@ import React from 'react'
 import { MapContainer, TileLayer, Marker, Popup, GeoJSON } from 'react-leaflet'
 import { useState, useEffect } from 'react';
 import { element } from 'prop-types';
+import { Link } from 'gatsby';
 
 const DEFAULT_CENTER = [40.75, 14.485]
 
@@ -127,6 +128,9 @@ const MapComponent = ({item, color, height, width, zoom, additionalItems, imageA
       }
 
       const result = await getGeoJSON(item);
+      if (result === null){
+        return
+      }
       const api_response = result[0];
       let list_of_geo_jsons;
       if(api_response.features){
@@ -152,6 +156,10 @@ const MapComponent = ({item, color, height, width, zoom, additionalItems, imageA
       }
 
       const result = await getGeoJSON(imageARC);
+      if (result === null){
+        return
+      }
+      console.log("result is", result)
       const api_response = result[0];
       let list_of_geo_jsons;
       if(api_response.features){
@@ -208,8 +216,13 @@ const MapComponent = ({item, color, height, width, zoom, additionalItems, imageA
           if (item === ""){
             return
           }
+
+          
   
           const result = await getGeoJSON(item);
+          if (result === null){
+            return
+          }
           const api_response = result[0];
           let list_of_geo_jsons;
           if(api_response.features){
@@ -278,7 +291,7 @@ const MapComponent = ({item, color, height, width, zoom, additionalItems, imageA
             // IMP:the key enables the geojson to change when the data prop is changed
           <GeoJSON key={currentImagePolygon['id']+Math.floor(Math.random()*1000).toString()} pathOptions={currImageGeoJSONStyle} data={currentImagePolygon}>
             <Popup>
-              The selected image is in {`${currentImagePolygon['id'].replace("urn:p-lod:id:","")}`}
+              The selected image is in <Link className='hover:underline' href={`/browse/${currentImagePolygon['id'].replace("urn:p-lod:id:","")}`}>{`${currentImagePolygon['id'].replace("urn:p-lod:id:","")}`}</Link> 
             </Popup>
           </GeoJSON>);
         })

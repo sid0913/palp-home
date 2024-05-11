@@ -142,7 +142,7 @@ const Item = (props) => {
 
     if (!response.ok) {
       console.log("url not found- unable to fetch images")
-      throw new Error("Network response was not OK");
+      // throw new Error("Network response was not OK");
     }
     
     else{
