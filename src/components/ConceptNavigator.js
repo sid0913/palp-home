@@ -215,19 +215,22 @@ const ConceptNavigator = ({selectedEntity, selectedEntityLabel, entityType, setS
 
 
                                             
+                                    <div className='ml-5'>
 
-                                    {/* the conceptual children */}
-                                    {conceptualChildren.map((conceptualChild)=>{
+                                        {/* the conceptual children */}
+                                        {conceptualChildren.map((conceptualChild)=>{
 
-                                    const label = conceptualChild['label']? conceptualChild['label'] : conceptualChild['urn'].replace("urn:p-lod:id:","")
-                                    const lowerCaseName = conceptualChild['urn'].replace("urn:p-lod:id:","")
+                                        const label = conceptualChild['label']? conceptualChild['label'] : conceptualChild['urn'].replace("urn:p-lod:id:","")
+                                        const lowerCaseName = conceptualChild['urn'].replace("urn:p-lod:id:","")
 
-                                    return(
-                                        
-                                        <EntityMenuItem key={lowerCaseName+Math.floor(Math.random()*1000).toString()} lowerCaseName={lowerCaseName} label={label} setSecondaryEntity={setSecondaryEntity} href={`/browse/${lowerCaseName}`}/>
+                                        return(
+                                            
+                                            <EntityMenuItem key={lowerCaseName+Math.floor(Math.random()*1000).toString()} lowerCaseName={lowerCaseName} label={label} setSecondaryEntity={setSecondaryEntity} href={`/browse/${lowerCaseName}`}/>
 
-                                    );
-                                    })}
+                                        );
+                                        })}
+                                    </div>
+                                    
                             </>
                         )
                     }()

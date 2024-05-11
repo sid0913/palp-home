@@ -207,12 +207,12 @@ const Item = (props) => {
               {entityType !== "" ?<SpatialNavigator selectedEntity={itemName} selectedEntityLabel={entityTitle} entityType={entityType} setSecondaryEntity={setSecondaryEntity}/> :""}
             </div>
 
-            <div  className='border-2 border-amber-700 w-full overflow-auto'>
+            <div  className='border-2 border-amber-700 w-full overflow-auto relative'>
               {/* <span className='z-10 relative top-0 right-0'> */}
-                {/* <button disabled={secondaryEntity.length === 0 } className={ `z-50 p-2 m-2 rounded-lg text-xs relative top-0 right-0 ${secondaryEntity.length > 0 ?'bg-black text-white border-2 border-black hover:bg-white hover:text-black ':"bg-slate-300 border-2 border-slate-300 text-slate-400"}`} onClick={()=>{
+                <button disabled={secondaryEntity.length === 0 } className={ `z-50 p-2 m-2 rounded-lg text-xs absolute top-0 right-0 ${secondaryEntity.length > 0 ?'bg-black text-white border-2 border-black hover:bg-white hover:text-black ':"bg-slate-300 border-2 border-slate-300 text-slate-400"}`} onClick={()=>{
                   //empty the secondary entities array
                   setSecondaryEntity([])
-                }}>Clear</button> */}
+                }}>Clear</button>
               {/* </span> */}
               {/* <MapComponent zoom={15} width="600px" height="300px" item={itemName} color={"#FF7259"} additionalItems={secondaryEntity}  imageARC={imageLocation}/> */}
               <MapComponent zoom={15} width="100%" height="100%" item={itemName} color={"#FF7259"} additionalItems={secondaryEntity}  imageARC={imageLocation}/>
