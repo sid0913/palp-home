@@ -202,12 +202,12 @@ const Item = (props) => {
         <div className='flex flex-col'>
 
           <div className='flex lg:flex-row flex-col justify-evenly h-[30vh] w-full'>
-            <div className='border-2 border-amber-700  flex justify-start overflow-auto w-[40vw] '>
+            <div className='border-2 border-amber-700  flex justify-start overflow-auto w-[25vw] '>
               {/* <SpaceNavigator selectedConcept={itemName}/> */}
               {entityType !== "" ?<SpatialNavigator selectedEntity={itemName} selectedEntityLabel={entityTitle} entityType={entityType} setSecondaryEntity={setSecondaryEntity}/> :""}
             </div>
 
-            <div  className='border-2 border-amber-700 w-full z-0 overflow-auto'>
+            <div  className='border-2 border-amber-700 w-full overflow-auto'>
               <span className='flex flex-row justify-start'>
                 <button disabled={secondaryEntity.length === 0 } className={ `p-2 m-2 rounded-lg text-xs ${secondaryEntity.length > 0 ?'bg-black text-white border-2 border-black hover:bg-white hover:text-black ':"bg-slate-300 border-2 border-slate-300 text-slate-400"}`} onClick={()=>{
                   //empty the secondary entities array
@@ -221,7 +221,7 @@ const Item = (props) => {
           </div>
 
           <div className='flex flex-col lg:flex-row justify-evenly h-[47vh] w-full'>
-            <div className='border-2 border-amber-700 w-[60vh] flex justify-start overflow-auto '>
+            <div className='border-2 border-amber-700 w-[25vw] flex justify-start overflow-auto '>
               {entityType !== "" ?<ConceptNavigator selectedEntity={itemName} selectedEntityLabel={entityTitle} entityType={entityType} setSecondaryEntity={setSecondaryEntity}/> :""}
             </div>
 
