@@ -89,7 +89,7 @@ const MapComponent = ({item, color, height, width, zoom, additionalItems, imageA
 
   //the geojson style of the currently selected image
   const currImageGeoJSONStyle = {
-    "color": "#FCEA04",
+    "color": "#000000",
     "weight": 4,
     "opacity": 0.9
   } 
