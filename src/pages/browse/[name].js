@@ -16,6 +16,7 @@ import '../../styles/Carousel.module.css'
 
 // import Swiper styles
 import 'swiper/css';
+import { Link } from 'gatsby';
 
 // import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 // import { Carousel } from 'react-responsive-carousel';
@@ -61,7 +62,7 @@ const Item = (props) => {
   const [entityType, setEntityType] = useState("")
   
 
-
+  const [WikiDataURL, setWikiDataURL] = useState("")
 
   async function getEntityDetails(itemName){
     const response = await fetch(`https://api.p-lod.org/id/${itemName}`);
@@ -82,6 +83,11 @@ const Item = (props) => {
         //get the type
         if(element["http://www.w3.org/1999/02/22-rdf-syntax-ns#type"]){
           type = element["http://www.w3.org/1999/02/22-rdf-syntax-ns#type"]
+        }
+
+        //get the wiki data url
+        if(element['urn:p-lod:id:wikidata-url']){
+          setWikiDataURL(element['urn:p-lod:id:wikidata-url'])
         }
 
       }); 
@@ -195,8 +201,25 @@ const Item = (props) => {
       <div className={`${entityTitle === ""?"invisible":""}`}>
 
       
-        <div className={`text-left text-base font-semibold py-2 md:pl-28 lg:pl-5 `}>  
-          {entityTitle}
+        <div className={`text-left text-base font-semibold py-2 md:pl-28 lg:pl-5 flex flex-row justify-between`}>  
+          <span>
+            {entityTitle}
+          </span>
+
+          <span className='flex flex-row justify-evenly space-x-5'>
+            <Link href={WikiDataURL} className={`${WikiDataURL !== ""? '':"hidden"} link`}>
+              WikiData
+            </Link>
+
+            <Link href="/" className='link hidden'>
+              Wiki(en)
+            </Link>
+
+            <Link href="/" className='link hidden'>
+              Wiki(it)
+            </Link>
+          </span>
+          
         </div> 
 
         <div className='flex flex-col'>
@@ -320,7 +343,13 @@ const Item = (props) => {
         </div>
       </div>
       
-
+      <span className='w-full  my-5'>
+         View {" "}
+         <Link className='link' href={`https://p-lod.org/urn/urn:p-lod:id:${itemName}`}>
+            {entityTitle? entityTitle:itemName}
+         </Link>
+          {" "}on PLOD
+      </span>
     </PageLayout>
     
     

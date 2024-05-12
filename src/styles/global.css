@@ -5,3 +5,7 @@
 .container{
     @apply px-20
 }
+
+.link{
+    @apply text-blue-500 hover:underline
+}

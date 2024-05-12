@@ -129,7 +129,7 @@ const links = [
 
 const MainTemplate = ({children}) => {
   return (
-    <div className="text-center h-full flex-col flex">
+    <div className="text-center h-full flex-col flex relative">
       <header className="text-xl bg-[#ecf0f1] w-full top-0">
         
         
