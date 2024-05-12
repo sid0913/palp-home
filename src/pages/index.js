@@ -8,7 +8,9 @@ const IndexPage = () => {
 
       {/* <MenuButton title={"Explore"} description={"Browse the map of Pompeii, discover artistic motifs, and peruse images of artworks"} href={"/explore"}/> */}
 
-      <MenuButton title={"Browse"} description={"Browse the map of Pompeii, discover artistic motifs, and peruse images of artworks"} href={"/browse/pompeii"}/>
+      <MenuButton disabled={false} title={"Browse"} description={"Browse the map of Pompeii, discover artistic motifs, and peruse images of artworks"} href={"/browse/pompeii"}/>
+      <MenuButton disabled={true} title={"Search (Coming Soon)"} description={"Search through the Concepts and Spatial Entities of Pompeii"} href={"/"}/>
+      <MenuButton disabled={true} title={"Compare (Coming Soon)"} description={"Compare the Concepts and Spatial Entities of Pompeii"} href={"/"}/>
 
     </div>
   )
