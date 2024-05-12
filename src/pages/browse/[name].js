@@ -258,7 +258,7 @@ const Item = (props) => {
                       <SwiperSlide>
                       <img className='h-[30vh] mx-auto px-16' src={imgURL["url"]}/>
                       
-                      </SwiperSlide>)
+                      </SwiperSlide>
                       {/* <span className='h-[20vh] overflow-y-auto text-white'>
                         {imgURL['description']}
                       </span> */}
