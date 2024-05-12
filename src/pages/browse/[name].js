@@ -142,7 +142,7 @@ const Item = (props) => {
 
     if (!response.ok) {
       console.log("url not found- unable to fetch images")
-      throw new Error("Network response was not OK");
+      // throw new Error("Network response was not OK");
     }
     
     else{
@@ -202,27 +202,27 @@ const Item = (props) => {
         <div className='flex flex-col'>
 
           <div className='flex lg:flex-row flex-col justify-evenly h-[30vh] w-full'>
-            <div className='border-2 border-amber-700  flex justify-start overflow-auto w-[40vw] '>
+            <div className='border-2 border-amber-700  flex justify-start overflow-auto w-[25vw] '>
               {/* <SpaceNavigator selectedConcept={itemName}/> */}
               {entityType !== "" ?<SpatialNavigator selectedEntity={itemName} selectedEntityLabel={entityTitle} entityType={entityType} setSecondaryEntity={setSecondaryEntity}/> :""}
             </div>
 
-            <div  className='border-2 border-amber-700 w-full z-0 overflow-auto'>
-              <span className='flex flex-row justify-start'>
-                <button disabled={secondaryEntity.length === 0 } className={ `p-2 m-2 rounded-lg text-xs ${secondaryEntity.length > 0 ?'bg-black text-white border-2 border-black hover:bg-white hover:text-black ':"bg-slate-300 border-2 border-slate-300 text-slate-400"}`} onClick={()=>{
+            <div  className='border-2 border-amber-700 w-full overflow-auto relative'>
+              {/* <span className='z-10 relative top-0 right-0'> */}
+                <button disabled={secondaryEntity.length === 0 } className={ `z-50 p-2 m-2 rounded-lg text-xs absolute top-0 right-0 ${secondaryEntity.length > 0 ?'bg-black text-white border-2 border-black hover:bg-white hover:text-black ':"bg-slate-300 border-2 border-slate-300 text-slate-400"}`} onClick={()=>{
                   //empty the secondary entities array
                   setSecondaryEntity([])
                 }}>Clear</button>
-              </span>
+              {/* </span> */}
               {/* <MapComponent zoom={15} width="600px" height="300px" item={itemName} color={"#FF7259"} additionalItems={secondaryEntity}  imageARC={imageLocation}/> */}
-              <MapComponent zoom={15} width="53vw" height="22vh" item={itemName} color={"#FF7259"} additionalItems={secondaryEntity}  imageARC={imageLocation}/>
+              <MapComponent zoom={15} width="100%" height="100%" item={itemName} color={"#FF7259"} additionalItems={secondaryEntity}  imageARC={imageLocation}/>
             </div>
 
           </div>
 
           <div className='flex flex-col lg:flex-row justify-evenly h-[47vh] w-full'>
-            <div className='border-2 border-amber-700 w-[60vh] flex justify-start overflow-auto '>
-              {entityType !== "" ?<ConceptNavigator selectedEntity={itemName} selectedEntityLabel={entityTitle} entityType={entityType} setSecondaryEntity={setSecondaryEntity}/> :""}
+            <div className='border-2 border-amber-700 w-[25vw] flex justify-start overflow-auto '>
+              {entityType !== "" ? <ConceptNavigator selectedEntity={itemName} selectedEntityLabel={entityTitle} entityType={entityType} setSecondaryEntity={setSecondaryEntity}/> :""}
             </div>
 
             <div className='border-2 border-amber-700 w-full bg-slate-950 overflow-auto '>
@@ -258,7 +258,7 @@ const Item = (props) => {
                       <SwiperSlide>
                       <img className='h-[30vh] mx-auto px-16' src={imgURL["url"]}/>
                       
-                      </SwiperSlide>)
+                      </SwiperSlide>
                       {/* <span className='h-[20vh] overflow-y-auto text-white'>
                         {imgURL['description']}
                       </span> */}

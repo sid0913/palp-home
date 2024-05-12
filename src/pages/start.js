@@ -1,14 +1,8 @@
 import * as React from "react"
-import { Link, navigate } from "gatsby";
+import { Link } from "gatsby";
 import MenuButton from "../components/LandingPageComponents/MenuButton";
-import { useEffect } from "react";
 
 const IndexPage = () => {
-
-  useEffect(()=>{
-    navigate("/start")
-  }, [])
-
   return (
     <div className="p-5 flex flex-col space-y-5 ">
 

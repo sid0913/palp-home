@@ -223,15 +223,21 @@ const SpatialNavigator = ({selectedEntity, selectedEntityLabel, entityType, setS
                                             
 
                                     {/* the spatial children */}
-                                    {spatialChildren.map((conceptualChild)=>{
 
-                                    const label = conceptualChild['urn'].replace("urn:p-lod:id:","")
-                                    const lowerCaseName = conceptualChild['urn'].replace("urn:p-lod:id:","")
+                                    <div className='ml-5'>
 
-                                    return(
-                                        <EntityMenuItem key={lowerCaseName+Math.floor(Math.random()*1000).toString()} lowerCaseName={lowerCaseName} label={label} setSecondaryEntity={setSecondaryEntity}/>
-                                    );
-                                    })}
+                                        {spatialChildren.map((conceptualChild)=>{
+
+                                        const label = conceptualChild['urn'].replace("urn:p-lod:id:","")
+                                        const lowerCaseName = conceptualChild['urn'].replace("urn:p-lod:id:","")
+
+                                        return(
+                                            
+                                            <EntityMenuItem key={lowerCaseName+Math.floor(Math.random()*1000).toString()} lowerCaseName={lowerCaseName} label={label} setSecondaryEntity={setSecondaryEntity}/>
+                                        );
+                                        })}
+                                    </div>
+                                    
                             </>
                         )
                     }()

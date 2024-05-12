@@ -1,9 +1,10 @@
 
 
 import React from 'react'
-import { MapContainer, TileLayer, Marker, Popup, GeoJSON } from 'react-leaflet'
+import { MapContainer, TileLayer, Marker, Popup, GeoJSON, CircleMarker } from 'react-leaflet'
 import { useState, useEffect } from 'react';
 import { element } from 'prop-types';
+import { Link } from 'gatsby';
 
 const DEFAULT_CENTER = [40.75, 14.485]
 
@@ -89,7 +90,7 @@ const MapComponent = ({item, color, height, width, zoom, additionalItems, imageA
   //the geojson style of the currently selected image
   const currImageGeoJSONStyle = {
     "color": "#000000",
-    "weight": 9,
+    "weight": 4,
     "opacity": 0.9
   } 
 
@@ -127,6 +128,9 @@ const MapComponent = ({item, color, height, width, zoom, additionalItems, imageA
       }
 
       const result = await getGeoJSON(item);
+      if (result === null){
+        return
+      }
       const api_response = result[0];
       let list_of_geo_jsons;
       if(api_response.features){
@@ -152,6 +156,10 @@ const MapComponent = ({item, color, height, width, zoom, additionalItems, imageA
       }
 
       const result = await getGeoJSON(imageARC);
+      if (result === null){
+        return
+      }
+      console.log("result is", result)
       const api_response = result[0];
       let list_of_geo_jsons;
       if(api_response.features){
@@ -208,8 +216,13 @@ const MapComponent = ({item, color, height, width, zoom, additionalItems, imageA
           if (item === ""){
             return
           }
+
+          
   
           const result = await getGeoJSON(item);
+          if (result === null){
+            return
+          }
           const api_response = result[0];
           let list_of_geo_jsons;
           if(api_response.features){
@@ -247,7 +260,7 @@ const MapComponent = ({item, color, height, width, zoom, additionalItems, imageA
   return (
 
     <>
-    <MapContainer style={{ height: height, width:width }} center={DEFAULT_CENTER} zoom={zoom} scrollWheelZoom={false}>
+    <MapContainer style={{ height: height, width:width}}  center={DEFAULT_CENTER} zoom={zoom} scrollWheelZoom={false} >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://palp.art/xyz-tiles/{z}/{x}/{y}.png"
@@ -278,11 +291,25 @@ const MapComponent = ({item, color, height, width, zoom, additionalItems, imageA
             // IMP:the key enables the geojson to change when the data prop is changed
           <GeoJSON key={currentImagePolygon['id']+Math.floor(Math.random()*1000).toString()} pathOptions={currImageGeoJSONStyle} data={currentImagePolygon}>
             <Popup>
-              The selected image is in {`${currentImagePolygon['id'].replace("urn:p-lod:id:","")}`}
+              The selected image is on <Link className='hover:underline' href={`/browse/${currentImagePolygon['id'].replace("urn:p-lod:id:","")}`}>{`${currentImagePolygon['id'].replace("urn:p-lod:id:","")}`}</Link> 
             </Popup>
           </GeoJSON>);
         })
       }
+
+      {/* {
+
+        currImagePolygonDeets.map((currentImagePolygon)=>{
+          console.log("the coordinates are :", [currentImagePolygon["geometry"]["coordinates"][0][0], currentImagePolygon["geometry"]["coordinates"][0][1]])
+          return (
+            // IMP:the key enables the geojson to change when the data prop is changed
+          <CircleMarker key={currentImagePolygon['id']+Math.floor(Math.random()*1000).toString()} pathOptions={{ color: 'green', fillColor: 'green' }} radius={100} center={[currentImagePolygon["geometry"]["coordinates"][0][0], currentImagePolygon["geometry"]["coordinates"][0][1]]}>
+            <Popup>
+              The selected image is on <Link className='hover:underline' href={`/browse/${currentImagePolygon['id'].replace("urn:p-lod:id:","")}`}>{`${currentImagePolygon['id'].replace("urn:p-lod:id:","")}`}</Link> 
+            </Popup>
+          </CircleMarker>);
+        })
+      } */}
       
       {/* shows the additional items on the map */}
       {

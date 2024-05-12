@@ -137,7 +137,7 @@ const MainTemplate = ({children}) => {
         {/* header image */}
         {/* <img className='h-20 object-none w-full' src={header}/> */}
         <div className=" bg-[url('src/images/header.jpg')] text-center object-none flex flex-row py-3">
-          <Link href="/">
+          <Link href="/start">
             <button className='my-auto p-1 m-5 bg-white rounded-md hover:bg-black hover:text-white  border-2 border-black text-black'>
               {/* <h1 className=' text-center my-auto '>MENU</h1> */}
               <GoHomeFill  /> 
