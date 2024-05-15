@@ -57,6 +57,7 @@ const Item = (props) => {
   //the title with the entity name
   const [entityTitle, setEntityTitle] = useState("")
   const [secondaryEntity, setSecondaryEntity] = useState([])
+  const [spatiallyWithin, setSpatiallyWithin] = useState("")
 
   //the type of the entity
   const [entityType, setEntityType] = useState("")
@@ -88,6 +89,11 @@ const Item = (props) => {
         //get the wiki data url
         if(element['urn:p-lod:id:wikidata-url']){
           setWikiDataURL(element['urn:p-lod:id:wikidata-url'])
+        }
+        //get the spatial parent, if any
+        if(element['urn:p-lod:id:spatially-within']){
+          setSpatiallyWithin(element['urn:p-lod:id:spatially-within'].replace("urn:p-lod:id:",""))
+          console.log("set spatially within", element['urn:p-lod:id:spatially-within'].replace("urn:p-lod:id:",""))
         }
 
       }); 
@@ -238,7 +244,7 @@ const Item = (props) => {
                 }}>Clear</button>
               {/* </span> */}
               {/* <MapComponent zoom={15} width="600px" height="300px" item={itemName} color={"#FF7259"} additionalItems={secondaryEntity}  imageARC={imageLocation}/> */}
-              <MapComponent zoom={15} width="100%" height="100%" item={itemName} color={"#FF7259"} additionalItems={secondaryEntity}  imageARC={imageLocation}/>
+              <MapComponent zoom={15} width="100%" height="100%" item={itemName} spatiallyWithin={spatiallyWithin} color={"#FF7259"} additionalItems={secondaryEntity}  imageARC={imageLocation}/>
             </div>
 
           </div>
