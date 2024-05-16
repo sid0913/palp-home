@@ -102,9 +102,9 @@ const MapComponent = ({item, spatiallyWithin, color, height, width, zoom, additi
 
   //the styling for the additional geojson plots on the map
   const additionalGeoJSONStyle = {
-    "color": "#FF7259",
-    "weight": 6,
-    "opacity": 0.4
+    "color": "#AAFF00",
+    "weight": 1,
+    "opacity": 0.3
   };
 
   //the styling for the spatial parent geojson plots on the map
