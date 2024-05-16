@@ -289,7 +289,7 @@ const Item = (props) => {
 
                       </div>
                       <p className='my-auto'>
-                        {element['legendName']}
+                        {element['legendName'] !== "current entity" ? element['legendName'] : (entityTitle)}
                       </p>
                     </span>
                     )
