@@ -64,6 +64,10 @@ const Item = (props) => {
   
 
   const [WikiDataURL, setWikiDataURL] = useState("")
+  const [WikiENDataURL, setWikiENDataURL] = useState("")
+  const [WikiITDataURL, setWikiITDataURL] = useState("")
+  const [PleiadesDataURL, setPleiadesDataURL] = useState("")
+  const [PipDataURL, setPipDataURL] = useState("")
 
   async function getEntityDetails(itemName){
     const response = await fetch(`https://api.p-lod.org/id/${itemName}`);
@@ -90,6 +94,29 @@ const Item = (props) => {
         if(element['urn:p-lod:id:wikidata-url']){
           setWikiDataURL(element['urn:p-lod:id:wikidata-url'])
         }
+
+        //get the wiki en data url
+        if(element['urn:p-lod:id:wiki-en-url']){
+          setWikiENDataURL(element['urn:p-lod:id:wiki-en-url'])
+        }
+
+        //get the wiki it data url
+        if(element['urn:p-lod:id:wiki-it-url']){
+          setWikiITDataURL(element['urn:p-lod:id:wiki-it-url'])
+        }
+
+        //get the pleiades data url
+        if(element['urn:p-lod:id:pleiades-url']){
+          setPleiadesDataURL(element['urn:p-lod:id:pleiades-url'])
+        }
+
+        //get the Pompeii in pictures data url
+        if(element['urn:p-lod:id:p-in-p-url']){
+          setPipDataURL(element['urn:p-lod:id:p-in-p-url'])
+        }
+
+
+
         //get the spatial parent, if any
         if(element['urn:p-lod:id:spatially-within']){
           setSpatiallyWithin(element['urn:p-lod:id:spatially-within'].replace("urn:p-lod:id:",""))
@@ -213,17 +240,27 @@ const Item = (props) => {
           </span>
 
           <span className='flex flex-row justify-evenly space-x-5'>
+            <Link href={PipDataURL} className={`${PipDataURL !== "hidden"? '':""} link`} >
+              Pompeii in Pictures
+            </Link>
+
+            <Link href={WikiENDataURL} className={`${WikiENDataURL !== ""? '':"hidden"} link`} >
+              Wiki(en)
+            </Link>
+
+            <Link href={WikiITDataURL} className={`${WikiITDataURL !== ""? '':"hidden"} link`}>
+              Wiki(it)
+            </Link>
+            
             <Link href={WikiDataURL} className={`${WikiDataURL !== ""? '':"hidden"} link`}>
               WikiData
             </Link>
 
-            <Link href="/" className='link hidden'>
-              Wiki(en)
+            <Link href={PleiadesDataURL} className={`${PleiadesDataURL !== ""? '':"hidden"} link`}>
+              Pleiades
             </Link>
 
-            <Link href="/" className='link hidden'>
-              Wiki(it)
-            </Link>
+            
           </span>
           
         </div> 
