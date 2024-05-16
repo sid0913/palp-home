@@ -97,7 +97,7 @@ const MapComponent = ({item, spatiallyWithin, color, height, width, zoom, additi
 
   //style of the geojsons to be plotted for all the occurences of the current item on the map
   const currentItemGeoJSONStyle={"color": "#dc143c",
-    "weight": 5,
+    "weight": 1,
     "opacity": 0.70}
 
   //the styling for the additional geojson plots on the map
@@ -148,6 +148,12 @@ const MapComponent = ({item, spatiallyWithin, color, height, width, zoom, additi
         return
       }
       const api_response = result[0];
+
+      if(!api_response){
+        console.log(`the spatial parent's (${spatiallyWithin}) geojson api response failed`)
+        return
+      }
+
       let list_of_geo_jsons;
       if(api_response.features){
         list_of_geo_jsons = api_response.features;
@@ -175,6 +181,12 @@ const MapComponent = ({item, spatiallyWithin, color, height, width, zoom, additi
         return
       }
       const api_response = result[0];
+
+      if(!api_response){
+        console.log(`the page item's (${item}) geojson api response failed`)
+        return
+      }
+      
       let list_of_geo_jsons;
       if(api_response.features){
         list_of_geo_jsons = api_response.features;
@@ -207,6 +219,12 @@ const MapComponent = ({item, spatiallyWithin, color, height, width, zoom, additi
       }
       console.log("result is", result)
       const api_response = result[0];
+
+      if(!api_response){
+        console.log(`the current image position's (${imageARC}) geojson api response failed`)
+        return
+      }
+      
       let list_of_geo_jsons;
       if(api_response.features){
         list_of_geo_jsons = api_response.features;
@@ -270,6 +288,12 @@ const MapComponent = ({item, spatiallyWithin, color, height, width, zoom, additi
             return
           }
           const api_response = result[0];
+
+          if(!api_response){
+            console.log(`the additional item's (${item}) geojson api response failed`)
+            return
+          }
+          
           let list_of_geo_jsons;
           if(api_response.features){
             list_of_geo_jsons = api_response.features;

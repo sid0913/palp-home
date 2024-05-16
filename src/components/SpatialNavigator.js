@@ -2,8 +2,15 @@ import React, { useEffect, useState } from 'react'
 import { Link } from 'gatsby'
 import LoadingComponent from './LoadingComponent'
 import EntityMenuItem from './NavigatorComponents/EntityMenuItem'
+import Dropdown from 'rsuite/Dropdown';
 
+// (Optional) Import component styles. If you are using Less, import the `index.less` file. 
+import 'rsuite/Dropdown/styles/index.css';
 const SpatialNavigator = ({selectedEntity, selectedEntityLabel, entityType, setSecondaryEntity}) => {
+
+    //the options of space levels
+    const levels = ["Region", "Insula","Property", "Rooms", "Walls"] //, "Space"]
+    const [selectedLevel, setSelectedLevel] = useState("Region")
 
     //give it a default empty string value
     selectedEntity = selectedEntity?selectedEntity:""
@@ -26,7 +33,7 @@ const SpatialNavigator = ({selectedEntity, selectedEntityLabel, entityType, setS
     
     async function getAncestors(spatialEntity){
         /**
-         * given a spatialEntity like r1, it retrieves a list of JSONs of spatial ancestors for the selected spatial entity
+         * given a spatialEntity like r1, it retrieves a list of JSONs of spatial ancestors for the selected spatial entity and sets the states
          * @param  {[string]} spatialEntity the spatial entity we want the ancestors for
          * @return {[JSON]}     a list of JSONs of the ancestors
          */
@@ -79,6 +86,44 @@ const SpatialNavigator = ({selectedEntity, selectedEntityLabel, entityType, setS
             }
     }
 
+    async function getSpatialAncestors(room){
+        /**
+         * given a spatialEntity like r1, it retrieves a list of JSONs of spatial ancestors for the selected spatial entity
+         * @param  {[string]} room the room we want the ancestors for
+         * @return {[JSON]}     a list of JSONs of the ancestors
+         */
+        
+        
+        const response = await fetch(`https://api.p-lod.org/spatial-ancestors/${room}`);
+        
+        if(response.ok){
+            const listOfAncestors = await response.json()
+
+            //set the state for ancestors
+            return listOfAncestors.reverse().slice(0,-1)
+    
+        }
+        else{
+            console.log("Error retrieving ancestors for "+room)
+        }
+    }
+
+    async function getSpatialParentsForAllRooms(arrayOfRooms){
+        const uniqueRooms = new Set(arrayOfRooms);
+
+        const Regions = []
+        const RegionsJSONs = []
+        const Properties = []
+        const PropertiesJSONs = []
+        const Insulae = []
+        const InsulaeJSONs = []
+
+        uniqueRooms.forEach((element)=>{
+            // const result = await getSpatialAncestors(room)
+
+        })
+        
+    }
 
     async function getSpatialEntitiesWhereTheConceptIsDepicted(concept){
         /**
@@ -104,6 +149,9 @@ const SpatialNavigator = ({selectedEntity, selectedEntityLabel, entityType, setS
                     setFetchedConceptSpaces(true)
                     //set the state for children
                     setListOfSpacesDepictingTheConcept(listOfDepictedConcepts)
+                    getSpatialParentsForAllRooms(listOfDepictedConcepts.filter((element)=>{return element["within"]}).map((element)=>{
+                        return element['within'].replace("urn:p-lod:id:","")
+                    }))
                 }
 
                 
@@ -151,12 +199,12 @@ const SpatialNavigator = ({selectedEntity, selectedEntityLabel, entityType, setS
     
 
   return (
-    <div className='p-2 flex flex-col space-y-5'>
+    <div className='p-2 flex flex-col space-y-1'>
         <h1 className='font-semibold text-lg text-left'>
             Spatial Units
         </h1>
 
-        <ul className='text-green-500 text-left text-sm'>
+        <ul className='text-left text-green-700'>
             {/* if the entity type is spatialEntity or city, show a heirarchy of it, or if it is a concept, render a list of spatial entities where the concept is depicted */}
             { 
             
@@ -171,6 +219,41 @@ const SpatialNavigator = ({selectedEntity, selectedEntityLabel, entityType, setS
                     function (){return (
                         <>
                             <LoadingComponent hiddenWhen={fetchedConceptSpaces}/>
+                            {/* <Dropdown style={{margin:"2vh"}} trigger="click" title={selectedLevel} >
+                                {levels.map((element)=>{
+                                    return (<Dropdown.Item value={element}  onClick={()=>{
+                                        setSelectedLevel(element)
+                                        // setCompleteList(mappingLevelsToArray[element])
+                                    }}>{element}</Dropdown.Item>)
+
+                                })}
+                            </Dropdown> */}
+
+
+                            <select className='border-2 border-slate-200 bg-slate-50 p-2 rounded-md' style={{margin:"2vh"}} trigger="click" title={selectedLevel}  >
+                                {levels.map((element)=>{
+                                    return (<option value={element}  onClick={()=>{
+                                        setSelectedLevel(element)
+                                        console.log("selected level", selectedLevel)
+                                        // setCompleteList(mappingLevelsToArray[element])
+                                    }}>{element}</option>)
+
+                                })}
+                                
+                            </select> 
+
+                            {/* <select style={{margin:"2vh"}} trigger="click" title={selectedLevel}   >
+                                {levels.map((element)=>{
+                                    return (<option key={element} value={element}  onClick={()=>{
+                                        setSelectedLevel(element)
+                                        console.log("selected level", selectedLevel)
+                                        // setCompleteList(mappingLevelsToArray[element])
+                                    }}>{element}</option>)
+
+                                })}
+                            </select> */}
+                            {/* {selectedLevel} */}
+
                             {listOfSpacesDepictingTheConcept.map((concept)=>{
                                 //if selected, highlight it
                                 
