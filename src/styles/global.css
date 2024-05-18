@@ -9,3 +9,11 @@
 .link{
     @apply text-blue-500 hover:underline
 }
+
+.black-link{
+    @apply text-black hover:underline
+}
+
+.disabled-black-link{
+    @apply text-slate-500
+}

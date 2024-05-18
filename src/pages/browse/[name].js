@@ -284,12 +284,12 @@ const Item = (props) => {
 
                   {[{color:"#dc143c", legendName:"current entity"}, {color:"#000000", legendName:"current image"}, {color:"#eee600", legendName:"spatial parent"}, {color:"#AAFF00", legendName:"added entities"}].map((element)=>{
                     return(
-                    <span className={` flex flex-row space-x-1 ${element["legendName"] === "added entities" && secondaryEntity.length === 0?"hidden":""} ${element["legendName"] === "spatial parent" && (entityType === "concept" || entityType === "")?"hidden":""}`}>
+                    <span className={` flex flex-row space-x-1 ${element["legendName"] === "spatial parent" && spatiallyWithin === ""?"hidden":""} ${element["legendName"] === "added entities" && secondaryEntity.length === 0?"hidden":""} ${element["legendName"] === "spatial parent" && (entityType === "concept" || entityType === "")?"hidden":""}`}>
                       <div style={{backgroundColor:element["color"]}} className={`h-[10px] w-[10px] my-auto `}>
 
                       </div>
                       <p className='my-auto'>
-                        {element['legendName'] !== "current entity" ? element['legendName'] : (entityTitle)}
+                        {element['legendName'] !== "current entity" ? ( element['legendName'] !== "spatial parent" ? element['legendName']:spatiallyWithin) : (entityTitle)}
                       </p>
                     </span>
                     )
@@ -411,7 +411,7 @@ const Item = (props) => {
          <Link className='link' href={`https://p-lod.org/urn/urn:p-lod:id:${itemName}`}>
             {entityTitle? entityTitle:itemName}
          </Link>
-          {" "}on PLOD
+          {" "}on P-LOD
       </span>
     </PageLayout>
     
