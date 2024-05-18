@@ -9,7 +9,7 @@ import 'rsuite/Dropdown/styles/index.css';
 const SpatialNavigator = ({selectedEntity, selectedEntityLabel, entityType, setSecondaryEntity}) => {
 
     //the options of space levels
-    const levels = ["Region", "Insula","Property", "Rooms", "Walls"] //, "Space"]
+    const levels = ["Region", "Insula","Property", "Room", "Wall"] //, "Space"]
     const [selectedLevel, setSelectedLevel] = useState("Region")
 
     //give it a default empty string value
@@ -61,7 +61,6 @@ const SpatialNavigator = ({selectedEntity, selectedEntityLabel, entityType, setS
          * @return {[JSON]}     a list of JSONs of the children
          */
         
-            console.log(`https://api.p-lod.org/spatial-children/${spatialEntity}`)
             const response = await fetch(`https://api.p-lod.org/spatial-children/${spatialEntity}`);
         
             if(response.ok){
