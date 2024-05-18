@@ -289,7 +289,7 @@ const Item = (props) => {
 
                       </div>
                       <p className='my-auto'>
-                        {element['legendName'] !== "current entity" ? ( element['legendName'] !== "spatial parent" ? element['legendName']:spatiallyWithin) : (entityTitle)}
+                        {element['legendName'] !== "current entity" ? ( element['legendName'] !== "spatial parent" ? element['legendName']: <Link className='link' href={`/browse/${spatiallyWithin}`}> {spatiallyWithin}</Link>) : (entityTitle)}
                       </p>
                     </span>
                     )

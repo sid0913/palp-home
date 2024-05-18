@@ -229,7 +229,7 @@ const SpatialNavigator = ({selectedEntity, selectedEntityLabel, entityType, setS
                             </Dropdown> */}
 
 
-                            <select className='border-2 border-slate-200 bg-slate-50 p-2 rounded-md' style={{margin:"2vh"}} trigger="click" title={selectedLevel}  >
+                            {/* <select className='border-2 border-slate-200 bg-slate-50 p-2 rounded-md' style={{margin:"2vh"}} trigger="click" title={selectedLevel}  >
                                 {levels.map((element)=>{
                                     return (<option value={element}  onClick={()=>{
                                         setSelectedLevel(element)
@@ -239,19 +239,9 @@ const SpatialNavigator = ({selectedEntity, selectedEntityLabel, entityType, setS
 
                                 })}
                                 
-                            </select> 
+                            </select>  */}
 
-                            {/* <select style={{margin:"2vh"}} trigger="click" title={selectedLevel}   >
-                                {levels.map((element)=>{
-                                    return (<option key={element} value={element}  onClick={()=>{
-                                        setSelectedLevel(element)
-                                        console.log("selected level", selectedLevel)
-                                        // setCompleteList(mappingLevelsToArray[element])
-                                    }}>{element}</option>)
-
-                                })}
-                            </select> */}
-                            {/* {selectedLevel} */}
+                            
 
                             {listOfSpacesDepictingTheConcept.map((concept)=>{
                                 //if selected, highlight it
