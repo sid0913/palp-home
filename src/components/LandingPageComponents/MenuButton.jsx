@@ -8,11 +8,12 @@ import { Link } from 'gatsby'
  * @param  {String} description the description of the menu item
  * @returns {Component} the component of the menu item
  */
-const MenuButton = ({title, description, href}) => {
+const MenuButton = ({disabled,title, description, href}) => {
+  disabled = disabled?disabled:false
   return (
-    <Link href={href}> 
-        <div className="card border-2 border-[#843c0b] bg-[url('src/images/header.jpg')] hover:opacity-75 text-white bg-center h-[20vh] w-[50vw] mx-auto">
-          <h1 className="text-2xl font-semibold">
+    <Link  href={href}> 
+        <div className={`${disabled?"opacity-50 ":"hover:opacity-75 text-white"} card border-2  border-[#843c0b] bg-[url('src/images/header.jpg')]    bg-center h-[20vh] w-[50vw] mx-auto`}>
+          <h1 className={`${disabled?"opacity-100 text-black":""} text-2xl font-semibold`}>
             {title}
           </h1>
 

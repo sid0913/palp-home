@@ -1,9 +1,10 @@
 
 
 import React from 'react'
-import { MapContainer, TileLayer, Marker, Popup, GeoJSON } from 'react-leaflet'
+import { MapContainer, TileLayer, Marker, Popup, GeoJSON, CircleMarker, LayerGroup, LayersControl } from 'react-leaflet'
 import { useState, useEffect } from 'react';
 import { element } from 'prop-types';
+import { Link } from 'gatsby';
 
 const DEFAULT_CENTER = [40.75, 14.485]
 
@@ -64,7 +65,7 @@ async function getGeoJSON(item){
   return [geo_json, found];
 }
 
-const MapComponent = ({item, color, height, width, zoom, additionalItems, imageARC}) => {
+const MapComponent = ({item, spatiallyWithin, color, height, width, zoom, additionalItems, imageARC}) => {
     /**
  * given an entity like snake or an address like r1-i1-p1, it returns a map component where that entity or address is plotted
  * @param  {string} item the entity or address we want plotted- must be lower case
@@ -83,32 +84,44 @@ const MapComponent = ({item, color, height, width, zoom, additionalItems, imageA
   additionalItems = additionalItems? additionalItems : []
   color = color? color : "#b029d7"
   imageARC = imageARC? imageARC : ""
+  spatiallyWithin = spatiallyWithin ? spatiallyWithin:""
 
   
 
   //the geojson style of the currently selected image
   const currImageGeoJSONStyle = {
     "color": "#000000",
-    "weight": 9,
+    "weight": 4,
     "opacity": 0.9
   } 
 
   //style of the geojsons to be plotted for all the occurences of the current item on the map
-  const currentItemGeoJSONStyle={"color": "#00ff80",
-    "weight": 5,
-    "opacity": 0.50}
+  const currentItemGeoJSONStyle={"color": "#dc143c",
+    "weight": 1,
+    "opacity": 0.70}
 
   //the styling for the additional geojson plots on the map
   const additionalGeoJSONStyle = {
-    "color": "#FF7259",
-    "weight": 6,
-    "opacity": 0.25
+    "color": "#AAFF00",
+    "weight": 1,
+    "opacity": 0.3
+  };
+
+  //the styling for the spatial parent geojson plots on the map
+  const parentGeoJSONStyle = {
+    "color": "#eee600",
+    "weight": 1,
+    "opacity": 0.3
   };
 
   //state to hold the polygon locations for the map
   const [PolygonDeets, setPolygon]  = useState([]);
 
+  //the polygon of the image that is currently being viewed in the gallery
   const [currImagePolygonDeets, setCurrImagePolygonDeets]  = useState([]);
+
+  //the polygon of the spatial parent of the item if it is a spatial unit 
+  const [parentPolygonDeets, setParentPolygonDeets]  = useState([]);
 
   //hold the polygon details for additional items
   const [additionalItemsPolygonDeets, setAdditionalItemsPolygonDeets]  = useState([]);
@@ -117,6 +130,43 @@ const MapComponent = ({item, color, height, width, zoom, additionalItems, imageA
 
 
   useEffect(()=>{
+
+    
+
+
+    (async ()=>{
+
+      //if this is any empty item- do nothing, showing a plain map
+      if (spatiallyWithin === ""){
+        console.log("the spatially within value is", spatiallyWithin)
+        return
+      }
+      console.log("the spatially within value is", spatiallyWithin)
+
+      const result = await getGeoJSON(spatiallyWithin);
+      if (result === null){
+        return
+      }
+      const api_response = result[0];
+
+      if(!api_response){
+        console.log(`the spatial parent's (${spatiallyWithin}) geojson api response failed`)
+        return
+      }
+
+      let list_of_geo_jsons;
+      if(api_response.features){
+        list_of_geo_jsons = api_response.features;
+    
+      }
+    
+      else{
+        list_of_geo_jsons = [api_response]
+      }
+  
+  
+      setParentPolygonDeets(list_of_geo_jsons);
+    })();
 
     //asynchronously get the geojsons and assign them to the Polygon react state of the current item
     (async ()=>{
@@ -127,7 +177,16 @@ const MapComponent = ({item, color, height, width, zoom, additionalItems, imageA
       }
 
       const result = await getGeoJSON(item);
+      if (result === null){
+        return
+      }
       const api_response = result[0];
+
+      if(!api_response){
+        console.log(`the page item's (${item}) geojson api response failed`)
+        return
+      }
+      
       let list_of_geo_jsons;
       if(api_response.features){
         list_of_geo_jsons = api_response.features;
@@ -142,6 +201,9 @@ const MapComponent = ({item, color, height, width, zoom, additionalItems, imageA
       setPolygon(list_of_geo_jsons);
     })();
 
+
+    
+
     //asynchronously assign the polygons for the ARC wall of the currently viewed image
     (async ()=>{
 
@@ -152,7 +214,17 @@ const MapComponent = ({item, color, height, width, zoom, additionalItems, imageA
       }
 
       const result = await getGeoJSON(imageARC);
+      if (result === null){
+        return
+      }
+      console.log("result is", result)
       const api_response = result[0];
+
+      if(!api_response){
+        console.log(`the current image position's (${imageARC}) geojson api response failed`)
+        return
+      }
+      
       let list_of_geo_jsons;
       if(api_response.features){
         list_of_geo_jsons = api_response.features;
@@ -208,9 +280,20 @@ const MapComponent = ({item, color, height, width, zoom, additionalItems, imageA
           if (item === ""){
             return
           }
+
+          
   
           const result = await getGeoJSON(item);
+          if (result === null){
+            return
+          }
           const api_response = result[0];
+
+          if(!api_response){
+            console.log(`the additional item's (${item}) geojson api response failed`)
+            return
+          }
+          
           let list_of_geo_jsons;
           if(api_response.features){
             list_of_geo_jsons = api_response.features;
@@ -242,16 +325,30 @@ const MapComponent = ({item, color, height, width, zoom, additionalItems, imageA
 
 
     })();
-  }, [item, additionalItems, imageARC])
+  }, [item, additionalItems, imageARC, spatiallyWithin])
 
   return (
 
     <>
-    <MapContainer style={{ height: height, width:width }} center={DEFAULT_CENTER} zoom={zoom} scrollWheelZoom={false}>
+    <MapContainer style={{ height: height, width:width}}   center={DEFAULT_CENTER} zoom={zoom} scrollWheelZoom={false} >
       <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        attribution='&copy; <a href="http://digitalhumanities.umass.edu/pbmp/">PBMP</a>'
         url="https://palp.art/xyz-tiles/{z}/{x}/{y}.png"
+        maxZoom={20}
       />
+
+      {/* <LayersControl.Overlay> */}
+        {
+          PolygonDeets.map((element)=>{
+            return (<GeoJSON  key={element["id"]+Math.floor(Math.random()*1000).toString()} pathOptions={currentItemGeoJSONStyle} data={element} >
+              <Popup>
+                {`${element['id'].replace("urn:p-lod:id:","")}`}
+              </Popup>
+            </GeoJSON>);
+          })
+
+        }
+      {/* </LayersControl.Overlay> */}
       {/* <Marker position={[51.505, -0.09]}>
         <Popup>
           A pretty CSS3 popup. <br /> Easily customizable.
@@ -259,16 +356,7 @@ const MapComponent = ({item, color, height, width, zoom, additionalItems, imageA
       </Marker> */}
 
       {/* the polygons of the current item */}
-      {
-        PolygonDeets.map((element)=>{
-          return (<GeoJSON key={element["id"]+Math.floor(Math.random()*1000).toString()} pathOptions={currentItemGeoJSONStyle} data={element} >
-            <Popup>
-              {`${element['id'].replace("urn:p-lod:id:","")}`}
-            </Popup>
-          </GeoJSON>);
-        })
-
-      }
+      
 
       {/* shows the location of the currently presenting image on the gallery */}
       {
@@ -278,11 +366,41 @@ const MapComponent = ({item, color, height, width, zoom, additionalItems, imageA
             // IMP:the key enables the geojson to change when the data prop is changed
           <GeoJSON key={currentImagePolygon['id']+Math.floor(Math.random()*1000).toString()} pathOptions={currImageGeoJSONStyle} data={currentImagePolygon}>
             <Popup>
-              The selected image is in {`${currentImagePolygon['id'].replace("urn:p-lod:id:","")}`}
+              The selected image is on <Link className='hover:underline' href={`/browse/${currentImagePolygon['id'].replace("urn:p-lod:id:","")}`}>{`${currentImagePolygon['id'].replace("urn:p-lod:id:","")}`}</Link> 
             </Popup>
           </GeoJSON>);
         })
       }
+
+      {/* {
+
+        currImagePolygonDeets.map((currentImagePolygon)=>{
+          console.log("the coordinates are :", [currentImagePolygon["geometry"]["coordinates"][0][0], currentImagePolygon["geometry"]["coordinates"][0][1]])
+          return (
+            // IMP:the key enables the geojson to change when the data prop is changed
+          <CircleMarker key={currentImagePolygon['id']+Math.floor(Math.random()*1000).toString()} pathOptions={{ color: 'green', fillColor: 'green' }} radius={100} center={[currentImagePolygon["geometry"]["coordinates"][0][0], currentImagePolygon["geometry"]["coordinates"][0][1]]}>
+            <Popup>
+              The selected image is on <Link className='hover:underline' href={`/browse/${currentImagePolygon['id'].replace("urn:p-lod:id:","")}`}>{`${currentImagePolygon['id'].replace("urn:p-lod:id:","")}`}</Link> 
+            </Popup>
+          </CircleMarker>);
+        })
+      } */}
+
+
+  {/* plot the spatial parent of the current item */}
+  <LayerGroup>
+  {
+
+    parentPolygonDeets.map((element)=>{
+      return (<GeoJSON interactive={false}  key={element["id"]+Math.floor(Math.random()*1000).toString()} pathOptions={parentGeoJSONStyle} data={element} >
+      </GeoJSON>);
+    })
+  }
+
+  </LayerGroup>
+  
+
+
       
       {/* shows the additional items on the map */}
       {

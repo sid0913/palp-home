@@ -16,6 +16,7 @@ import '../../styles/Carousel.module.css'
 
 // import Swiper styles
 import 'swiper/css';
+import { Link } from 'gatsby';
 
 // import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 // import { Carousel } from 'react-responsive-carousel';
@@ -56,12 +57,17 @@ const Item = (props) => {
   //the title with the entity name
   const [entityTitle, setEntityTitle] = useState("")
   const [secondaryEntity, setSecondaryEntity] = useState([])
+  const [spatiallyWithin, setSpatiallyWithin] = useState("")
 
   //the type of the entity
   const [entityType, setEntityType] = useState("")
   
 
-
+  const [WikiDataURL, setWikiDataURL] = useState("")
+  const [WikiENDataURL, setWikiENDataURL] = useState("")
+  const [WikiITDataURL, setWikiITDataURL] = useState("")
+  const [PleiadesDataURL, setPleiadesDataURL] = useState("")
+  const [PipDataURL, setPipDataURL] = useState("")
 
   async function getEntityDetails(itemName){
     const response = await fetch(`https://api.p-lod.org/id/${itemName}`);
@@ -82,6 +88,39 @@ const Item = (props) => {
         //get the type
         if(element["http://www.w3.org/1999/02/22-rdf-syntax-ns#type"]){
           type = element["http://www.w3.org/1999/02/22-rdf-syntax-ns#type"]
+        }
+
+        //get the wiki data url
+        if(element['urn:p-lod:id:wikidata-url']){
+          setWikiDataURL(element['urn:p-lod:id:wikidata-url'])
+        }
+
+        //get the wiki en data url
+        if(element['urn:p-lod:id:wiki-en-url']){
+          setWikiENDataURL(element['urn:p-lod:id:wiki-en-url'])
+        }
+
+        //get the wiki it data url
+        if(element['urn:p-lod:id:wiki-it-url']){
+          setWikiITDataURL(element['urn:p-lod:id:wiki-it-url'])
+        }
+
+        //get the pleiades data url
+        if(element['urn:p-lod:id:pleiades-url']){
+          setPleiadesDataURL(element['urn:p-lod:id:pleiades-url'])
+        }
+
+        //get the Pompeii in pictures data url
+        if(element['urn:p-lod:id:p-in-p-url']){
+          setPipDataURL(element['urn:p-lod:id:p-in-p-url'])
+        }
+
+
+
+        //get the spatial parent, if any
+        if(element['urn:p-lod:id:spatially-within']){
+          setSpatiallyWithin(element['urn:p-lod:id:spatially-within'].replace("urn:p-lod:id:",""))
+          console.log("set spatially within", element['urn:p-lod:id:spatially-within'].replace("urn:p-lod:id:",""))
         }
 
       }); 
@@ -142,7 +181,7 @@ const Item = (props) => {
 
     if (!response.ok) {
       console.log("url not found- unable to fetch images")
-      throw new Error("Network response was not OK");
+      // throw new Error("Network response was not OK");
     }
     
     else{
@@ -195,34 +234,81 @@ const Item = (props) => {
       <div className={`${entityTitle === ""?"invisible":""}`}>
 
       
-        <div className={`text-left text-base font-semibold py-2 md:pl-28 lg:pl-5 `}>  
-          {entityTitle}
+        <div className={`text-left text-base font-semibold py-2 md:pl-28 lg:pl-5 flex flex-row justify-between`}>  
+          <span>
+            {entityTitle}
+          </span>
+
+          <span className='flex flex-row justify-evenly space-x-5'>
+            <Link href={PipDataURL} className={`${PipDataURL !== "hidden"? '':""} link`} >
+              Pompeii in Pictures
+            </Link>
+
+            <Link href={WikiENDataURL} className={`${WikiENDataURL !== ""? '':"hidden"} link`} >
+              Wiki(en)
+            </Link>
+
+            <Link href={WikiITDataURL} className={`${WikiITDataURL !== ""? '':"hidden"} link`}>
+              Wiki(it)
+            </Link>
+            
+            <Link href={WikiDataURL} className={`${WikiDataURL !== ""? '':"hidden"} link`}>
+              WikiData
+            </Link>
+
+            <Link href={PleiadesDataURL} className={`${PleiadesDataURL !== ""? '':"hidden"} link`}>
+              Pleiades
+            </Link>
+
+            
+          </span>
+          
         </div> 
 
         <div className='flex flex-col'>
 
           <div className='flex lg:flex-row flex-col justify-evenly h-[30vh] w-full'>
-            <div className='border-2 border-amber-700  flex justify-start overflow-auto w-[40vw] '>
+            <div className='border-2 border-amber-700  flex justify-start overflow-auto w-[25vw] '>
               {/* <SpaceNavigator selectedConcept={itemName}/> */}
               {entityType !== "" ?<SpatialNavigator selectedEntity={itemName} selectedEntityLabel={entityTitle} entityType={entityType} setSecondaryEntity={setSecondaryEntity}/> :""}
             </div>
 
-            <div  className='border-2 border-amber-700 w-full z-0 overflow-auto'>
-              <span className='flex flex-row justify-start'>
-                <button disabled={secondaryEntity.length === 0 } className={ `p-2 m-2 rounded-lg text-xs ${secondaryEntity.length > 0 ?'bg-black text-white border-2 border-black hover:bg-white hover:text-black ':"bg-slate-300 border-2 border-slate-300 text-slate-400"}`} onClick={()=>{
+            <div  className='border-2 border-amber-700 w-full overflow-auto relative'>
+              {/* <span className='z-10 relative top-0 right-0'> */}
+                <button style={{zIndex:700}} disabled={secondaryEntity.length === 0 } className={ ` p-2 m-2 rounded-lg text-xs absolute top-0 right-0 ${secondaryEntity.length > 0 ?'bg-black text-white border-2 border-black hover:bg-white hover:text-black ':"bg-slate-300 border-2 border-slate-300 text-slate-400"}`} onClick={()=>{
                   //empty the secondary entities array
                   setSecondaryEntity([])
                 }}>Clear</button>
-              </span>
+              <div style={{zIndex:700}} className={ `p-2 m-2 rounded-lg text-xs absolute bottom-0 left-0 `}>
+                <div className='flex flex-row space-x-2 bg-slate-50/75 rounded-md p-2'>
+
+                  {[{color:"#dc143c", legendName:"current entity"}, {color:"#000000", legendName:"current image"}, {color:"#eee600", legendName:"spatial parent"}, {color:"#AAFF00", legendName:"added entities"}].map((element)=>{
+                    return(
+                    <span className={` flex flex-row space-x-1 ${element["legendName"] === "spatial parent" && spatiallyWithin === ""?"hidden":""} ${element["legendName"] === "added entities" && secondaryEntity.length === 0?"hidden":""} ${element["legendName"] === "spatial parent" && (entityType === "concept" || entityType === "")?"hidden":""}`}>
+                      <div style={{backgroundColor:element["color"]}} className={`h-[10px] w-[10px] my-auto `}>
+
+                      </div>
+                      <p className='my-auto'>
+                        {element['legendName'] !== "current entity" ? ( element['legendName'] !== "spatial parent" ? element['legendName']: <Link className='link' href={`/browse/${spatiallyWithin}`}> {spatiallyWithin}</Link>) : (entityTitle)}
+                      </p>
+                    </span>
+                    )
+                  })}
+                  
+                  
+                </div>
+              </div>
+
+              {/* </span> */}
               {/* <MapComponent zoom={15} width="600px" height="300px" item={itemName} color={"#FF7259"} additionalItems={secondaryEntity}  imageARC={imageLocation}/> */}
-              <MapComponent zoom={15} width="53vw" height="22vh" item={itemName} color={"#FF7259"} additionalItems={secondaryEntity}  imageARC={imageLocation}/>
+              <MapComponent zoom={15} width="100%" height="100%" item={itemName} spatiallyWithin={spatiallyWithin} color={"#FF7259"} additionalItems={secondaryEntity}  imageARC={imageLocation}/>
             </div>
 
           </div>
 
           <div className='flex flex-col lg:flex-row justify-evenly h-[47vh] w-full'>
-            <div className='border-2 border-amber-700 w-[60vh] flex justify-start overflow-auto '>
-              {entityType !== "" ?<ConceptNavigator selectedEntity={itemName} selectedEntityLabel={entityTitle} entityType={entityType} setSecondaryEntity={setSecondaryEntity}/> :""}
+            <div className='border-2 border-amber-700 w-[25vw] flex justify-start overflow-auto '>
+              {entityType !== "" ? <ConceptNavigator selectedEntity={itemName} selectedEntityLabel={entityTitle} entityType={entityType} setSecondaryEntity={setSecondaryEntity}/> :""}
             </div>
 
             <div className='border-2 border-amber-700 w-full bg-slate-950 overflow-auto '>
@@ -258,7 +344,7 @@ const Item = (props) => {
                       <SwiperSlide>
                       <img className='h-[30vh] mx-auto px-16' src={imgURL["url"]}/>
                       
-                      </SwiperSlide>)
+                      </SwiperSlide>
                       {/* <span className='h-[20vh] overflow-y-auto text-white'>
                         {imgURL['description']}
                       </span> */}
@@ -320,7 +406,14 @@ const Item = (props) => {
         </div>
       </div>
       
-
+      <span className='w-full  my-5'>
+         View {" "}
+         <Link className='link' href={`https://p-lod.org/urn/urn:p-lod:id:${itemName}`}>
+            {entityTitle? entityTitle:itemName}
+         </Link>
+          {" "}on P-LOD
+      </span>
+      
     </PageLayout>
     
     
