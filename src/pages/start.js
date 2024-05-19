@@ -110,11 +110,11 @@ const IndexPage = () => {
       <div className="mx-auto">
         <CompleteMapComponent width={"40vw"} height={"50vh"}  itemName={currEntity} entityTitle={entityTitle} entityType={entityType} secondaryEntity={[]}  />
       </div>  
-      <div className="w-50vw bg-black text-white p-5 rounded-md my-5">
+      <div className="w-[70vw] mx-auto bg-black text-white p-5 rounded-md my-5">
         <Swiper  navigation={true} modules={[Navigation, Thumbs, FreeMode]}
           // thumbs={{ swiper: thumbsSwiper }}
           spaceBetween={10}
-          slidesPerView={3}
+          slidesPerView={2}
           onSlideChange={(swiper) => {
             // setCurrImageIndex(swiper.activeIndex)
 
@@ -126,6 +126,11 @@ const IndexPage = () => {
           style={{
             '--swiper-navigation-color': 'white',
             '--swiper-pagination-color': '#000',
+
+            'padding-top':'1vh',
+            'padding-bottom':'1vh',
+            'padding-right':'1vw',
+            'padding-left':'2vw'
           }}
         >
 
@@ -138,7 +143,7 @@ const IndexPage = () => {
                 setCurrEntity(imgURL["name"])
                 setEntityTitle(imgURL["name"])
               }}>
-              <div className={`${currEntity === imgURL["name"]?"border-white bg-white text-black":"border-black hover:border-white"} w-[20vw]  flex flex-col text-wrap border-2 rounded-md py-2 mx-5`}>
+              <div className={`${currEntity === imgURL["name"]?"border-white bg-white text-black":"border-black hover:border-white"} w-[20vw]  flex flex-col text-wrap border-2 rounded-md py-2  mx-5`}>
                 <img className='h-[20vh] mx-auto' src={imgURL["url"]}/>
                 <p >
                   {capitalize(imgURL["name"])}
