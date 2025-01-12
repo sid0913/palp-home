@@ -12,8 +12,15 @@ const SpatialNavigator = ({selectedEntity, selectedEntityLabel, entityType, setS
     const levels = ["Region", "Insula","Property", "Room", "Wall"] //, "Space"]
     const [selectedLevel, setSelectedLevel] = useState("Region")
 
+    //the options of space levels and their mapping to their respective url parameter
+    const spatialDepthLevels = {"Region":"region", "Insula":"insula","Property":"property", "Wall":"feature"} //, "Space"]
+    //if the entity is a concept, this state records the level of depth at which the spatial navigator shows the spaces where the concept is depicted
+    const [selectedLevelOfDepth, setSelectedLevelOfDepth] = useState("Wall")
+
     //give it a default empty string value
     selectedEntity = selectedEntity?selectedEntity:""
+
+
 
     //if the entity type is spatial-entity, this stores spatial ancestors of the spatial-entity as JSONs
     const [ancestors, setAncestors] = useState([])
@@ -157,9 +164,8 @@ const SpatialNavigator = ({selectedEntity, selectedEntityLabel, entityType, setS
          * @param  {[String]} concept the concept for which we are search spatialEntities
          * @return {[JSON]}     a list of JSONs of the spatialEntities
          */
-        
-        
-            const response = await fetch(`https://api.p-lod.org/depicted-where/${concept}`);
+            //fetch the spaces where the concept is depicted to the select of depth that the user selects
+            const response = await fetch(`https://api.p-lod.org/depicted-where/${concept}?level_of_detail=${spatialDepthLevels[selectedLevelOfDepth]}`);
         
             if(response.ok){
                 const listOfDepictedConcepts = await response.json()
@@ -218,7 +224,7 @@ const SpatialNavigator = ({selectedEntity, selectedEntityLabel, entityType, setS
 
         }
 
-    }, [])
+    }, [selectedLevelOfDepth])
 
     
 
@@ -267,6 +273,28 @@ const SpatialNavigator = ({selectedEntity, selectedEntityLabel, entityType, setS
                                 })}
                                 
                             </select>  */}
+                            <details className="dropdown">
+                                <summary className="btn m-1">
+                                    {selectedLevelOfDepth}
+                                </summary>
+                                <ul className="menu dropdown-content bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
+                                    {Object.keys(spatialDepthLevels).map((depthLevel)=>{
+                                        return (
+                                            <button key={depthLevel}
+                                            onClick={()=>{
+
+                                                //set the level of depth selected to the option the user clicks on
+                                                setSelectedLevelOfDepth(depthLevel)
+
+                                            }}
+                                            >
+                                                {depthLevel}
+                                            </button>
+                                        )
+                                    })}
+                                    
+                                </ul>
+                            </details>
 
                             
 
@@ -294,7 +322,7 @@ const SpatialNavigator = ({selectedEntity, selectedEntityLabel, entityType, setS
                     
 
                     //if the entity is not a concept execute this, show the hierarchy of the spatial entity
-                    function ifEntityTypeIsConcept (){
+                    function (){
                         return (
                             <>
                                 <LoadingComponent hiddenWhen={fetchedAncestors && fetchedChildren}/>
