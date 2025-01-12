@@ -136,19 +136,46 @@ const MainTemplate = ({children}) => {
         
         {/* header image */}
         {/* <img className='h-20 object-none w-full' src={header}/> */}
-        <div className=" bg-[url('src/images/header.jpg')] text-center object-none flex flex-row py-3">
-          <Link href="/start">
-            <button className='my-auto p-1 m-5 bg-white rounded-md hover:bg-black hover:text-white  border-2 border-black text-black'>
-              {/* <h1 className=' text-center my-auto '>MENU</h1> */}
-              <GoHomeFill  /> 
-            </button>
-          </Link>
-          <h1 className="my-auto text-2xl text-center text-black font-semibold h-full">
-            <span className="">
-              Pompeii’s Artistic Landscape Project
+        <div className=" bg-[url('src/images/header.jpg')] text-center object-none flex flex-row justify-between py-3 px-5">
+          <div className="flex flex-row ">
+            {/* <Link href="/start">
+              <button className='my-auto p-1 m-5 bg-white rounded-md hover:bg-black hover:text-white  border-2 border-black text-black'>
+                <GoHomeFill  /> 
+              </button>
+            </Link> */}
+            <Link href="/start" className="my-auto text-2xl text-center text-black font-semibold h-full hover:underline">
+              <span className="">
+                Pompeii’s Artistic Landscape Project
+              </span>
+            
+            </Link>
+          </div>
+
+          <div className="flex flex-row justify-evenly bg-slate-50/50 py-1 px-4 rounded-md space-x-5">
+            <Link className="black-link" href="/browse/pompeii">
+              Browse
+            </Link>
+            <span className="disabled-black-link flex flex-col">
+              <p>
+                Search
+              </p>
+              <p className="text-xs">
+                (Coming soon)
+              </p>
+
             </span>
+
+            <span className="disabled-black-link" >
+              <p>
+                Compare
+              </p>
+              <p className="text-xs">
+                (Coming soon)
+              </p>
+            </span>
+
+          </div>  
           
-          </h1>
         </div>
 
       </header>

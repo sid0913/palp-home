@@ -9,7 +9,7 @@ import 'rsuite/Dropdown/styles/index.css';
 const SpatialNavigator = ({selectedEntity, selectedEntityLabel, entityType, setSecondaryEntity}) => {
 
     //the options of space levels
-    const levels = ["Region", "Insula","Property", "Rooms", "Walls"] //, "Space"]
+    const levels = ["Region", "Insula","Property", "Room", "Wall"] //, "Space"]
     const [selectedLevel, setSelectedLevel] = useState("Region")
 
     //give it a default empty string value
@@ -61,7 +61,6 @@ const SpatialNavigator = ({selectedEntity, selectedEntityLabel, entityType, setS
          * @return {[JSON]}     a list of JSONs of the children
          */
         
-            console.log(`https://api.p-lod.org/spatial-children/${spatialEntity}`)
             const response = await fetch(`https://api.p-lod.org/spatial-children/${spatialEntity}`);
         
             if(response.ok){
@@ -74,7 +73,34 @@ const SpatialNavigator = ({selectedEntity, selectedEntityLabel, entityType, setS
 
                 // else{
                     //set the state for children
-                    setSpatialChildren(listOfChildren.reverse().slice(0,-1))
+                    const finalChildrenList = listOfChildren.reverse().slice(0,-1)
+                    const ranking=["city", "region","property","insula","space","street"]
+                    //sort to make sure the children are sorted according to the above ranking
+                    finalChildrenList.sort((elementA,elementB)=>{
+                        let a = "space"
+                        let b = "space"
+                        if (elementA["http://www.w3.org/1999/02/22-rdf-syntax-ns#type"]){
+                            a = elementA["http://www.w3.org/1999/02/22-rdf-syntax-ns#type"].replace("urn:p-lod:id:","")
+                        }
+
+                        if (elementB["http://www.w3.org/1999/02/22-rdf-syntax-ns#type"]){
+                            b = elementB["http://www.w3.org/1999/02/22-rdf-syntax-ns#type"].replace("urn:p-lod:id:","")
+                        }
+                         
+
+                        let valueA = 10
+                        let valueB = 10
+                        if (ranking.includes(a)){
+                            valueA = ranking.reverse().indexOf(a)
+                        }
+
+                        if (ranking.includes(b)){
+                            valueB = ranking.reverse().indexOf(b)
+                        }
+
+                        return valueA-valueB
+                    })
+                    setSpatialChildren(finalChildrenList)
                     setFetchedChildren(true)
                 // }
 
@@ -230,7 +256,7 @@ const SpatialNavigator = ({selectedEntity, selectedEntityLabel, entityType, setS
                             </Dropdown> */}
 
 
-                            <select className='border-2 border-slate-200 bg-slate-50 p-2 rounded-md' style={{margin:"2vh"}} trigger="click" title={selectedLevel}  >
+                            {/* <select className='border-2 border-slate-200 bg-slate-50 p-2 rounded-md' style={{margin:"2vh"}} trigger="click" title={selectedLevel}  >
                                 {levels.map((element)=>{
                                     return (<option value={element}  onClick={()=>{
                                         setSelectedLevel(element)
@@ -240,19 +266,9 @@ const SpatialNavigator = ({selectedEntity, selectedEntityLabel, entityType, setS
 
                                 })}
                                 
-                            </select> 
+                            </select>  */}
 
-                            {/* <select style={{margin:"2vh"}} trigger="click" title={selectedLevel}   >
-                                {levels.map((element)=>{
-                                    return (<option key={element} value={element}  onClick={()=>{
-                                        setSelectedLevel(element)
-                                        console.log("selected level", selectedLevel)
-                                        // setCompleteList(mappingLevelsToArray[element])
-                                    }}>{element}</option>)
-
-                                })}
-                            </select> */}
-                            {/* {selectedLevel} */}
+                            
 
                             {listOfSpacesDepictingTheConcept.map((concept)=>{
                                 //if selected, highlight it

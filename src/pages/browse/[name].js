@@ -64,6 +64,10 @@ const Item = (props) => {
   
 
   const [WikiDataURL, setWikiDataURL] = useState("")
+  const [WikiENDataURL, setWikiENDataURL] = useState("")
+  const [WikiITDataURL, setWikiITDataURL] = useState("")
+  const [PleiadesDataURL, setPleiadesDataURL] = useState("")
+  const [PipDataURL, setPipDataURL] = useState("")
 
   async function getEntityDetails(itemName){
     const response = await fetch(`https://api.p-lod.org/id/${itemName}`);
@@ -90,6 +94,29 @@ const Item = (props) => {
         if(element['urn:p-lod:id:wikidata-url']){
           setWikiDataURL(element['urn:p-lod:id:wikidata-url'])
         }
+
+        //get the wiki en data url
+        if(element['urn:p-lod:id:wiki-en-url']){
+          setWikiENDataURL(element['urn:p-lod:id:wiki-en-url'])
+        }
+
+        //get the wiki it data url
+        if(element['urn:p-lod:id:wiki-it-url']){
+          setWikiITDataURL(element['urn:p-lod:id:wiki-it-url'])
+        }
+
+        //get the pleiades data url
+        if(element['urn:p-lod:id:pleiades-url']){
+          setPleiadesDataURL(element['urn:p-lod:id:pleiades-url'])
+        }
+
+        //get the Pompeii in pictures data url
+        if(element['urn:p-lod:id:p-in-p-url']){
+          setPipDataURL(element['urn:p-lod:id:p-in-p-url'])
+        }
+
+
+
         //get the spatial parent, if any
         if(element['urn:p-lod:id:spatially-within']){
           setSpatiallyWithin(element['urn:p-lod:id:spatially-within'].replace("urn:p-lod:id:",""))
@@ -213,17 +240,27 @@ const Item = (props) => {
           </span>
 
           <span className='flex flex-row justify-evenly space-x-5'>
+            <Link href={PipDataURL} className={`${PipDataURL !== "hidden"? '':""} link`} >
+              Pompeii in Pictures
+            </Link>
+
+            <Link href={WikiENDataURL} className={`${WikiENDataURL !== ""? '':"hidden"} link`} >
+              Wiki(en)
+            </Link>
+
+            <Link href={WikiITDataURL} className={`${WikiITDataURL !== ""? '':"hidden"} link`}>
+              Wiki(it)
+            </Link>
+            
             <Link href={WikiDataURL} className={`${WikiDataURL !== ""? '':"hidden"} link`}>
               WikiData
             </Link>
 
-            <Link href="/" className='link hidden'>
-              Wiki(en)
+            <Link href={PleiadesDataURL} className={`${PleiadesDataURL !== ""? '':"hidden"} link`}>
+              Pleiades
             </Link>
 
-            <Link href="/" className='link hidden'>
-              Wiki(it)
-            </Link>
+            
           </span>
           
         </div> 
@@ -238,10 +275,30 @@ const Item = (props) => {
 
             <div  className='border-2 border-amber-700 w-full overflow-auto relative'>
               {/* <span className='z-10 relative top-0 right-0'> */}
-                <button disabled={secondaryEntity.length === 0 } className={ `z-50 p-2 m-2 rounded-lg text-xs absolute top-0 right-0 ${secondaryEntity.length > 0 ?'bg-black text-white border-2 border-black hover:bg-white hover:text-black ':"bg-slate-300 border-2 border-slate-300 text-slate-400"}`} onClick={()=>{
+                <button style={{zIndex:700}} disabled={secondaryEntity.length === 0 } className={ ` p-2 m-2 rounded-lg text-xs absolute top-0 right-0 ${secondaryEntity.length > 0 ?'bg-black text-white border-2 border-black hover:bg-white hover:text-black ':"bg-slate-300 border-2 border-slate-300 text-slate-400"}`} onClick={()=>{
                   //empty the secondary entities array
                   setSecondaryEntity([])
                 }}>Clear</button>
+              <div style={{zIndex:700}} className={ `p-2 m-2 rounded-lg text-xs absolute bottom-0 left-0 `}>
+                <div className='flex flex-row space-x-2 bg-slate-50/75 rounded-md p-2'>
+
+                  {[{color:"#dc143c", legendName:"current entity"}, {color:"#000000", legendName:"current image"}, {color:"#eee600", legendName:"spatial parent"}, {color:"#AAFF00", legendName:"added entities"}].map((element)=>{
+                    return(
+                    <span className={` flex flex-row space-x-1 ${element["legendName"] === "spatial parent" && spatiallyWithin === ""?"hidden":""} ${element["legendName"] === "added entities" && secondaryEntity.length === 0?"hidden":""} ${element["legendName"] === "spatial parent" && (entityType === "concept" || entityType === "")?"hidden":""}`}>
+                      <div style={{backgroundColor:element["color"]}} className={`h-[10px] w-[10px] my-auto `}>
+
+                      </div>
+                      <p className='my-auto'>
+                        {element['legendName'] !== "current entity" ? ( element['legendName'] !== "spatial parent" ? element['legendName']: <Link className='link' href={`/browse/${spatiallyWithin}`}> {spatiallyWithin}</Link>) : (entityTitle)}
+                      </p>
+                    </span>
+                    )
+                  })}
+                  
+                  
+                </div>
+              </div>
+
               {/* </span> */}
               {/* <MapComponent zoom={15} width="600px" height="300px" item={itemName} color={"#FF7259"} additionalItems={secondaryEntity}  imageARC={imageLocation}/> */}
               <MapComponent zoom={15} width="100%" height="100%" item={itemName} spatiallyWithin={spatiallyWithin} color={"#FF7259"} additionalItems={secondaryEntity}  imageARC={imageLocation}/>
@@ -354,8 +411,9 @@ const Item = (props) => {
          <Link className='link' href={`https://p-lod.org/urn/urn:p-lod:id:${itemName}`}>
             {entityTitle? entityTitle:itemName}
          </Link>
-          {" "}on PLOD
+          {" "}on P-LOD
       </span>
+      
     </PageLayout>
     
     

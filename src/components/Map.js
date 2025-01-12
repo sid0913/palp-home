@@ -102,9 +102,9 @@ const MapComponent = ({item, spatiallyWithin, color, height, width, zoom, additi
 
   //the styling for the additional geojson plots on the map
   const additionalGeoJSONStyle = {
-    "color": "#FF7259",
-    "weight": 6,
-    "opacity": 0.4
+    "color": "#AAFF00",
+    "weight": 1,
+    "opacity": 0.3
   };
 
   //the styling for the spatial parent geojson plots on the map
@@ -330,10 +330,11 @@ const MapComponent = ({item, spatiallyWithin, color, height, width, zoom, additi
   return (
 
     <>
-    <MapContainer style={{ height: height, width:width}}  center={DEFAULT_CENTER} zoom={zoom} scrollWheelZoom={false} >
+    <MapContainer style={{ height: height, width:width}}   center={DEFAULT_CENTER} zoom={zoom} scrollWheelZoom={false} >
       <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        attribution='&copy; <a href="http://digitalhumanities.umass.edu/pbmp/">PBMP</a>'
         url="https://palp.art/xyz-tiles/{z}/{x}/{y}.png"
+        maxZoom={20}
       />
 
       {/* <LayersControl.Overlay> */}
