@@ -250,46 +250,33 @@ const SpatialNavigator = ({selectedEntity, selectedEntityLabel, entityType, setS
                 entityType === "concept"? 
                     function (){return (
                         <>
+                            {/* the loading component */}
                             <LoadingComponent hiddenWhen={fetchedConceptSpaces}/>
-                            {/* <Dropdown style={{margin:"2vh"}} trigger="click" title={selectedLevel} >
-                                {levels.map((element)=>{
-                                    return (<Dropdown.Item value={element}  onClick={()=>{
-                                        setSelectedLevel(element)
-                                        // setCompleteList(mappingLevelsToArray[element])
-                                    }}>{element}</Dropdown.Item>)
 
-                                })}
-                            </Dropdown> */}
-
-
-                            {/* <select className='border-2 border-slate-200 bg-slate-50 p-2 rounded-md' style={{margin:"2vh"}} trigger="click" title={selectedLevel}  >
-                                {levels.map((element)=>{
-                                    return (<option value={element}  onClick={()=>{
-                                        setSelectedLevel(element)
-                                        console.log("selected level", selectedLevel)
-                                        // setCompleteList(mappingLevelsToArray[element])
-                                    }}>{element}</option>)
-
-                                })}
-                                
-                            </select>  */}
-                            <details className="dropdown">
-                                <summary className="btn m-1">
+                            {/* the dropdown that allows the user to select the depth at which they want to view the spaces where the concept appears, namely: region, insula, property and wall */}
+                            <details className={`dropdown my-2 ${fetchedConceptSpaces? "" :"hidden"}`}>
+                                <summary className="btn m-1 bg-lime-300 hover:bg-lime-500">
                                     {selectedLevelOfDepth}
                                 </summary>
-                                <ul className="menu dropdown-content bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
+                                <ul className={`menu dropdown-content bg-base-100 rounded-box z-[1] w-52 p-2 shadow `}>
                                     {Object.keys(spatialDepthLevels).map((depthLevel)=>{
                                         return (
-                                            <button key={depthLevel}
-                                            onClick={()=>{
+                                            <div className={`${ selectedLevelOfDepth === depthLevel? "bg-lime-300 text-black":""} rounded-sm p-1`} role="button" tabindex="0" key={depthLevel}
+                                            onClick={(e)=>{
 
                                                 //set the level of depth selected to the option the user clicks on
                                                 setSelectedLevelOfDepth(depthLevel)
 
+                                                // Close the dropdown by finding the details element and closing it
+                                                const detailsElement = e.currentTarget.closest('details');
+                                                if (detailsElement) {
+                                                    detailsElement.removeAttribute('open');
+                                                }
+
                                             }}
                                             >
                                                 {depthLevel}
-                                            </button>
+                                            </div>
                                         )
                                     })}
                                     
@@ -297,17 +284,19 @@ const SpatialNavigator = ({selectedEntity, selectedEntityLabel, entityType, setS
                             </details>
 
                             
-
-                            {listOfSpacesDepictingTheConcept.map((concept)=>{
-                                //if selected, highlight it
-                                
-                                const label = concept["urn"].replace("urn:p-lod:id:","")
-                                    return (
-                                            <EntityMenuItem key={label+Math.floor(Math.random()*1000).toString()} lowerCaseName={label} label={label} setSecondaryEntity={setSecondaryEntity}/>
-                                        
-                                    )
-        
-                            })}
+                            <div className='ml-2'>
+                                {listOfSpacesDepictingTheConcept.map((concept)=>{
+                                    //if selected, highlight it
+                                    
+                                    const label = concept["urn"].replace("urn:p-lod:id:","")
+                                        return (
+                                                <EntityMenuItem key={label+Math.floor(Math.random()*1000).toString()} lowerCaseName={label} label={label} setSecondaryEntity={setSecondaryEntity}/>
+                                            
+                                        )
+            
+                                })}
+                            </div>
+                            
                         </>
                         
                     )
