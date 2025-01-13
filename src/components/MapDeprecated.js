@@ -69,13 +69,11 @@ const MapComponent = ({item, spatiallyWithin, color, height, width, zoom, additi
     /**
  * given an entity like snake or an address like r1-i1-p1, it returns a map component where that entity or address is plotted
  * @param  {string} item the entity or address we want plotted- must be lower case
- * @param  {string} spatiallyWithin the spatial parent of the entity if the entity is a space
  * @param  {string} color the color we want it plotted in
- * @param  {string} height height as a string in pixels like "200px"
  * @param  {string} width width as a string in pixels, the default value is "1200px"
+ * @param  {string} height height as a string in pixels like "200px"
  * @param  {Integer} zoom how far out the map should be zoomed like 15. The higher the value the more zoomed in
  * @param  {[JSON]} additionalItems array of jsons of the itemName and color
- * @param  {[string]} imageARC the currently viewed image on the image panel, this info is important to plot where this image is on the map
  * @return {Component}   the map component
  */
 
