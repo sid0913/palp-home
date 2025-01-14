@@ -6,11 +6,13 @@ import Dropdown from 'rsuite/Dropdown';
 
 // (Optional) Import component styles. If you are using Less, import the `index.less` file. 
 import 'rsuite/Dropdown/styles/index.css';
-const SpatialNavigator = ({selectedEntity, selectedEntityLabel, entityType, setSecondaryEntity}) => {
+
+
+const SpatialNavigator = ({selectedEntity, selectedEntityLabel, entityType, setSecondaryEntity, setSpacesWhereTheConceptIsDepictedGeoJSONs}) => {
 
     //the options of space levels
-    const levels = ["Region", "Insula","Property", "Room", "Wall"] //, "Space"]
-    const [selectedLevel, setSelectedLevel] = useState("Region")
+    // const levels = ["Region", "Insula","Property", "Room", "Wall"] //, "Space"]
+    // const [selectedLevel, setSelectedLevel] = useState("Region")
 
     //the options of space levels and their mapping to their respective url parameter
     const spatialDepthLevels = {"Region":"region", "Insula":"insula","Property":"property", "Wall":"feature"} //, "Space"]
@@ -35,6 +37,18 @@ const SpatialNavigator = ({selectedEntity, selectedEntityLabel, entityType, setS
     const [fetchedAncestors, setFetchedAncestors] = useState(false)
     const [fetchedChildren, setFetchedChildren] = useState(false)
     const [fetchedConceptSpaces, setFetchedConceptSpaces] = useState(false)
+
+
+    function onlyUnique(value, index, array) {
+        /**
+         * this is passed a arrray.filter() as a parameter to return an array without repeated elements
+         * @param  {*} value the element from the current iteration
+         * @param  {Number} index the index from the current iteration
+         * @param  {[*]} array the array with repeated elements
+         * @return {[*]}     an array with no repeated elements
+         */
+        return array.indexOf(value) === index;
+      }
  
 
     
@@ -181,6 +195,48 @@ const SpatialNavigator = ({selectedEntity, selectedEntityLabel, entityType, setS
                     setFetchedConceptSpaces(true)
                     //set the state for children
                     setListOfSpacesDepictingTheConcept(listOfDepictedConcepts)
+
+                    function onlyUnique(value, index, array) {
+                        return array.indexOf(value) === index;
+                      }
+
+                    //set the new values to show on the map component
+                    const extractedGeojsons = listOfDepictedConcepts.filter(
+                        (space)=>{
+                            return space["geojson"] !== "None"
+                        }
+                    ).map(
+                        (space)=>{
+                            return JSON.parse(space['geojson'])
+                        }
+                    )
+
+                    //remove duplicates to avoid overcoloring
+                    const extractedGeojsonsIDs = extractedGeojsons.map((geojson)=>geojson["id"])
+                    const uniqueExtractedGeojsonsIDs = extractedGeojsonsIDs.filter(onlyUnique)
+
+
+
+                    const uniqueExtractedGeojsons = extractedGeojsons.filter((geojson)=>{
+                        const id = geojson['id']
+                        const indexOfID =  uniqueExtractedGeojsonsIDs.indexOf(id)
+                        const isFirstInstance = indexOfID !== -1
+
+
+                        //if this is the first instance of this id, remove it from the list of unique ids
+                        if(isFirstInstance){
+                            uniqueExtractedGeojsonsIDs.splice(indexOfID, 1)
+                        }
+
+
+                        return isFirstInstance
+                    })
+                    
+
+                    //plot the spaces on the map
+                    setSpacesWhereTheConceptIsDepictedGeoJSONs(uniqueExtractedGeojsons)
+
+                    //get the spatial parent
                     getSpatialParentsForAllRooms(listOfDepictedConcepts.filter((element)=>{return element["within"]}).map((element)=>{
                         return element['within'].replace("urn:p-lod:id:","")
                     }))
@@ -285,7 +341,34 @@ const SpatialNavigator = ({selectedEntity, selectedEntityLabel, entityType, setS
 
                             
                             <div className='ml-2'>
-                                {listOfSpacesDepictingTheConcept.map((concept)=>{
+                                {
+                                function (){
+
+                                    const listOfUniqueSpaces = listOfSpacesDepictingTheConcept.map((concept)=>{
+                                        //if selected, highlight it
+                                        
+                                        return concept["urn"].replace("urn:p-lod:id:","")
+                                            
+                                        
+                                    }).filter(onlyUnique) //remove duplicates
+                                    
+                                    //sort the spaces
+                                    listOfUniqueSpaces.sort() 
+
+                                    //build entity menu items to display them
+                                    return listOfUniqueSpaces.map(
+                                        (conceptName)=>{
+                                            return (
+                                                <EntityMenuItem key={conceptName+Math.floor(Math.random()*1000).toString()} lowerCaseName={conceptName} label={conceptName} setSecondaryEntity={setSecondaryEntity}/>
+                                            
+                                            )
+                                        })
+
+                                }()
+                                
+                                }
+
+                                {/* {listOfSpacesDepictingTheConcept.map((concept)=>{
                                     //if selected, highlight it
                                     
                                     const label = concept["urn"].replace("urn:p-lod:id:","")
@@ -294,7 +377,7 @@ const SpatialNavigator = ({selectedEntity, selectedEntityLabel, entityType, setS
                                             
                                         )
             
-                                })}
+                                })} */}
                             </div>
                             
                         </>
