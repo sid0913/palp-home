@@ -65,19 +65,15 @@ async function getGeoJSON(item){
   return [geo_json, found];
 }
 
-const MapComponent = ({item, entityType, spacesWhereTheConceptIsDepictedGeoJSONs, spatiallyWithin, color, height, width, zoom, additionalItems, imageARC}) => {
+const MapComponent = ({item, spatiallyWithin, color, height, width, zoom, additionalItems, imageARC}) => {
     /**
  * given an entity like snake or an address like r1-i1-p1, it returns a map component where that entity or address is plotted
  * @param  {string} item the entity or address we want plotted- must be lower case
- * @param  {string} entityType the type of entity, if undefined "", the values it can host are: city, concept and spatial-entity
- * @param  {[JSON]} spacesWhereTheConceptIsDepictedGeoJSONs the GeoJSONs of the spaces where the concept is depicted if the entity is a concept
- * @param  {string} spatiallyWithin the spatial parent of the entity if the entity is a space
  * @param  {string} color the color we want it plotted in
- * @param  {string} height height as a string in pixels like "200px"
  * @param  {string} width width as a string in pixels, the default value is "1200px"
+ * @param  {string} height height as a string in pixels like "200px"
  * @param  {Integer} zoom how far out the map should be zoomed like 15. The higher the value the more zoomed in
  * @param  {[JSON]} additionalItems array of jsons of the itemName and color
- * @param  {[string]} imageARC the currently viewed image on the image panel, this info is important to plot where this image is on the map
  * @return {Component}   the map component
  */
 
@@ -89,6 +85,8 @@ const MapComponent = ({item, entityType, spacesWhereTheConceptIsDepictedGeoJSONs
   color = color? color : "#b029d7"
   imageARC = imageARC? imageARC : ""
   spatiallyWithin = spatiallyWithin ? spatiallyWithin:""
+
+  
 
   //the geojson style of the currently selected image
   const currImageGeoJSONStyle = {
@@ -132,14 +130,132 @@ const MapComponent = ({item, entityType, spacesWhereTheConceptIsDepictedGeoJSONs
 
 
   useEffect(()=>{
-    //NOTE: items are added in the sequence in which we want leaflet to layer them in the map
+
     
-    //if the entityType has not been fetched yet
-    if (entityType !== ""){ 
+
+
+    (async ()=>{
+
+      //if this is any empty item- do nothing, showing a plain map
+      if (spatiallyWithin === ""){
+        console.log("the spatially within value is", spatiallyWithin)
+        return
+      }
+      console.log("the spatially within value is", spatiallyWithin)
+
+      const result = await getGeoJSON(spatiallyWithin);
+      if (result === null){
+        return
+      }
+      const api_response = result[0];
+
+      if(!api_response){
+        console.log(`the spatial parent's (${spatiallyWithin}) geojson api response failed`)
+        return
+      }
+
+      let list_of_geo_jsons;
+      if(api_response.features){
+        list_of_geo_jsons = api_response.features;
+    
+      }
+    
+      else{
+        list_of_geo_jsons = [api_response]
+      }
+  
+  
+      setParentPolygonDeets(list_of_geo_jsons);
+    })();
+
+    //asynchronously get the geojsons and assign them to the Polygon react state of the current item
+    (async ()=>{
+
+      //if this is any empty item- do nothing, showing a plain map
+      if (item === ""){
+        return
+      }
+
+      const result = await getGeoJSON(item);
+      if (result === null){
+        return
+      }
+      const api_response = result[0];
+
+      if(!api_response){
+        console.log(`the page item's (${item}) geojson api response failed`)
+        return
+      }
+      
+      let list_of_geo_jsons;
+      if(api_response.features){
+        list_of_geo_jsons = api_response.features;
+    
+      }
+    
+      else{
+        list_of_geo_jsons = [api_response]
+      }
+  
+  
+      setPolygon(list_of_geo_jsons);
+    })();
+
+
+    
+
+    //asynchronously assign the polygons for the ARC wall of the currently viewed image
+    (async ()=>{
+
+
+      //if this is any empty item- do nothing, showing a plain map
+      if (imageARC === ""){
+        return
+      }
+
+      const result = await getGeoJSON(imageARC);
+      if (result === null){
+        return
+      }
+      console.log("result is", result)
+      const api_response = result[0];
+
+      if(!api_response){
+        console.log(`the current image position's (${imageARC}) geojson api response failed`)
+        return
+      }
+      
+      let list_of_geo_jsons;
+      if(api_response.features){
+        list_of_geo_jsons = api_response.features;
+    
+      }
+    
+      else{
+        list_of_geo_jsons = [api_response]
+      }
+
+  
+  
+      // setCurrImagePolygonDeets([]);
+      setCurrImagePolygonDeets(list_of_geo_jsons);
+
+      //this dynamically adds a growing black spot that grows when the navigation arrows are used- indicating that it can be changed and that the new geojson values are different
+      // setCurrImagePolygonDeets((prev, props)=>{
+      //   return prev.concat(list_of_geo_jsons)
+      // });
+
+      //this stays stationary
+      // setCurrImagePolygonDeets((prev, props)=>{
+      //   const newArray = []
+      //   return newArray.concat(prev)
+      // });
+
+
+    })();
 
 
 
-    //add the additional items the user adds to the map
     (async ()=>{
 
       if (additionalItems.length === 0){
@@ -205,151 +321,11 @@ const MapComponent = ({item, entityType, spacesWhereTheConceptIsDepictedGeoJSONs
 
       await fillGeoJSONArray()
 
-    
+      
 
 
     })();
-
-      //for spatial entities or cities
-      if (entityType !== "concept"){
-
-
-        
-
-        //get the spatial parent plotted 
-        (async ()=>{
-
-          //if this is any empty item- do nothing, showing a plain map
-          if (spatiallyWithin === ""){
-            console.log("the spatially within value is", spatiallyWithin)
-            return
-          }
-          console.log("the spatially within value is", spatiallyWithin)
-
-          const result = await getGeoJSON(spatiallyWithin);
-          if (result === null){
-            return
-          }
-          const api_response = result[0];
-
-          if(!api_response){
-            console.log(`the spatial parent's (${spatiallyWithin}) geojson api response failed`)
-            return
-          }
-
-          let list_of_geo_jsons;
-          if(api_response.features){
-            list_of_geo_jsons = api_response.features;
-        
-          }
-        
-          else{
-            list_of_geo_jsons = [api_response]
-          }
-      
-      
-          setParentPolygonDeets(list_of_geo_jsons);
-        })();
-
-        //asynchronously get the geojsons and assign them to the Polygon react state of the current item
-        (async ()=>{
-
-          //if this is any empty item- do nothing, showing a plain map
-          if (item === ""){
-            return
-          }
-    
-          const result = await getGeoJSON(item);
-          if (result === null){
-            return
-          }
-          const api_response = result[0];
-    
-          if(!api_response){
-            console.log(`the page item's (${item}) geojson api response failed`)
-            return
-          }
-          
-          let list_of_geo_jsons;
-          if(api_response.features){
-            list_of_geo_jsons = api_response.features;
-        
-          }
-        
-          else{
-            list_of_geo_jsons = [api_response]
-          }
-      
-      
-          setPolygon(list_of_geo_jsons);
-        })();
-      }
-
-      //set the polygons according to the spatial pane provided state, if the entity is a concept
-      else{
-
-        //set the polygon to the spaces depicted provided by the spatial pane based on the depth provided by the user
-        setPolygon(spacesWhereTheConceptIsDepictedGeoJSONs)
-
-      }
-      
-
-
-      //asynchronously assign the polygons for the ARC wall of the currently viewed image
-      (async ()=>{
-
-
-        //if this is any empty item- do nothing, showing a plain map
-        if (imageARC === ""){
-          return
-        }
-
-        const result = await getGeoJSON(imageARC);
-        if (result === null){
-          return
-        }
-        console.log("result is", result)
-        const api_response = result[0];
-
-        if(!api_response){
-          console.log(`the current image position's (${imageARC}) geojson api response failed`)
-          return
-        }
-        
-        let list_of_geo_jsons;
-        if(api_response.features){
-          list_of_geo_jsons = api_response.features;
-      
-        }
-      
-        else{
-          list_of_geo_jsons = [api_response]
-        }
-
-    
-    
-        // setCurrImagePolygonDeets([]);
-        setCurrImagePolygonDeets(list_of_geo_jsons);
-
-        //this dynamically adds a growing black spot that grows when the navigation arrows are used- indicating that it can be changed and that the new geojson values are different
-        // setCurrImagePolygonDeets((prev, props)=>{
-        //   return prev.concat(list_of_geo_jsons)
-        // });
-
-        //this stays stationary
-        // setCurrImagePolygonDeets((prev, props)=>{
-        //   const newArray = []
-        //   return newArray.concat(prev)
-        // });
-      
-    
-
-
-      })();
-
-
-    }
-  }, [item, spacesWhereTheConceptIsDepictedGeoJSONs, entityType, additionalItems, imageARC, spatiallyWithin])
+  }, [item, additionalItems, imageARC, spatiallyWithin])
 
   return (
 

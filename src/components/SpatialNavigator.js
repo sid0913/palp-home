@@ -2,18 +2,28 @@ import React, { useEffect, useState } from 'react'
 import { Link } from 'gatsby'
 import LoadingComponent from './LoadingComponent'
 import EntityMenuItem from './NavigatorComponents/EntityMenuItem'
+import { IoIosArrowDown } from "react-icons/io";
 import Dropdown from 'rsuite/Dropdown';
 
 // (Optional) Import component styles. If you are using Less, import the `index.less` file. 
 import 'rsuite/Dropdown/styles/index.css';
-const SpatialNavigator = ({selectedEntity, selectedEntityLabel, entityType, setSecondaryEntity}) => {
+
+
+const SpatialNavigator = ({selectedEntity, selectedEntityLabel, entityType, setSecondaryEntity, setSpacesWhereTheConceptIsDepictedGeoJSONs}) => {
 
     //the options of space levels
-    const levels = ["Region", "Insula","Property", "Room", "Wall"] //, "Space"]
-    const [selectedLevel, setSelectedLevel] = useState("Region")
+    // const levels = ["Region", "Insula","Property", "Room", "Wall"] //, "Space"]
+    // const [selectedLevel, setSelectedLevel] = useState("Region")
+
+    //the options of space levels and their mapping to their respective url parameter
+    const spatialDepthLevels = {"Region":"region", "Insula":"insula","Property":"property", "Wall":"feature"} //, "Space"]
+    //if the entity is a concept, this state records the level of depth at which the spatial navigator shows the spaces where the concept is depicted
+    const [selectedLevelOfDepth, setSelectedLevelOfDepth] = useState("Wall")
 
     //give it a default empty string value
     selectedEntity = selectedEntity?selectedEntity:""
+
+
 
     //if the entity type is spatial-entity, this stores spatial ancestors of the spatial-entity as JSONs
     const [ancestors, setAncestors] = useState([])
@@ -28,6 +38,42 @@ const SpatialNavigator = ({selectedEntity, selectedEntityLabel, entityType, setS
     const [fetchedAncestors, setFetchedAncestors] = useState(false)
     const [fetchedChildren, setFetchedChildren] = useState(false)
     const [fetchedConceptSpaces, setFetchedConceptSpaces] = useState(false)
+
+
+    function onlyUnique(value, index, array) {
+        /**
+         * this is passed a arrray.filter() as a parameter to return an array without repeated elements
+         * @param  {*} value the element from the current iteration
+         * @param  {Number} index the index from the current iteration
+         * @param  {[*]} array the array with repeated elements
+         * @return {[*]}     an array with no repeated elements
+         */
+        return array.indexOf(value) === index;
+    }
+
+    function getSortedUniqueLabelledEntityMenuItems(listOfEntitiesToShowcase){
+        const listOfUniqueEntities = listOfEntitiesToShowcase.map((entity)=>{
+            
+            const lowerCaseName = entity['urn'].replace("urn:p-lod:id:","")
+
+            return lowerCaseName
+                
+            
+        }).filter(onlyUnique) //remove duplicates
+        
+        //sort the spaces
+        listOfUniqueEntities.sort() 
+
+        //build entity menu items to display them
+        return listOfUniqueEntities.map(
+            (entityName)=>{
+                return (
+                    <EntityMenuItem key={entityName+Math.floor(Math.random()*1000).toString()} lowerCaseName={entityName} label={entityName} setSecondaryEntity={setSecondaryEntity}/>
+                
+                )
+            })
+
+    }
  
 
     
@@ -157,9 +203,8 @@ const SpatialNavigator = ({selectedEntity, selectedEntityLabel, entityType, setS
          * @param  {[String]} concept the concept for which we are search spatialEntities
          * @return {[JSON]}     a list of JSONs of the spatialEntities
          */
-        
-        
-            const response = await fetch(`https://api.p-lod.org/depicted-where/${concept}`);
+            //fetch the spaces where the concept is depicted to the select of depth that the user selects
+            const response = await fetch(`https://api.p-lod.org/depicted-where/${concept}?level_of_detail=${spatialDepthLevels[selectedLevelOfDepth]}`);
         
             if(response.ok){
                 const listOfDepictedConcepts = await response.json()
@@ -175,6 +220,48 @@ const SpatialNavigator = ({selectedEntity, selectedEntityLabel, entityType, setS
                     setFetchedConceptSpaces(true)
                     //set the state for children
                     setListOfSpacesDepictingTheConcept(listOfDepictedConcepts)
+
+                    function onlyUnique(value, index, array) {
+                        return array.indexOf(value) === index;
+                      }
+
+                    //set the new values to show on the map component
+                    const extractedGeojsons = listOfDepictedConcepts.filter(
+                        (space)=>{
+                            return space["geojson"] !== "None"
+                        }
+                    ).map(
+                        (space)=>{
+                            return JSON.parse(space['geojson'])
+                        }
+                    )
+
+                    //remove duplicates to avoid overcoloring
+                    const extractedGeojsonsIDs = extractedGeojsons.map((geojson)=>geojson["id"])
+                    const uniqueExtractedGeojsonsIDs = extractedGeojsonsIDs.filter(onlyUnique)
+
+
+
+                    const uniqueExtractedGeojsons = extractedGeojsons.filter((geojson)=>{
+                        const id = geojson['id']
+                        const indexOfID =  uniqueExtractedGeojsonsIDs.indexOf(id)
+                        const isFirstInstance = indexOfID !== -1
+
+
+                        //if this is the first instance of this id, remove it from the list of unique ids
+                        if(isFirstInstance){
+                            uniqueExtractedGeojsonsIDs.splice(indexOfID, 1)
+                        }
+
+
+                        return isFirstInstance
+                    })
+                    
+
+                    //plot the spaces on the map
+                    setSpacesWhereTheConceptIsDepictedGeoJSONs(uniqueExtractedGeojsons)
+
+                    //get the spatial parent
                     getSpatialParentsForAllRooms(listOfDepictedConcepts.filter((element)=>{return element["within"]}).map((element)=>{
                         return element['within'].replace("urn:p-lod:id:","")
                     }))
@@ -218,7 +305,7 @@ const SpatialNavigator = ({selectedEntity, selectedEntityLabel, entityType, setS
 
         }
 
-    }, [])
+    }, [selectedLevelOfDepth])
 
     
 
@@ -244,42 +331,59 @@ const SpatialNavigator = ({selectedEntity, selectedEntityLabel, entityType, setS
                 entityType === "concept"? 
                     function (){return (
                         <>
+                            {/* the loading component */}
                             <LoadingComponent hiddenWhen={fetchedConceptSpaces}/>
-                            {/* <Dropdown style={{margin:"2vh"}} trigger="click" title={selectedLevel} >
-                                {levels.map((element)=>{
-                                    return (<Dropdown.Item value={element}  onClick={()=>{
-                                        setSelectedLevel(element)
-                                        // setCompleteList(mappingLevelsToArray[element])
-                                    }}>{element}</Dropdown.Item>)
 
-                                })}
-                            </Dropdown> */}
+                            {/* the dropdown that allows the user to select the depth at which they want to view the spaces where the concept appears, namely: region, insula, property and wall */}
+                            <details className={`dropdown my-2 ${fetchedConceptSpaces? "" :"hidden"}`}>
+                                <summary className="btn m-1 bg-lime-300 hover:bg-lime-500">
+                                    {selectedLevelOfDepth}
+                                    <IoIosArrowDown />
+                                </summary>
+                                <ul className={`menu dropdown-content bg-base-100 rounded-box z-[1] w-52 p-2 shadow `}>
+                                    {Object.keys(spatialDepthLevels).map((depthLevel)=>{
+                                        return (
+                                            <div className={`${ selectedLevelOfDepth === depthLevel? "bg-lime-300 text-black":"hover:bg-lime-100 text-black"} rounded-sm p-1`} role="button" tabindex="0" key={depthLevel}
+                                            onClick={(e)=>{
 
+                                                //set the level of depth selected to the option the user clicks on
+                                                setSelectedLevelOfDepth(depthLevel)
 
-                            {/* <select className='border-2 border-slate-200 bg-slate-50 p-2 rounded-md' style={{margin:"2vh"}} trigger="click" title={selectedLevel}  >
-                                {levels.map((element)=>{
-                                    return (<option value={element}  onClick={()=>{
-                                        setSelectedLevel(element)
-                                        console.log("selected level", selectedLevel)
-                                        // setCompleteList(mappingLevelsToArray[element])
-                                    }}>{element}</option>)
+                                                // Close the dropdown by finding the details element and closing it
+                                                const detailsElement = e.currentTarget.closest('details');
+                                                if (detailsElement) {
+                                                    detailsElement.removeAttribute('open');
+                                                }
 
-                                })}
-                                
-                            </select>  */}
+                                            }}
+                                            >
+                                                {depthLevel}
+                                            </div>
+                                        )
+                                    })}
+                                    
+                                </ul>
+                            </details>
 
                             
+                            <div className='ml-2'>
+                                {
+                                    getSortedUniqueLabelledEntityMenuItems(listOfSpacesDepictingTheConcept)
 
-                            {listOfSpacesDepictingTheConcept.map((concept)=>{
-                                //if selected, highlight it
-                                
-                                const label = concept["urn"].replace("urn:p-lod:id:","")
-                                    return (
-                                            <EntityMenuItem key={label+Math.floor(Math.random()*1000).toString()} lowerCaseName={label} label={label} setSecondaryEntity={setSecondaryEntity}/>
-                                        
-                                    )
-        
-                            })}
+                                }
+
+                                {/* {listOfSpacesDepictingTheConcept.map((concept)=>{
+                                    //if selected, highlight it
+                                    
+                                    const label = concept["urn"].replace("urn:p-lod:id:","")
+                                        return (
+                                                <EntityMenuItem key={label+Math.floor(Math.random()*1000).toString()} lowerCaseName={label} label={label} setSecondaryEntity={setSecondaryEntity}/>
+                                            
+                                        )
+            
+                                })} */}
+                            </div>
+                            
                         </>
                         
                     )
@@ -294,22 +398,18 @@ const SpatialNavigator = ({selectedEntity, selectedEntityLabel, entityType, setS
                     
 
                     //if the entity is not a concept execute this, show the hierarchy of the spatial entity
-                    function ifEntityTypeIsConcept (){
+                    function (){
                         return (
                             <>
                                 <LoadingComponent hiddenWhen={fetchedAncestors && fetchedChildren}/>
                                 
-                                {ancestors.map((ancestor)=>{
+                                {
 
-                                    const label = ancestor['label']? ancestor['label'] : ancestor['urn'].replace("urn:p-lod:id:","")
-                                    const lowerCaseName = ancestor['urn'].replace("urn:p-lod:id:","")
 
-                                    return(
-     
-                                        <EntityMenuItem key={lowerCaseName+Math.floor(Math.random()*1000).toString()} lowerCaseName={lowerCaseName} label={label} setSecondaryEntity={setSecondaryEntity}/>
-                                        
-                                    );
-                                    })}
+                                    getSortedUniqueLabelledEntityMenuItems(ancestors)
+                                    
+                                
+                                }
 
 
 
@@ -325,16 +425,13 @@ const SpatialNavigator = ({selectedEntity, selectedEntityLabel, entityType, setS
 
                                     <div className='ml-5'>
 
-                                        {spatialChildren.map((conceptualChild)=>{
+                                        {
 
-                                        const label = conceptualChild['urn'].replace("urn:p-lod:id:","")
-                                        const lowerCaseName = conceptualChild['urn'].replace("urn:p-lod:id:","")
+                                            getSortedUniqueLabelledEntityMenuItems(spatialChildren)
+                                        
 
-                                        return(
-                                            
-                                            <EntityMenuItem key={lowerCaseName+Math.floor(Math.random()*1000).toString()} lowerCaseName={lowerCaseName} label={label} setSecondaryEntity={setSecondaryEntity}/>
-                                        );
-                                        })}
+                                        
+                                        }
                                     </div>
                                     
                             </>
