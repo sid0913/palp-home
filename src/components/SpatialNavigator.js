@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { Component, useEffect, useState } from 'react'
 import { Link } from 'gatsby'
 import LoadingComponent from './LoadingComponent'
 import EntityMenuItem from './NavigatorComponents/EntityMenuItem'
@@ -40,35 +40,63 @@ const SpatialNavigator = ({selectedEntity, selectedEntityLabel, entityType, setS
     const [fetchedConceptSpaces, setFetchedConceptSpaces] = useState(false)
 
 
-    function onlyUnique(value, index, array) {
+
+    function onlyUniqueLabels(value, index, array) {
         /**
-         * this is passed a arrray.filter() as a parameter to return an array without repeated elements
-         * @param  {*} value the element from the current iteration
+         * this is passed a arrray.filter() as a parameter to return an array without repeated pairs of elements (it only checks the second element of the pair which is from the urn id)
+         * @param  {*} value the pair of one lowercase name and one label from the current iteration
          * @param  {Number} index the index from the current iteration
          * @param  {[*]} array the array with repeated elements
          * @return {[*]}     an array with no repeated elements
          */
-        return array.indexOf(value) === index;
+
+        //get the lowercase names
+        const lowerCaseNames = array.map((element)=> element[1])
+
+        //check if this is the element's first occurence, if so, return true
+        return lowerCaseNames.indexOf(value[1]) === index;
     }
 
     function getSortedUniqueLabelledEntityMenuItems(listOfEntitiesToShowcase){
+        /**
+         * Returns Entity Menu Items to populate the spatial navigator component. It takes in api response arrays and removes duplicates, sortes and converts them into Entity Menu Components
+         * @param  {[*]} listOfEntitiesToShowcase the API Response array to convert into Entity Menu Items
+         * @return {[Component]}     an array of Entity Menu Items to populate the Spatial Navigator
+         */
+
+
+        //get the label and lowercase names out of the api response JSON and filter out duplicates
         const listOfUniqueEntities = listOfEntitiesToShowcase.map((entity)=>{
             
-            const lowerCaseName = entity['urn'].replace("urn:p-lod:id:","")
+            //lowercase name provided by the urn id
+            const lowerCaseName = entity['urn'].replace("urn:p-lod:id:","") 
 
-            return lowerCaseName
+            //if the label parameter (normally a cased version of the lowercase urn name) and if it isn't None, use that, otherwise use the urn name
+            const label = entity['label']? (entity['label'] !== "None" ? entity['label']: lowerCaseName) : lowerCaseName
+
+            //return both the label and lowercase name
+            return [label, lowerCaseName]
                 
             
-        }).filter(onlyUnique) //remove duplicates
+        }).filter(onlyUniqueLabels) //remove duplicates
         
+
         //sort the spaces
-        listOfUniqueEntities.sort() 
+        listOfUniqueEntities.sort((a,b)=>a[1] < b[1]) 
 
         //build entity menu items to display them
         return listOfUniqueEntities.map(
             (entityName)=>{
+
+                //get the label to show on the UI
+                const label = entityName[0]
+
+                //use the lowercase name for links
+                const lowerCaseName = entityName[1]
+
+                //rerturn the entity menu item
                 return (
-                    <EntityMenuItem key={entityName+Math.floor(Math.random()*1000).toString()} lowerCaseName={entityName} label={entityName} setSecondaryEntity={setSecondaryEntity}/>
+                    <EntityMenuItem key={lowerCaseName+Math.floor(Math.random()*1000).toString()} lowerCaseName={lowerCaseName} label={label} setSecondaryEntity={setSecondaryEntity}/>
                 
                 )
             })
@@ -222,6 +250,7 @@ const SpatialNavigator = ({selectedEntity, selectedEntityLabel, entityType, setS
                     setListOfSpacesDepictingTheConcept(listOfDepictedConcepts)
 
                     function onlyUnique(value, index, array) {
+                        //to be used in a filter function to remove duplicates
                         return array.indexOf(value) === index;
                       }
 
