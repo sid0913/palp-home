@@ -48,7 +48,31 @@ const SpatialNavigator = ({selectedEntity, selectedEntityLabel, entityType, setS
          * @return {[*]}     an array with no repeated elements
          */
         return array.indexOf(value) === index;
-      }
+    }
+
+    function getSortedUniqueLabelledEntityMenuItems(listOfEntitiesToShowcase){
+        const listOfUniqueEntities = listOfEntitiesToShowcase.map((entity)=>{
+            
+            const lowerCaseName = entity['urn'].replace("urn:p-lod:id:","")
+
+            return lowerCaseName
+                
+            
+        }).filter(onlyUnique) //remove duplicates
+        
+        //sort the spaces
+        listOfUniqueEntities.sort() 
+
+        //build entity menu items to display them
+        return listOfUniqueEntities.map(
+            (entityName)=>{
+                return (
+                    <EntityMenuItem key={entityName+Math.floor(Math.random()*1000).toString()} lowerCaseName={entityName} label={entityName} setSecondaryEntity={setSecondaryEntity}/>
+                
+                )
+            })
+
+    }
  
 
     
@@ -342,30 +366,8 @@ const SpatialNavigator = ({selectedEntity, selectedEntityLabel, entityType, setS
                             
                             <div className='ml-2'>
                                 {
-                                function (){
+                                    getSortedUniqueLabelledEntityMenuItems(listOfSpacesDepictingTheConcept)
 
-                                    const listOfUniqueSpaces = listOfSpacesDepictingTheConcept.map((concept)=>{
-                                        //if selected, highlight it
-                                        
-                                        return concept["urn"].replace("urn:p-lod:id:","")
-                                            
-                                        
-                                    }).filter(onlyUnique) //remove duplicates
-                                    
-                                    //sort the spaces
-                                    listOfUniqueSpaces.sort() 
-
-                                    //build entity menu items to display them
-                                    return listOfUniqueSpaces.map(
-                                        (conceptName)=>{
-                                            return (
-                                                <EntityMenuItem key={conceptName+Math.floor(Math.random()*1000).toString()} lowerCaseName={conceptName} label={conceptName} setSecondaryEntity={setSecondaryEntity}/>
-                                            
-                                            )
-                                        })
-
-                                }()
-                                
                                 }
 
                                 {/* {listOfSpacesDepictingTheConcept.map((concept)=>{
@@ -399,17 +401,13 @@ const SpatialNavigator = ({selectedEntity, selectedEntityLabel, entityType, setS
                             <>
                                 <LoadingComponent hiddenWhen={fetchedAncestors && fetchedChildren}/>
                                 
-                                {ancestors.map((ancestor)=>{
+                                {
 
-                                    const label = ancestor['label']? ancestor['label'] : ancestor['urn'].replace("urn:p-lod:id:","")
-                                    const lowerCaseName = ancestor['urn'].replace("urn:p-lod:id:","")
 
-                                    return(
-     
-                                        <EntityMenuItem key={lowerCaseName+Math.floor(Math.random()*1000).toString()} lowerCaseName={lowerCaseName} label={label} setSecondaryEntity={setSecondaryEntity}/>
-                                        
-                                    );
-                                    })}
+                                    getSortedUniqueLabelledEntityMenuItems(ancestors)
+                                    
+                                
+                                }
 
 
 
@@ -425,16 +423,13 @@ const SpatialNavigator = ({selectedEntity, selectedEntityLabel, entityType, setS
 
                                     <div className='ml-5'>
 
-                                        {spatialChildren.map((conceptualChild)=>{
+                                        {
 
-                                        const label = conceptualChild['urn'].replace("urn:p-lod:id:","")
-                                        const lowerCaseName = conceptualChild['urn'].replace("urn:p-lod:id:","")
+                                            getSortedUniqueLabelledEntityMenuItems(spatialChildren)
+                                        
 
-                                        return(
-                                            
-                                            <EntityMenuItem key={lowerCaseName+Math.floor(Math.random()*1000).toString()} lowerCaseName={lowerCaseName} label={label} setSecondaryEntity={setSecondaryEntity}/>
-                                        );
-                                        })}
+                                        
+                                        }
                                     </div>
                                     
                             </>
