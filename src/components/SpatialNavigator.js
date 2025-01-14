@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Link } from 'gatsby'
 import LoadingComponent from './LoadingComponent'
 import EntityMenuItem from './NavigatorComponents/EntityMenuItem'
+import { IoIosArrowDown } from "react-icons/io";
 import Dropdown from 'rsuite/Dropdown';
 
 // (Optional) Import component styles. If you are using Less, import the `index.less` file. 
@@ -337,11 +338,12 @@ const SpatialNavigator = ({selectedEntity, selectedEntityLabel, entityType, setS
                             <details className={`dropdown my-2 ${fetchedConceptSpaces? "" :"hidden"}`}>
                                 <summary className="btn m-1 bg-lime-300 hover:bg-lime-500">
                                     {selectedLevelOfDepth}
+                                    <IoIosArrowDown />
                                 </summary>
                                 <ul className={`menu dropdown-content bg-base-100 rounded-box z-[1] w-52 p-2 shadow `}>
                                     {Object.keys(spatialDepthLevels).map((depthLevel)=>{
                                         return (
-                                            <div className={`${ selectedLevelOfDepth === depthLevel? "bg-lime-300 text-black":""} rounded-sm p-1`} role="button" tabindex="0" key={depthLevel}
+                                            <div className={`${ selectedLevelOfDepth === depthLevel? "bg-lime-300 text-black":"hover:bg-lime-100 text-black"} rounded-sm p-1`} role="button" tabindex="0" key={depthLevel}
                                             onClick={(e)=>{
 
                                                 //set the level of depth selected to the option the user clicks on
