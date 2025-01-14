@@ -40,9 +40,14 @@ function capitalize(input){
 
 const Item = (props) => {
 
+  //the thumbnail state for the thumbnails of the image gallery
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
 
+  //the name of the entity
   const itemName = props.params.name;
+
+  //the list of geojsons where the entity, if a concept, is depicted
+  const [spacesWhereTheConceptIsDepictedGeoJSONs, setSpacesWhereTheConceptIsDepictedGeoJSONs] = useState([])
 
   //the image urls
   const [imageURLs, setImageURLs] = useState([])
@@ -270,7 +275,7 @@ const Item = (props) => {
           <div className='flex lg:flex-row flex-col justify-evenly h-[30vh] w-full'>
             <div className='border-2 border-amber-700  flex justify-start overflow-auto w-[25vw] '>
               {/* <SpaceNavigator selectedConcept={itemName}/> */}
-              {entityType !== "" ?<SpatialNavigator selectedEntity={itemName} selectedEntityLabel={entityTitle} entityType={entityType} setSecondaryEntity={setSecondaryEntity}/> :""}
+              {entityType !== "" ?<SpatialNavigator selectedEntity={itemName} selectedEntityLabel={entityTitle} entityType={entityType} setSecondaryEntity={setSecondaryEntity} setSpacesWhereTheConceptIsDepictedGeoJSONs={setSpacesWhereTheConceptIsDepictedGeoJSONs}/> :""}
             </div>
 
             <div  className='border-2 border-amber-700 w-full overflow-auto relative'>
@@ -301,7 +306,7 @@ const Item = (props) => {
 
               {/* </span> */}
               {/* <MapComponent zoom={15} width="600px" height="300px" item={itemName} color={"#FF7259"} additionalItems={secondaryEntity}  imageARC={imageLocation}/> */}
-              <MapComponent zoom={15} width="100%" height="100%" item={itemName} spatiallyWithin={spatiallyWithin} color={"#FF7259"} additionalItems={secondaryEntity}  imageARC={imageLocation}/>
+              <MapComponent zoom={15} width="100%" height="100%" item={itemName} entityType={entityType} spacesWhereTheConceptIsDepictedGeoJSONs={spacesWhereTheConceptIsDepictedGeoJSONs}  spatiallyWithin={spatiallyWithin} color={"#FF7259"} additionalItems={secondaryEntity}  imageARC={imageLocation}/>
             </div>
 
           </div>
