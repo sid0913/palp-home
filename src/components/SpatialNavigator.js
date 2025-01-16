@@ -1,4 +1,4 @@
-import React, { Component, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'gatsby'
 import LoadingComponent from './LoadingComponent'
 import EntityMenuItem from './NavigatorComponents/EntityMenuItem'
