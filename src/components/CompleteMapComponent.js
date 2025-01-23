@@ -1,6 +1,8 @@
 import React from 'react'
 import MapComponent from './Map'
 
+
+//The special map component for the start page
 const CompleteMapComponent = ({itemName, spatiallyWithin, imageLocation, entityTitle, entityType, secondaryEntity, setSecondaryEntity, height, width}) => {
 
     spatiallyWithin = spatiallyWithin?spatiallyWithin:""

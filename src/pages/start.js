@@ -18,11 +18,35 @@ const IndexPage = () => {
   //the type of the entity
   const [entityType, setEntityType] = useState("concept")
   
-  const [popularEntities, setPopularEntities] = useState(["snake", "hercules", "ariadne"])
-
   const [currEntity, setCurrEntity] = useState("snake")
 
-  const [imageURLs, setImageURLs] = useState([{name: "ariadne", url:"http://umassamherst.lunaimaging.com/MediaManager/srvr?mediafile=/Size3/umass~14~14/4240/image53085.jpg"}, {name:"snake", url:"http://umassamherst.lunaimaging.com/MediaManager/srvr?mediafile=/Size3/umass~16~16/4276/PPM3_1904.jpg"}, {name:"hercules", url:"http://umassamherst.lunaimaging.com/MediaManager/srvr?mediafile=/Size3/umass~14~14/4064/image2735.jpg"}, {name:"zeus", url:"http://umassamherst.lunaimaging.com/MediaManager/srvr?mediafile=/Size3/umass~16~16/4275/PPM2_737.jpg"}])
+  const [imageURLs, setImageURLs] = useState(
+    [
+      {
+        name: "aediculum", label:"Aediculum", url:"https://pompeiiinpictures.com/pompeiiinpictures/R8/8%2002%2023%20p1_files/image062.jpg"
+      }, 
+
+      {
+        name:"rhyton", label:"Rhyton", url:"https://pompeiiinpictures.com/pompeiiinpictures/R1/1%2008%2008_files/image045.jpg"
+      },
+
+      {
+        name:"r5-i2-pi", label:"House of the Silver Wedding", url:"https://pompeiiinpictures.com/pompeiiinpictures/R5/5%2002%20i%20p8_files/image038.jpg"
+      },
+      
+      {
+        name:"r7-i1-p8", label:"Stabian Baths", url:"https://pompeiiinpictures.com/pompeiiinpictures/R7/7%2001%2008%20gymnasium%20p6_files/image006.jpg"
+      },
+
+      {
+        name:"r8-i1-p1", label:"Basilica", url:"https://pompeiiinpictures.com/pompeiiinpictures/R8/8%2001%2001%20p4_files/image037.jpg"
+      },
+
+      
+
+
+    ]
+  )
 
   //function to capitalize the first letter of a string
   function capitalize(input){
@@ -146,7 +170,7 @@ const IndexPage = () => {
               <div className={`${currEntity === imgURL["name"]?"border-white bg-white text-black":"border-black hover:border-white"} w-[20vw]  flex flex-col text-wrap border-2 rounded-md py-2  mx-5`}>
                 <img className='h-[20vh] mx-auto' src={imgURL["url"]}/>
                 <p >
-                  {capitalize(imgURL["name"])}
+                  {capitalize(imgURL["label"]?imgURL["label"]:imgURL["name"])}
                 </p>
               </div>
               
