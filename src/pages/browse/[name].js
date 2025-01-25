@@ -40,9 +40,17 @@ function capitalize(input){
 
 const Item = (props) => {
 
+  //the thumbnail state for the thumbnails of the image gallery
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
 
+  //the Luna link citation for the current image
+  const [LunaLink, setLunaLink] = useState("")
+
+  //the name of the entity
   const itemName = props.params.name;
+
+  //the list of geojsons where the entity, if a concept, is depicted
+  const [spacesWhereTheConceptIsDepictedGeoJSONs, setSpacesWhereTheConceptIsDepictedGeoJSONs] = useState([])
 
   //the image urls
   const [imageURLs, setImageURLs] = useState([])
@@ -192,7 +200,7 @@ const Item = (props) => {
       }).map((element)=>{
         
 
-        return {"url":element["l_img_url"], "arc":element["feature"].replace("urn:p-lod:id:",""), "description":element["l_description"]}
+        return {"url":element["l_img_url"], "arc":element["feature"].replace("urn:p-lod:id:",""), "description":element["l_description"], "l_img_url":element["l_img_url"]}
       })
 
 
@@ -200,7 +208,12 @@ const Item = (props) => {
 
       //show the location of the current image in the gallery on the map
       if(urls.length > 0 && imageLocation.length === 0){
+
+        //set the image location pointer
         setImageLocation(urls[0]["arc"]);
+
+        //set luna link citation
+        setLunaLink(urls[0]["l_img_url"])
       }
         
       
@@ -270,7 +283,7 @@ const Item = (props) => {
           <div className='flex lg:flex-row flex-col justify-evenly h-[30vh] w-full'>
             <div className='border-2 border-amber-700  flex justify-start overflow-auto w-[25vw] '>
               {/* <SpaceNavigator selectedConcept={itemName}/> */}
-              {entityType !== "" ?<SpatialNavigator selectedEntity={itemName} selectedEntityLabel={entityTitle} entityType={entityType} setSecondaryEntity={setSecondaryEntity}/> :""}
+              {entityType !== "" ?<SpatialNavigator selectedEntity={itemName} selectedEntityLabel={entityTitle} entityType={entityType} setSecondaryEntity={setSecondaryEntity} setSpacesWhereTheConceptIsDepictedGeoJSONs={setSpacesWhereTheConceptIsDepictedGeoJSONs}/> :""}
             </div>
 
             <div  className='border-2 border-amber-700 w-full overflow-auto relative'>
@@ -301,7 +314,7 @@ const Item = (props) => {
 
               {/* </span> */}
               {/* <MapComponent zoom={15} width="600px" height="300px" item={itemName} color={"#FF7259"} additionalItems={secondaryEntity}  imageARC={imageLocation}/> */}
-              <MapComponent zoom={15} width="100%" height="100%" item={itemName} spatiallyWithin={spatiallyWithin} color={"#FF7259"} additionalItems={secondaryEntity}  imageARC={imageLocation}/>
+              <MapComponent zoom={15} width="100%" height="100%" item={itemName} entityType={entityType} spacesWhereTheConceptIsDepictedGeoJSONs={spacesWhereTheConceptIsDepictedGeoJSONs}  spatiallyWithin={spatiallyWithin} color={"#FF7259"} additionalItems={secondaryEntity}  imageARC={imageLocation}/>
             </div>
 
           </div>
@@ -315,6 +328,15 @@ const Item = (props) => {
 
               {imageURLs?(imageURLs.length > 0?
               <div className='overflow-hidden p-5 w-[40vw] z-0 space-y-5 mx-auto'>
+
+
+                {/* credits for Luna's image gallery: */}
+                <Link href={LunaLink?LunaLink:"/start"} target="_blank"
+                  className='text-white text-sm link w-[100%] text-right'>
+                    View in Luna (from UMass Amherst Library)
+                </Link>
+
+
                 {/* https://github.com/xiaolin/react-image-gallery */}
                 {/* <ImageGallery  items={imageURLs} /> */}
                 <Swiper  navigation={true} modules={[Navigation, Thumbs, FreeMode]}
@@ -322,9 +344,15 @@ const Item = (props) => {
                   spaceBetween={50}
                   slidesPerView={1}
                   onSlideChange={(swiper) => {
+                    
+                    //set the current image index
                     setCurrImageIndex(swiper.activeIndex)
 
+                    //set the current image pointer
                     setImageLocation(imageURLs[Number(swiper.activeIndex)]["arc"])
+
+                    //set the Luna citation link
+                    setLunaLink(imageURLs[Number(swiper.activeIndex)]["l_img_url"])
 
 
                   }}

@@ -1,7 +1,7 @@
 import * as React from "react"
 import { Link } from "gatsby";
 import MenuButton from "../components/LandingPageComponents/MenuButton";
-import CompleteMapComponent from "../components/CompleteMapComponent";
+import StartPageMapComponent from "../components/StartPageMapComponent";
 import { useState } from "react";
 import {SwiperSlide, Swiper } from 'swiper/react';
 import {Navigation, Thumbs, FreeMode } from 'swiper/modules';
@@ -13,16 +13,40 @@ import '../styles/Carousel.module.css'
 const IndexPage = () => {
 
   //the title with the entity name
-  const [entityTitle, setEntityTitle] = useState("snake")
+  const [entityTitle, setEntityTitle] = useState("aediculum")
 
   //the type of the entity
   const [entityType, setEntityType] = useState("concept")
   
-  const [popularEntities, setPopularEntities] = useState(["snake", "hercules", "ariadne"])
+  const [currEntity, setCurrEntity] = useState("aediculum")
 
-  const [currEntity, setCurrEntity] = useState("snake")
+  const [imageURLs, setImageURLs] = useState(
+    [
+      {
+        name: "aediculum", label:"Aediculum", url:"https://pompeiiinpictures.com/pompeiiinpictures/R8/8%2002%2023%20p1_files/image062.jpg"
+      }, 
 
-  const [imageURLs, setImageURLs] = useState([{name: "ariadne", url:"http://umassamherst.lunaimaging.com/MediaManager/srvr?mediafile=/Size3/umass~14~14/4240/image53085.jpg"}, {name:"snake", url:"http://umassamherst.lunaimaging.com/MediaManager/srvr?mediafile=/Size3/umass~16~16/4276/PPM3_1904.jpg"}, {name:"hercules", url:"http://umassamherst.lunaimaging.com/MediaManager/srvr?mediafile=/Size3/umass~14~14/4064/image2735.jpg"}, {name:"zeus", url:"http://umassamherst.lunaimaging.com/MediaManager/srvr?mediafile=/Size3/umass~16~16/4275/PPM2_737.jpg"}])
+      {
+        name:"rhyton", label:"Rhyton", url:"https://pompeiiinpictures.com/pompeiiinpictures/R1/1%2008%2008_files/image045.jpg"
+      },
+
+      {
+        name:"r5-i2-pi", label:"House of the Silver Wedding", url:"https://pompeiiinpictures.com/pompeiiinpictures/R5/5%2002%20i%20p8_files/image038.jpg"
+      },
+      
+      {
+        name:"r7-i1-p8", label:"Stabian Baths", url:"https://pompeiiinpictures.com/pompeiiinpictures/R7/7%2001%2008%20gymnasium%20p6_files/image006.jpg"
+      },
+
+      {
+        name:"r8-i1-p1", label:"Basilica", url:"https://pompeiiinpictures.com/pompeiiinpictures/R8/8%2001%2001%20p4_files/image037.jpg"
+      },
+
+      
+
+
+    ]
+  )
 
   //function to capitalize the first letter of a string
   function capitalize(input){
@@ -108,7 +132,7 @@ const IndexPage = () => {
     </div>    
     <div className="mt-10 flex flex-col px-10">
       <div className="mx-auto">
-        <CompleteMapComponent width={"40vw"} height={"50vh"}  itemName={currEntity} entityTitle={entityTitle} entityType={entityType} secondaryEntity={[]}  />
+        <StartPageMapComponent width={"40vw"} height={"50vh"}  itemName={currEntity} entityTitle={entityTitle} entityType={entityType} secondaryEntity={[]}  />
       </div>  
       <div className="w-[70vw] mx-auto bg-black text-white p-5 rounded-md my-5">
         <Swiper  navigation={true} modules={[Navigation, Thumbs, FreeMode]}
@@ -143,10 +167,10 @@ const IndexPage = () => {
                 setCurrEntity(imgURL["name"])
                 setEntityTitle(imgURL["name"])
               }}>
-              <div className={`${currEntity === imgURL["name"]?"border-white bg-white text-black":"border-black hover:border-white"} w-[20vw]  flex flex-col text-wrap border-2 rounded-md py-2  mx-5`}>
+              <div className={`${currEntity === imgURL["name"]?" bg-amber-500 text-black border-black":"border-black text-white hover:bg-amber-300 hover:text-black"} w-[20vw]  flex flex-col text-wrap border-2 rounded-md py-2  mx-5`}>
                 <img className='h-[20vh] mx-auto' src={imgURL["url"]}/>
                 <p >
-                  {capitalize(imgURL["name"])}
+                  {capitalize(imgURL["label"]?imgURL["label"]:imgURL["name"])}
                 </p>
               </div>
               
@@ -159,18 +183,7 @@ const IndexPage = () => {
         </Swiper>
       </div>
       
-      {/* <CompleteImageGallery width={"40vw"} height={"50vh"}  setCurrImageIndex={setCurrImageIndex} setImageLocation={setImageLocation} imageURLs={imageURLs} currImageIndex={currImageIndex}/> */}
       
-
-      {/* <div className="p-5 flex flex-col space-y-5 ">
-
-
-        <MenuButton disabled={false} title={"Browse"} description={"Browse the map of Pompeii, discover artistic motifs, and peruse images of artworks"} href={"/browse/pompeii"}/>
-        <MenuButton disabled={true} title={"Search (Coming Soon)"} description={"Search through the Concepts and Spatial Entities of Pompeii"} href={"/"}/>
-        <MenuButton disabled={true} title={"Compare (Coming Soon)"} description={"Compare the Concepts and Spatial Entities of Pompeii"} href={"/"}/>
-
-
-      </div> */}
 
     </div>
     <div className="container mx-auto text-center">
