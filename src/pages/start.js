@@ -167,7 +167,7 @@ const IndexPage = () => {
                 setCurrEntity(imgURL["name"])
                 setEntityTitle(imgURL["name"])
               }}>
-              <div className={`${currEntity === imgURL["name"]?" bg-amber-500 text-black border-white":"border-black text-white hover:bg-amber-300 hover:text-black"} w-[20vw]  flex flex-col text-wrap border-2 rounded-md py-2  mx-5`}>
+              <div className={`${currEntity === imgURL["name"]?" bg-amber-500 text-black border-black":"border-black text-white hover:bg-amber-300 hover:text-black"} w-[20vw]  flex flex-col text-wrap border-2 rounded-md py-2  mx-5`}>
                 <img className='h-[20vh] mx-auto' src={imgURL["url"]}/>
                 <p >
                   {capitalize(imgURL["label"]?imgURL["label"]:imgURL["name"])}
