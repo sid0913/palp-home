@@ -183,18 +183,7 @@ const IndexPage = () => {
         </Swiper>
       </div>
       
-      {/* <CompleteImageGallery width={"40vw"} height={"50vh"}  setCurrImageIndex={setCurrImageIndex} setImageLocation={setImageLocation} imageURLs={imageURLs} currImageIndex={currImageIndex}/> */}
       
-
-      {/* <div className="p-5 flex flex-col space-y-5 ">
-
-
-        <MenuButton disabled={false} title={"Browse"} description={"Browse the map of Pompeii, discover artistic motifs, and peruse images of artworks"} href={"/browse/pompeii"}/>
-        <MenuButton disabled={true} title={"Search (Coming Soon)"} description={"Search through the Concepts and Spatial Entities of Pompeii"} href={"/"}/>
-        <MenuButton disabled={true} title={"Compare (Coming Soon)"} description={"Compare the Concepts and Spatial Entities of Pompeii"} href={"/"}/>
-
-
-      </div> */}
 
     </div>
     <div className="container mx-auto text-center">
