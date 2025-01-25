@@ -3,7 +3,7 @@ import MapComponent from './Map'
 
 
 //The special map component for the start page
-const CompleteMapComponent = ({itemName, spatiallyWithin, imageLocation, entityTitle, entityType, secondaryEntity, setSecondaryEntity, height, width}) => {
+const StartPageMapComponent = ({itemName, spatiallyWithin, imageLocation, entityTitle, entityType, secondaryEntity, setSecondaryEntity, height, width}) => {
 
     spatiallyWithin = spatiallyWithin?spatiallyWithin:""
     secondaryEntity = secondaryEntity?secondaryEntity:[]
@@ -42,4 +42,4 @@ const CompleteMapComponent = ({itemName, spatiallyWithin, imageLocation, entityT
   )
 }
 
-export default CompleteMapComponent
+export default StartPageMapComponent

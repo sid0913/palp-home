@@ -1,7 +1,7 @@
 import * as React from "react"
 import { Link } from "gatsby";
 import MenuButton from "../components/LandingPageComponents/MenuButton";
-import CompleteMapComponent from "../components/CompleteMapComponent";
+import StartPageMapComponent from "../components/StartPageMapComponent";
 import { useState } from "react";
 import {SwiperSlide, Swiper } from 'swiper/react';
 import {Navigation, Thumbs, FreeMode } from 'swiper/modules';
@@ -13,12 +13,12 @@ import '../styles/Carousel.module.css'
 const IndexPage = () => {
 
   //the title with the entity name
-  const [entityTitle, setEntityTitle] = useState("snake")
+  const [entityTitle, setEntityTitle] = useState("aediculum")
 
   //the type of the entity
   const [entityType, setEntityType] = useState("concept")
   
-  const [currEntity, setCurrEntity] = useState("snake")
+  const [currEntity, setCurrEntity] = useState("aediculum")
 
   const [imageURLs, setImageURLs] = useState(
     [
@@ -132,7 +132,7 @@ const IndexPage = () => {
     </div>    
     <div className="mt-10 flex flex-col px-10">
       <div className="mx-auto">
-        <CompleteMapComponent width={"40vw"} height={"50vh"}  itemName={currEntity} entityTitle={entityTitle} entityType={entityType} secondaryEntity={[]}  />
+        <StartPageMapComponent width={"40vw"} height={"50vh"}  itemName={currEntity} entityTitle={entityTitle} entityType={entityType} secondaryEntity={[]}  />
       </div>  
       <div className="w-[70vw] mx-auto bg-black text-white p-5 rounded-md my-5">
         <Swiper  navigation={true} modules={[Navigation, Thumbs, FreeMode]}
@@ -167,7 +167,7 @@ const IndexPage = () => {
                 setCurrEntity(imgURL["name"])
                 setEntityTitle(imgURL["name"])
               }}>
-              <div className={`${currEntity === imgURL["name"]?"border-white bg-white text-black":"border-black hover:border-white"} w-[20vw]  flex flex-col text-wrap border-2 rounded-md py-2  mx-5`}>
+              <div className={`${currEntity === imgURL["name"]?" bg-amber-500 text-black border-white":"border-black text-white hover:bg-amber-300 hover:text-black"} w-[20vw]  flex flex-col text-wrap border-2 rounded-md py-2  mx-5`}>
                 <img className='h-[20vh] mx-auto' src={imgURL["url"]}/>
                 <p >
                   {capitalize(imgURL["label"]?imgURL["label"]:imgURL["name"])}
