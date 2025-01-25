@@ -15,6 +15,9 @@ const CompleteImageGallery = ({setCurrImageIndex, setImageLocation, imageURLs, c
 
               {imageURLs?(imageURLs.length > 0?
     <div className={`overflow-hidden p-5 w-[${width}]  z-0 space-y-5 mx-auto`}>
+
+                
+
                 {/* https://github.com/xiaolin/react-image-gallery */}
                 {/* <ImageGallery  items={imageURLs} /> */}
                 <Swiper  navigation={true} modules={[Navigation, Thumbs, FreeMode]}
@@ -36,13 +39,17 @@ const CompleteImageGallery = ({setCurrImageIndex, setImageLocation, imageURLs, c
                   }}
                 >
 
+                  
+
 
                   {imageURLs.map((imgURL, index)=>
                   {
                     return (
                     <div key={index.toString()+Math.floor(Math.random()*1000).toString()} className='flex flex-col'>
                       <SwiperSlide>
-                      <img className='h-[30vh] mx-auto px-16' src={imgURL["url"]}/>
+
+                        
+                        <img className='h-[30vh] mx-auto px-16' src={imgURL["url"]}/>
                       
                       </SwiperSlide>
                       {/* <span className='h-[20vh] overflow-y-auto text-white'>
@@ -87,9 +94,15 @@ const CompleteImageGallery = ({setCurrImageIndex, setImageLocation, imageURLs, c
                 >
 
                   {imageURLs.map((imgURL, index)=>{
-                    return (<SwiperSlide key={index.toString()+Math.floor(Math.random()*1000).toString()}>
+                    return (
+
+                    <SwiperSlide key={index.toString()+Math.floor(Math.random()*1000).toString()}>
+                      
                       {<img id={index} src={imgURL["url"]}/>}
-                    </SwiperSlide>)
+
+                    </SwiperSlide>
+                    
+                  )
                   })}
 
                 </Swiper>
