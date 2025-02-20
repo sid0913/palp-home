@@ -21,7 +21,7 @@ Open `localhost:8000` on your browser
 
 ## 🚀 Online Demo
 
-Check out the [online demo](https://main--palp-art.netlify.app/):
+Check out the [online demo](https://palp-art.netlify.app/start/):
 
 [<img src="./src/images/ScreenshotPALPNetlify.png" alt="screenshot of the netlify wesbite" />](https://main--palp-art.netlify.app/browse/snake)
 
